@@ -40,8 +40,6 @@ public class MyBooksFragment extends Fragment
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_my_books, container, false);
     }
-
-
     // https://stackoverflow.com/questions/6495898/findviewbyid-in-fragment#:~:text=Use%20getView%20%28%29%20or%20the%20View%20parameter%20from,method%29.%20With%20this%20you%20can%20call%20findViewById%20%28%29.
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState)
@@ -65,5 +63,4 @@ public class MyBooksFragment extends Fragment
             // TODO: Do something with your extra data
         }
     }
-
 }
