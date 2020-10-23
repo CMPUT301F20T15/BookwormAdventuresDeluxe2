@@ -31,8 +31,10 @@ public class MyBooksFragment extends Fragment
     {
         this.myBooksList = new ArrayList<Book>();
         // Temporary books to show how listview looks
-        myBooksList.add(new Book("1984", "George Orwell", "9780141036144", Status.AVAILABLE));
-        myBooksList.add(new Book("To Kill a Mockingbird", "Harper Lee", "9780446310789", Status.REQUESTED));
+        myBooksList.add(new Book("1984", "George Orwell", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do" +
+                "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis", "9780141036144", Status.Available));
+        myBooksList.add(new Book("To Kill a Mockingbird", "Harper Lee", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do" +
+                "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis", "9780446310789", Status.Requested));
     }
 
     @Override
@@ -66,6 +68,7 @@ public class MyBooksFragment extends Fragment
             public void onClick(View view, int position)
             {
                 MyBooksDetailViewFragment bookDetailFragment = new MyBooksDetailViewFragment();
+                bookDetailFragment.onFragmentInteraction(myBooksList.get(position));
                 getFragmentManager().beginTransaction().replace(R.id.frame_container, bookDetailFragment).commit();
             }
 
