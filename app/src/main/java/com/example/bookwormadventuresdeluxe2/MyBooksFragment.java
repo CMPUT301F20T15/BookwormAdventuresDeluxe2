@@ -1,15 +1,11 @@
 package com.example.bookwormadventuresdeluxe2;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,19 +39,12 @@ public class MyBooksFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        //https://stackoverflow.com/questions/9469174/set-theme-for-a-fragment
-        // create ContextThemeWrapper from the original Activity Context with the custom theme
-        final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.AppTheme_NoActionBar);
+        View myBooksView = inflater.inflate(R.layout.fragment_my_books, container, false);
 
-        // clone the inflater using the ContextThemeWrapper
-        LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
-
-        // inflate the layout using the cloned inflater, not default inflater
-        return localInflater.inflate(R.layout.fragment_my_books, container, false);
-
-        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_my_books, container, false);
-
+        myBooksView.findViewById(R.id.app_header_filter_button).setVisibility(View.VISIBLE);
+        myBooksView.findViewById(R.id.app_header_scan_button).setVisibility(View.VISIBLE);
+        myBooksView.findViewById(R.id.app_header_notification_button).setVisibility(View.VISIBLE);
+        return myBooksView;
     }
 
     // https://stackoverflow.com/questions/6495898/findviewbyid-in-fragment#:~:text=Use%20getView%20%28%29%20or%20the%20View%20parameter%20from,method%29.%20With%20this%20you%20can%20call%20findViewById%20%28%29.
@@ -76,24 +65,15 @@ public class MyBooksFragment extends Fragment
             @Override
             public void onClick(View view, int position)
             {
-                Log.v("HERE ", myBooksList.get(position).getTitle());
-//                Intent myBooksDetailViewIntent = new Intent(getActivity(), MyBooksDetailViewActivity.class);
-//                getActivity().startActivity(myBooksDetailViewIntent);
-//                Toast.makeText(this, myBooksList.get(position).getTitle() + " is clicked!", Toast.LENGTH_SHORT).show();
-//                replaceFragment(new MyBooksDetailViewFragment());
-                MyBooksDetailViewFragment eventadd = new MyBooksDetailViewFragment();
-                getFragmentManager().beginTransaction().replace(R.id.frame_container, eventadd).commit();
+                MyBooksDetailViewFragment bookDetailFragment = new MyBooksDetailViewFragment();
+                getFragmentManager().beginTransaction().replace(R.id.frame_container, bookDetailFragment).commit();
             }
 
             @Override
             public void onLongClick(View view, int position)
             {
-//                Toast.makeText(this, myBooksList.get(position).getTitle() + " is long pressed!", Toast.LENGTH_SHORT).show();
-
+                // Required for now in case we need it later
             }
         }));
-//        BookListAdapter.BookListViewHolder vh = myBooksRecyclerAdapter.bookListViewHolder;
-//
     }
-
 }
