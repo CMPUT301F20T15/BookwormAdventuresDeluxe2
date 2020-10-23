@@ -1,5 +1,6 @@
 package com.example.bookwormadventuresdeluxe2;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,8 +43,19 @@ public class MyBooksFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
+        //https://stackoverflow.com/questions/9469174/set-theme-for-a-fragment
+        // create ContextThemeWrapper from the original Activity Context with the custom theme
+        final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.AppTheme_NoActionBar);
+
+        // clone the inflater using the ContextThemeWrapper
+        LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
+
+        // inflate the layout using the cloned inflater, not default inflater
+        return localInflater.inflate(R.layout.fragment_my_books, container, false);
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_books, container, false);
+//        return inflater.inflate(R.layout.fragment_my_books, container, false);
+
     }
 
     // https://stackoverflow.com/questions/6495898/findviewbyid-in-fragment#:~:text=Use%20getView%20%28%29%20or%20the%20View%20parameter%20from,method%29.%20With%20this%20you%20can%20call%20findViewById%20%28%29.
