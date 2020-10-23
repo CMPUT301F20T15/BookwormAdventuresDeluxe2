@@ -1,18 +1,23 @@
 package com.example.bookwormadventuresdeluxe2;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.bookwormadventuresdeluxe2.Utilities.RecyclerViewClickListener;
+import com.example.bookwormadventuresdeluxe2.Utilities.RecyclerViewTouchListener;
 import com.example.bookwormadventuresdeluxe2.Utilities.Status;
 
 import java.util.ArrayList;
+
 
 /**
  * A {@link Fragment} subclass for navbar menu item 1.
@@ -20,7 +25,7 @@ import java.util.ArrayList;
 public class MyBooksFragment extends Fragment
 {
     private RecyclerView myBooksRecyclerView;
-    private RecyclerView.Adapter myBooksRecyclerAdapter;
+    private BookListAdapter myBooksRecyclerAdapter;
     private RecyclerView.LayoutManager myBooksRecyclerLayoutManager;
     private ArrayList<Book> myBooksList;
 
@@ -52,5 +57,30 @@ public class MyBooksFragment extends Fragment
 
         myBooksRecyclerAdapter = new BookListAdapter(myBooksList, this.getContext());
         myBooksRecyclerView.setAdapter(myBooksRecyclerAdapter);
+
+        myBooksRecyclerView.addOnItemTouchListener(new RecyclerViewTouchListener(this.getContext(), myBooksRecyclerView, new RecyclerViewClickListener()
+        {
+            @Override
+            public void onClick(View view, int position)
+            {
+                Log.v("HERE ", myBooksList.get(position).getTitle());
+//                Intent myBooksDetailViewIntent = new Intent(getActivity(), MyBooksDetailViewActivity.class);
+//                getActivity().startActivity(myBooksDetailViewIntent);
+//                Toast.makeText(this, myBooksList.get(position).getTitle() + " is clicked!", Toast.LENGTH_SHORT).show();
+//                replaceFragment(new MyBooksDetailViewFragment());
+                MyBooksDetailViewFragment eventadd = new MyBooksDetailViewFragment();
+                getFragmentManager().beginTransaction().replace(R.id.frame_container, eventadd).commit();
+            }
+
+            @Override
+            public void onLongClick(View view, int position)
+            {
+//                Toast.makeText(this, myBooksList.get(position).getTitle() + " is long pressed!", Toast.LENGTH_SHORT).show();
+
+            }
+        }));
+//        BookListAdapter.BookListViewHolder vh = myBooksRecyclerAdapter.bookListViewHolder;
+//
     }
+
 }

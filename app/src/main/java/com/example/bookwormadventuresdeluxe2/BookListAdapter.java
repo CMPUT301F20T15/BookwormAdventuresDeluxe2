@@ -18,6 +18,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookLi
 {
     private ArrayList<Book> books;
     private Context context;
+    public BookListAdapter.BookListViewHolder bookListViewHolder;
 
     // Reference to the views for each item
     public static class BookListViewHolder extends RecyclerView.ViewHolder
@@ -50,7 +51,13 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookLi
         ConstraintLayout bookItem = (ConstraintLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.book_item, parent, false);
         BookListViewHolder bookListViewHolder = new BookListViewHolder((bookItem));
+        this.bookListViewHolder = bookListViewHolder;
         return bookListViewHolder;
+    }
+
+    public BookListAdapter.BookListViewHolder getViewHolder()
+    {
+        return this.bookListViewHolder;
     }
 
     // Replace the contents of the view with the appropriate data

@@ -26,10 +26,10 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        setTitle("My Books");
+//        setTitle("My Books");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
-
+//
         navbar = findViewById(R.id.bottom_navbar);
         navbar.setOnNavigationItemSelectedListener(this);
         navbar.setSelectedItemId(R.id.my_books_menu_item); // Set My Books as default
