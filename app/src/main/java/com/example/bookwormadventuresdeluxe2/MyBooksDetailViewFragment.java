@@ -1,22 +1,15 @@
 package com.example.bookwormadventuresdeluxe2;
 
-import android.app.ActionBar;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,6 +47,7 @@ public class MyBooksDetailViewFragment extends Fragment
         View bookDetailView = inflater.inflate(R.layout.fragment_my_books_detail_view, null, false);
         this.editButton = bookDetailView.findViewById(R.id.app_header_edit_button);
         this.editButton.setVisibility(View.VISIBLE);
+        this.editButton.setOnClickListener(this::onEditClick);
 
         this.backButton = bookDetailView.findViewById(R.id.app_header_back_button);
         this.backButton.setVisibility(View.VISIBLE);
@@ -84,6 +78,11 @@ public class MyBooksDetailViewFragment extends Fragment
     {
         MyBooksFragment myBooksFragment = new MyBooksFragment();
         getFragmentManager().beginTransaction().replace(R.id.frame_container, myBooksFragment).commit();
+    }
+
+    public void onEditClick(View v)
+    {
+        // TODO: Once Richmond is done add book this will be much easier
     }
 
     public void onFragmentInteraction(Book selectedBook)
