@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include layout="@layout/app_header" />
+
     <ImageView
         android:id="@+id/book_details_image"
         android:layout_width="185sp"
