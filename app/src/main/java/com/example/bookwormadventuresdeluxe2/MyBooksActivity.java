@@ -9,9 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import android.os.Bundle;
-import android.view.MenuItem;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MyBooksActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener
@@ -26,10 +23,9 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-//        setTitle("My Books");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
-//
+
         navbar = findViewById(R.id.bottom_navbar);
         navbar.setOnNavigationItemSelectedListener(this);
         navbar.setSelectedItemId(R.id.my_books_menu_item); // Set My Books as default

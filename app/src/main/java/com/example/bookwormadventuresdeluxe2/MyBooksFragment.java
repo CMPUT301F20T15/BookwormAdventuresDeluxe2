@@ -43,9 +43,11 @@ public class MyBooksFragment extends Fragment
     {
         View myBooksView = inflater.inflate(R.layout.fragment_my_books, container, false);
 
+        // Set visibility of desired custom header buttons
         myBooksView.findViewById(R.id.app_header_filter_button).setVisibility(View.VISIBLE);
         myBooksView.findViewById(R.id.app_header_scan_button).setVisibility(View.VISIBLE);
         myBooksView.findViewById(R.id.app_header_notification_button).setVisibility(View.VISIBLE);
+
         return myBooksView;
     }
 
@@ -62,12 +64,15 @@ public class MyBooksFragment extends Fragment
         myBooksRecyclerAdapter = new BookListAdapter(myBooksList, this.getContext());
         myBooksRecyclerView.setAdapter(myBooksRecyclerAdapter);
 
+        // Handles clicks on the RecyclerView
         myBooksRecyclerView.addOnItemTouchListener(new RecyclerViewTouchListener(this.getContext(), myBooksRecyclerView, new RecyclerViewClickListener()
         {
             @Override
             public void onClick(View view, int position)
             {
+                // Open book detail view when an item is clicked
                 MyBooksDetailViewFragment bookDetailFragment = new MyBooksDetailViewFragment();
+                // Send the selected book to MyBooksDetailViewFragment and open the fragment
                 bookDetailFragment.onFragmentInteraction(myBooksList.get(position));
                 getFragmentManager().beginTransaction().replace(R.id.frame_container, bookDetailFragment).commit();
             }

@@ -8,6 +8,12 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+/**
+ * RecyclerViewTouchListener employs a gesture detector to detect when the RecyclerView has
+ * been touched then uses the coordinates of the touch to determine which item was selected. This
+ * is because RecyclerView does not have a native onItemClickListener
+ */
+
 // http://www.androidtutorialshub.com/android-recyclerview-click-listener-tutorial/
 public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListener
 {

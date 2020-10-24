@@ -12,9 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link MyBooksDetailViewFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * This fragment holds the view for viewing the details of a book after it is clicked
+ * on from the RecyclerView in MyBooks. From here, the user can view the details of their
+ * book and edit it from a button in the header.
  */
 public class MyBooksDetailViewFragment extends Fragment
 {
@@ -45,6 +45,8 @@ public class MyBooksDetailViewFragment extends Fragment
                              Bundle savedInstanceState)
     {
         View bookDetailView = inflater.inflate(R.layout.fragment_my_books_detail_view, null, false);
+
+        // Make the desired custom header buttons visible and set their click listeners
         this.editButton = bookDetailView.findViewById(R.id.app_header_edit_button);
         this.editButton.setVisibility(View.VISIBLE);
         this.editButton.setOnClickListener(this::onEditClick);
@@ -53,6 +55,7 @@ public class MyBooksDetailViewFragment extends Fragment
         this.backButton.setVisibility(View.VISIBLE);
         this.backButton.setOnClickListener(this::onBackClick);
 
+        // Set the content based on the book that was selected
         TextView title = bookDetailView.findViewById(R.id.book_details_title);
         title.setText(this.selectedBook.getTitle());
 
@@ -74,17 +77,32 @@ public class MyBooksDetailViewFragment extends Fragment
         return bookDetailView;
     }
 
+    /**
+     * Takes the user back to the main MyBooks screen
+     *
+     * @param v The view that was clicked on
+     */
     public void onBackClick(View v)
     {
         MyBooksFragment myBooksFragment = new MyBooksFragment();
         getFragmentManager().beginTransaction().replace(R.id.frame_container, myBooksFragment).commit();
     }
 
+    /**
+     * Allows the user to edit the selected book
+     *
+     * @param v The view that was clicked on
+     */
     public void onEditClick(View v)
     {
         // TODO: Once Richmond is done add book this will be much easier
     }
 
+    /**
+     * Receives and sets the selected book from the calling fragment, MyBooksFragment
+     *
+     * @param selectedBook The book that was selected from MyBooksFragment
+     */
     public void onFragmentInteraction(Book selectedBook)
     {
         this.selectedBook = selectedBook;
