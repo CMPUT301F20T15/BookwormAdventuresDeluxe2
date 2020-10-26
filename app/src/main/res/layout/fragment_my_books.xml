@@ -25,7 +25,7 @@
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/fab_content_desc"
         android:onClick="addBook"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="@color/colorPrimaryDark"
         app:borderWidth="0dp"
         app:srcCompat="@android:drawable/ic_input_add"
         app:tint="@android:color/white" />
