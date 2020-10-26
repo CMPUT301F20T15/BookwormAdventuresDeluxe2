@@ -57,7 +57,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginLeft="32dp"
             android:layout_marginTop="24dp"
-            android:text="@string/phone"
+            android:text="@string/phone_number"
             android:textColor="@android:color/black"
             android:textSize="18dp"
             android:textStyle="bold"
