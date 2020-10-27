@@ -189,7 +189,7 @@
             android:layout_height="49dp"
             android:onClick="onDeleteButtonClick"
             android:text="Delete"
-            app:backgroundTint="#FF0000"
+            app:backgroundTint="#C72929"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"

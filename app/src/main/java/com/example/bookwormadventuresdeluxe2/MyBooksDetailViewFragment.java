@@ -1,6 +1,5 @@
 package com.example.bookwormadventuresdeluxe2;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -132,7 +131,7 @@ public class MyBooksDetailViewFragment extends Fragment
         if (requestCode == AddOrEditBooksActivity.EDIT_BOOK)
         {
             /* Save was pressed */
-            if (resultCode == Activity.RESULT_OK)
+            if (resultCode == AddOrEditBooksActivity.EDIT_BOOK)
             {
                 // Get the book that was edited and its new values
                 this.selectedBook = (Book) data.getSerializableExtra("EditedBook");
@@ -149,10 +148,15 @@ public class MyBooksDetailViewFragment extends Fragment
                 bookDocument.update("description", this.selectedBook.getDescription());
                 bookDocument.update("isbn", this.selectedBook.getIsbn());
             }
-            else if (resultCode == Activity.RESULT_CANCELED) /* Delete was pressed */
+            else if (resultCode == AddOrEditBooksActivity.DELETE_BOOK) /* Delete was pressed */
             {
                 /* Simulate back click to exit this fragment since the book no longer exists */
                 this.onBackClick(getView());
+            }
+            else
+            {
+                /* We shouldn't be returning any other result codes */
+                throw new IllegalStateException("Unknown return code received from Edit Book Activity.");
             }
         }
     }

@@ -28,6 +28,7 @@ public class AddOrEditBooksActivity extends AppCompatActivity
 
     public static int ADD_BOOK = 0;
     public static int EDIT_BOOK = 1;
+    public static int DELETE_BOOK = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -101,7 +102,7 @@ public class AddOrEditBooksActivity extends AppCompatActivity
                 this.bookToEdit.setIsbn(isbnView.getText().toString());
 
                 Intent intent = new Intent();
-                setResult(Activity.RESULT_OK, intent);
+                setResult(this.EDIT_BOOK, intent);
                 intent.putExtra("EditedBook", this.bookToEdit);
             }
             else
@@ -205,8 +206,8 @@ public class AddOrEditBooksActivity extends AppCompatActivity
             rootRef.collection(getString(R.string.books_collection)).document(documentId).delete();
 
             Intent intent = new Intent();
-            /* Set result to cancelled so when we return to the previous fragment we know delete was pressed */
-            setResult(Activity.RESULT_CANCELED, intent);
+            /* Set result to deleted so when we return to the previous fragment we know delete was pressed */
+            setResult(this.DELETE_BOOK, intent);
             /* Return one activity up */
             finish();
         }
