@@ -28,7 +28,7 @@ public class MyBooksFragment extends Fragment
     private RecyclerView myBooksRecyclerView;
     private BookListAdapter myBooksRecyclerAdapter;
     private RecyclerView.LayoutManager myBooksRecyclerLayoutManager;
-    private final FilterMenu filterMenu = new FilterMenu();
+    private FilterMenu filterMenu;
 
     ImageButton notificationButton;
     ImageButton filterButton;
@@ -83,6 +83,9 @@ public class MyBooksFragment extends Fragment
 
         myBooksRecyclerAdapter = new BookListAdapter(this.getContext(), options);
         myBooksRecyclerView.setAdapter(myBooksRecyclerAdapter);
+
+        /* Initialize the filterMenu. This will update the queries using the adapter */
+        this.filterMenu = new FilterMenu(myBooksRecyclerAdapter, query);
 
         FloatingActionButton btn = (FloatingActionButton) getView().findViewById(R.id.my_books_add_button);
         btn.setOnClickListener(new View.OnClickListener()

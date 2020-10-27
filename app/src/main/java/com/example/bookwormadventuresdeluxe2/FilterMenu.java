@@ -1,70 +1,102 @@
 package com.example.bookwormadventuresdeluxe2;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import androidx.fragment.app.Fragment;
+
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.Query;
+
+import java.security.InvalidParameterException;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link FilterMenu#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment class for the filter menu
  */
-public class FilterMenu extends Fragment
+public class FilterMenu extends Fragment implements View.OnClickListener
 {
+    private BookListAdapter bookAdapter;
+    private Query rootQuery;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    Button availableButton;
+    Button requestedButton;
+    Button acceptedButton;
+    Button borrowedButton;
+    Button allButton;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public FilterMenu()
+    public FilterMenu(BookListAdapter bookAdapter, Query rootQuery)
     {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FilterMenu.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FilterMenu newInstance(String param1, String param2)
-    {
-        FilterMenu fragment = new FilterMenu();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+        this.bookAdapter = bookAdapter;
+        this.rootQuery = rootQuery;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null)
-        {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_filter_menu, container, false);
+        /* Inflate the layout for this fragment */
+        View filterView = inflater.inflate(R.layout.fragment_filter_menu, container, false);
+
+        /* Get all the buttons */
+        availableButton = filterView.findViewById(R.id.available_button);
+        requestedButton = filterView.findViewById(R.id.requested_button);
+        acceptedButton = filterView.findViewById(R.id.accepted_button);
+        borrowedButton = filterView.findViewById(R.id.borrowed_button);
+        allButton = filterView.findViewById(R.id.all_button);
+
+        /* Set all the buttons' listeners */
+        availableButton.setOnClickListener(this);
+        requestedButton.setOnClickListener(this);
+        acceptedButton.setOnClickListener(this);
+        borrowedButton.setOnClickListener(this);
+        allButton.setOnClickListener(this);
+
+        return filterView;
+    }
+
+    /**
+     * Handle click on Profile Edit and SignOut button
+     *
+     * @param view View containing layout resources
+     */
+    @Override
+    public void onClick(View view)
+    {
+        Query nextQuery;
+        switch (view.getId())
+        {
+            case R.id.available_button:
+                nextQuery = rootQuery.whereEqualTo(getString(R.string.status), getString(R.string.available));
+                break;
+            case R.id.requested_button:
+                nextQuery = rootQuery.whereEqualTo(getString(R.string.status), getString(R.string.requested));
+                break;
+            case R.id.accepted_button:
+                nextQuery = rootQuery.whereEqualTo(getString(R.string.status), getString(R.string.accepted));
+                break;
+            case R.id.borrowed_button:
+                nextQuery = rootQuery.whereEqualTo(getString(R.string.status), getString(R.string.borrowed));
+                break;
+            case R.id.all_button:
+                nextQuery = rootQuery;
+                break;
+            default:
+                throw new InvalidParameterException("Unknown ID passed into Filter Menu onClick Listener");
+        }
+
+        /* Update the query in the recyclerView */
+        FirestoreRecyclerOptions<Book> options = new FirestoreRecyclerOptions.Builder<Book>()
+                .setQuery(nextQuery, Book.class)
+                .build();
+        bookAdapter.updateOptions(options);
     }
 }
