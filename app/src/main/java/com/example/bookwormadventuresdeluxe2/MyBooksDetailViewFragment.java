@@ -133,7 +133,7 @@ public class MyBooksDetailViewFragment extends Fragment
             /* Save was pressed */
             if (resultCode == AddOrEditBooksActivity.EDIT_BOOK)
             {
-                // Get the book that was edited and its new values
+                /* Get the book that was edited and its new values */
                 this.selectedBook = (Book) data.getSerializableExtra("EditedBook");
                 updateView(this.selectedBook);
 
