@@ -1,6 +1,7 @@
 package com.example.bookwormadventuresdeluxe2;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
     private ArrayList<Book> books;
     private Context context;
     public BookListAdapter.BookListViewHolder bookListViewHolder;
+    private int caller;
 
     // Reference to the views for each item
     public static class BookListViewHolder extends RecyclerView.ViewHolder
@@ -43,10 +45,11 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
         }
     }
 
-    public BookListAdapter(Context context, FirestoreRecyclerOptions options)
+    public BookListAdapter(Context context, FirestoreRecyclerOptions options, int caller)
     {
         super(options);
         this.context = context;
+        this.caller = caller;
     }
 
     // Create new views
@@ -68,21 +71,64 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
         bookListViewHolder.author.setText(book.getAuthor());
         bookListViewHolder.isbn.setText(book.getIsbn());
 
-        book.setStatusCircleColor(book.getStatus(), bookListViewHolder.statusCircle);
+        switch(this.caller) {
+            case R.id.my_books:
+                book.setStatusCircleColor(book.getStatus(), bookListViewHolder.statusCircle);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener()
-        {
-            // Handles a click on an item in the recycler view
-            @Override
-            public void onClick(View v)
-            {
-                // Opens the book in detail view
-                MyBooksDetailViewFragment bookDetailFragment = new MyBooksDetailViewFragment();
-                bookDetailFragment.onFragmentInteraction(book, documentId);
+                holder.itemView.setOnClickListener(new View.OnClickListener()
+                {
+                    // Handles a click on an item in the recycler view
+                    @Override
+                    public void onClick(View v)
+                    {
+                        // Opens the book in detail view
+                        MyBooksDetailViewFragment bookDetailFragment = new MyBooksDetailViewFragment();
+                        bookDetailFragment.onFragmentInteraction(book, documentId);
 
-                ((MyBooksActivity) context).getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_container, bookDetailFragment).commit();
-            }
-        });
+                        ((MyBooksActivity) context).getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.frame_container, bookDetailFragment).commit();
+                    }
+                });
+                break;
+            case R.id.requests:
+                book.setStatusCircleColor(book.getStatus(), bookListViewHolder.statusCircle);
+
+                holder.itemView.setOnClickListener(new View.OnClickListener()
+                {
+                    // Handles a click on an item in the recycler view
+                    @Override
+                    public void onClick(View v)
+                    {
+                        // Opens the book in request view
+                        RequestDetailViewFragment fragment = new RequestDetailViewFragment();
+                        fragment.onFragmentInteraction(book, documentId);
+
+                        ((MyBooksActivity) context).getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.frame_container, fragment).commit();
+                    }
+                });
+                break;
+            case R.id.borrow:
+                book.setStatusCircleColor(book.getStatus(), bookListViewHolder.statusCircle);
+
+                holder.itemView.setOnClickListener(new View.OnClickListener()
+                {
+                    // Handles a click on an item in the recycler view
+                    @Override
+                    public void onClick(View v)
+                    {
+                        // Opens the book in borrow view
+                        BorrowDetailViewFragment fragment = new BorrowDetailViewFragment();
+                        fragment.onFragmentInteraction(book, documentId);
+
+                        ((MyBooksActivity) context).getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.frame_container, fragment).commit();
+                    }
+                });
+                break;
+            default:
+                Log.d("Error", "Error in BookListAdapter: caller not found");
+        }
+
     }
 }

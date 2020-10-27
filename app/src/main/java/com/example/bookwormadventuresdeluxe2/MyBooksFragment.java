@@ -70,7 +70,7 @@ public class MyBooksFragment extends Fragment
         myBooksRecyclerLayoutManager = new LinearLayoutManager(this.getContext());
         myBooksRecyclerView.setLayoutManager(myBooksRecyclerLayoutManager);
 
-        myBooksRecyclerAdapter = new BookListAdapter(this.getContext(), options);
+        myBooksRecyclerAdapter = new BookListAdapter(this.getContext(), options, R.id.my_books);
         myBooksRecyclerView.setAdapter(myBooksRecyclerAdapter);
 
         FloatingActionButton btn = (FloatingActionButton) getView().findViewById(R.id.my_books_add_button);
