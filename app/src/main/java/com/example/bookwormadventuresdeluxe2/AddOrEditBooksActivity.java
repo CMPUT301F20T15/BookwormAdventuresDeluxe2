@@ -202,7 +202,7 @@ public class AddOrEditBooksActivity extends AppCompatActivity
 
         if (this.bookToEdit != null)
         {
-            rootRef.collection("Books").document(documentId).delete();
+            rootRef.collection(getString(R.string.books_collection)).document(documentId).delete();
 
             Intent intent = new Intent();
             /* Set result to cancelled so when we return to the previous fragment we know delete was pressed */
