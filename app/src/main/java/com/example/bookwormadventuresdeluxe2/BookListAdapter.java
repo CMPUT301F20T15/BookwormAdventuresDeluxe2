@@ -14,12 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-import java.util.ArrayList;
-
 // https://stackoverflow.com/questions/49277797/how-to-display-data-from-firestore-in-a-recyclerview-with-android
 public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdapter.BookListViewHolder>
 {
-    private ArrayList<Book> books;
     private Context context;
     public BookListAdapter.BookListViewHolder bookListViewHolder;
 
@@ -54,7 +51,7 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
     {
         ConstraintLayout bookItem = (ConstraintLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.book_item, parent, false);
-        BookListViewHolder bookListViewHolder = new BookListViewHolder((bookItem));
+        BookListViewHolder bookListViewHolder = new BookListViewHolder(bookItem);
         this.bookListViewHolder = bookListViewHolder;
         return bookListViewHolder;
     }
@@ -70,19 +67,22 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
 
         book.setStatusCircleColor(book.getStatus(), bookListViewHolder.statusCircle);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener()
+        if (!holder.itemView.hasOnClickListeners())
         {
-            // Handles a click on an item in the recycler view
-            @Override
-            public void onClick(View v)
+            holder.itemView.setOnClickListener(new View.OnClickListener()
             {
-                // Opens the book in detail view
-                MyBooksDetailViewFragment bookDetailFragment = new MyBooksDetailViewFragment();
-                bookDetailFragment.onFragmentInteraction(book, documentId);
+                // Handles a click on an item in the recycler view
+                @Override
+                public void onClick(View v)
+                {
+                    // Opens the book in detail view
+                    MyBooksDetailViewFragment bookDetailFragment = new MyBooksDetailViewFragment();
+                    bookDetailFragment.onFragmentInteraction(book, documentId);
 
-                ((MyBooksActivity) context).getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_container, bookDetailFragment).commit();
-            }
-        });
+                    ((MyBooksActivity) context).getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.frame_container, bookDetailFragment).commit();
+                }
+            });
+        }
     }
 }

@@ -97,6 +97,7 @@ public class FilterMenu extends Fragment implements View.OnClickListener
         FirestoreRecyclerOptions<Book> options = new FirestoreRecyclerOptions.Builder<Book>()
                 .setQuery(nextQuery, Book.class)
                 .build();
+
         bookAdapter.updateOptions(options);
     }
 }
