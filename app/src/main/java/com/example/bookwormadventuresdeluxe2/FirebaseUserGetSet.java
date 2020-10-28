@@ -1,5 +1,6 @@
 package com.example.bookwormadventuresdeluxe2;
 
+import android.content.res.Resources;
 import android.util.Log;
 import android.widget.EditText;
 
@@ -29,8 +30,9 @@ import static android.content.ContentValues.TAG;
  */
 public class FirebaseUserGetSet
 {
+    private static Resources resources;
     private static FirebaseFirestore firebase = FirebaseFirestore.getInstance();
-    private static CollectionReference usersRef = firebase.collection("Users");
+    private static CollectionReference usersRef = firebase.collection(resources.getString(R.string.users_collection));
 
     /**
      * Performs query to extract UserProfileObject from database
