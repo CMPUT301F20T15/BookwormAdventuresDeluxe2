@@ -18,7 +18,6 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdapter.BookListViewHolder>
 {
     private Context context;
-    public BookListAdapter.BookListViewHolder bookListViewHolder;
 
     // Reference to the views for each item
     public static class BookListViewHolder extends RecyclerView.ViewHolder
@@ -52,21 +51,21 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
         ConstraintLayout bookItem = (ConstraintLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.book_item, parent, false);
         BookListViewHolder bookListViewHolder = new BookListViewHolder(bookItem);
-        this.bookListViewHolder = bookListViewHolder;
         return bookListViewHolder;
     }
 
     @Override
     protected void onBindViewHolder(@NonNull BookListViewHolder holder, int position, @NonNull Book book)
     {
-        // Set the text on the item view for each book
+        /* Set the text on the item view for each book */
         String documentId = getSnapshots().getSnapshot(position).getId();
-        bookListViewHolder.title.setText(book.getTitle());
-        bookListViewHolder.author.setText(book.getAuthor());
-        bookListViewHolder.isbn.setText(book.getIsbn());
+        holder.title.setText(book.getTitle());
+        holder.author.setText(book.getAuthor());
+        holder.isbn.setText(book.getIsbn());
 
-        book.setStatusCircleColor(book.getStatus(), bookListViewHolder.statusCircle);
+        book.setStatusCircleColor(book.getStatus(), holder.statusCircle);
 
+        /* Don't keep setting the onClickListener if it has already been set */
         if (!holder.itemView.hasOnClickListeners())
         {
             holder.itemView.setOnClickListener(new View.OnClickListener()
