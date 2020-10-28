@@ -16,8 +16,10 @@ import android.widget.TextView;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
- * TODO: actually document this
+ * Holds the view for seeing details on a book in the Requested tab
+ * The user will be able to interact with request options on the book
  */
+//TODO: add status specific buttons, functions, and labels
 public class RequestDetailViewFragment extends Fragment
 {
     ImageButton backButton;
@@ -93,7 +95,7 @@ public class RequestDetailViewFragment extends Fragment
     }
 
     /**
-     * Takes the user back to the main MyBooks screen
+     * Takes the user back to the main Requests screen
      *
      * @param v The view that was clicked on
      */
@@ -106,9 +108,9 @@ public class RequestDetailViewFragment extends Fragment
     }
 
     /**
-     * Receives and sets the selected book from the calling fragment, MyBooksFragment
+     * Receives and sets the selected book from the calling fragment, RequestsFragment
      *
-     * @param selectedBook The book that was selected from MyBooksFragment
+     * @param selectedBook The book that was selected from RequestsFragment
      */
     public void onFragmentInteraction(Book selectedBook, String documentId)
     {

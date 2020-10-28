@@ -131,6 +131,7 @@ public class RequestsFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    // User wants to change tab, swap the lists and labels
     @Override
     public void onClick(View view)
     {
