@@ -45,4 +45,5 @@
     <string name="notification_title">Notifications</string>
     <string name="test_account_email">test@gmail.com</string>
     <string name="test_account_password">123456</string>
+    <string name="test_account_phone">123-456-7890</string>
 </resources>

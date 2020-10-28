@@ -174,7 +174,7 @@ public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.Us
                     viewUserObject.setPhoneNumber(inputPhone.getText().toString().trim());
 
                     /* Updating TextView in fragment */
-                    viewEmail.setText(inputPhone.getText().toString().trim());
+                    viewEmail.setText(inputEmail.getText().toString().trim());
                     viewPhoneNumber.setText(inputPhone.getText().toString().trim());
 
                     /* Closing dialog */
