@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 
-// Todo: Rename Class to ProfileFragment or rename other fragments
 
 /**
  * A simple {@link Fragment} subclass.
