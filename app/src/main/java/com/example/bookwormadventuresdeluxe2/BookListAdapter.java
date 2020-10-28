@@ -65,23 +65,20 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
 
         book.setStatusCircleColor(book.getStatus(), holder.statusCircle);
 
-        /* Don't keep setting the onClickListener if it has already been set */
-        if (!holder.itemView.hasOnClickListeners())
+        /* We need to continually update the onClick listener in the case of filtered queries */
+        holder.itemView.setOnClickListener(new View.OnClickListener()
         {
-            holder.itemView.setOnClickListener(new View.OnClickListener()
+            // Handles a click on an item in the recycler view
+            @Override
+            public void onClick(View v)
             {
-                // Handles a click on an item in the recycler view
-                @Override
-                public void onClick(View v)
-                {
-                    // Opens the book in detail view
-                    MyBooksDetailViewFragment bookDetailFragment = new MyBooksDetailViewFragment();
-                    bookDetailFragment.onFragmentInteraction(book, documentId);
+                // Opens the book in detail view
+                MyBooksDetailViewFragment bookDetailFragment = new MyBooksDetailViewFragment();
+                bookDetailFragment.onFragmentInteraction(book, documentId);
 
-                    ((MyBooksActivity) context).getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.frame_container, bookDetailFragment).commit();
-                }
-            });
-        }
+                ((MyBooksActivity) context).getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame_container, bookDetailFragment).commit();
+            }
+        });
     }
 }
