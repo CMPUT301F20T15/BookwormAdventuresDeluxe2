@@ -16,12 +16,9 @@ import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-import java.util.ArrayList;
-
 // https://stackoverflow.com/questions/49277797/how-to-display-data-from-firestore-in-a-recyclerview-with-android
 public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdapter.BookListViewHolder>
 {
-    private ArrayList<Book> books;
     private Context context;
     public BookListAdapter.BookListViewHolder bookListViewHolder;
     private int caller;
@@ -58,14 +55,14 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
     {
         ConstraintLayout bookItem = (ConstraintLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.book_item, parent, false);
-        BookListViewHolder bookListViewHolder = new BookListViewHolder((bookItem));
-        this.bookListViewHolder = bookListViewHolder;
+        BookListViewHolder bookListViewHolder = new BookListViewHolder(bookItem);
         return bookListViewHolder;
     }
 
     private View.OnClickListener launchDetailView(DetailView bookDetailFragment, Book book, String documentId)
     {
-        View.OnClickListener listener = new View.OnClickListener() {
+        View.OnClickListener listener = new View.OnClickListener()
+        {
             // Handles a click on an item in the recycler view
             @Override
             public void onClick(View v)

@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Bookworm Adventure Deluxe 2</string>
-    <string name="description">Description</string>
-    <string name="isbn">ISBN</string>
+    <string name="app_name">Bookworm Adventures Deluxe 2</string>
+    <string name="description">Description:</string>
+    <string name="isbn">ISBN:</string>
     <string name="available">Available</string>
     <string name="requested">Requested</string>
     <string name="accepted">Accepted</string>
@@ -35,10 +35,14 @@
     <string name="take_photo">Take Photo</string>
     <string name="describe_the_book">Describe the Book</string>
     <string name="detail_join">by</string>
+    <!-- Firestore collections -->
+    <string name="books_collection">Books</string>
+    <string name="users_collection">Users</string>
+    <!-- Firestore keywords -->
+    <string name="status">status</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="notification_title">Notifications</string>
     <string name="owned_by">Owned by</string>
-    <string name="books_collection">Books</string>
 </resources>

@@ -15,6 +15,7 @@ public class EditTextValidator
     private static String WRONGPASSWORD = "Incorrect password!";
     private static String WEAKPASS = "Password must be 6 characters or longer!";
     private static String INVALIDEMAIL = "Invalid e-mail address!";
+    private static String INVALIDISBN = "Invalid ISBN!";
 
     /**
      * Set empty field error notification
@@ -23,13 +24,18 @@ public class EditTextValidator
      */
     public static void isEmpty(EditText editText)
     {
-        editText.requestFocus();
         editText.setError(EMPTY);
+        editText.setText("");
+        editText.requestFocus();
+    }
 
-        if (allSpaces(editText))
-        {
-            editText.setText("");
-        }
+    /**
+     * Set invalid ISBN error notification
+     */
+    public static void invalidIsbn(EditText editText)
+    {
+        editText.setError(INVALIDISBN);
+        editText.requestFocus();
     }
 
     /**
@@ -85,34 +91,6 @@ public class EditTextValidator
     {
         editText.setError(INVALIDEMAIL);
         editText.requestFocus();
-    }
-
-    /**
-     * Checks if input text was all space characters
-     *
-     * @param editText editText to be checked
-     * @return boolean stating if all spaces
-     */
-    private static boolean allSpaces(EditText editText)
-    {
-        int spaceCount = 0;
-
-        for (int i = 0; i < editText.length(); i++)
-        {
-            if (Character.isSpaceChar(editText.getText().toString().charAt(i)))
-            {
-                spaceCount++;
-            }
-        }
-        if (spaceCount == editText.length())
-        {
-            editText.clearComposingText();
-            return true;
-        }
-        else
-        {
-            return false;
-        }
     }
 
     /**
