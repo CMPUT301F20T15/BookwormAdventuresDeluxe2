@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
@@ -20,12 +21,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * The user will be able to interact with request options on the book
  */
 //TODO: add status specific buttons, functions, and labels
-public class RequestDetailViewFragment extends Fragment
+public class RequestDetailViewFragment extends DetailView
 {
-    ImageButton backButton;
-    View bookDetailView;
-    Book selectedBook;
-    String selectedBookId;
 
     public RequestDetailViewFragment()
     {
@@ -39,27 +36,14 @@ public class RequestDetailViewFragment extends Fragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
         this.bookDetailView = inflater.inflate(R.layout.fragment_request_detail_view, null, false);
         ((TextView) bookDetailView.findViewById(R.id.app_header_title)).setText(R.string.requests_title);
 
-        // Make the desired custom header buttons visible and set their click listeners
-        this.backButton = bookDetailView.findViewById(R.id.app_header_back_button);
-        this.backButton.setVisibility(View.VISIBLE);
-        this.backButton.setOnClickListener(this::onBackClick);
-
-        if (this.selectedBook != null)
-        {
-            updateView(this.selectedBook);
-        }
+        // Setup back button
+        super.onCreateView(inflater, container, savedInstanceState);
 
         return bookDetailView;
     }
@@ -72,23 +56,13 @@ public class RequestDetailViewFragment extends Fragment
     public void updateView(Book book)
     {
         // Set the content based on the book that was selected
-        TextView title = bookDetailView.findViewById(R.id.book_details_title);
-        title.setText(book.getTitle());
-
-        TextView authorName = bookDetailView.findViewById(R.id.book_details_author);
-        authorName.setText(book.getAuthor());
-
-        TextView description = bookDetailView.findViewById(R.id.book_details_description);
-        description.setText(book.getDescription());
+        super.updateView(book);
 
         TextView status = bookDetailView.findViewById(R.id.book_details_status);
         status.setText(book.getStatus().toString() + " " + getString(R.string.detail_join));
 
         TextView user = bookDetailView.findViewById(R.id.book_request_user);
         user.setText("TODO: get borrower");
-
-        TextView isbn = bookDetailView.findViewById(R.id.book_details_isbn);
-        isbn.setText(book.getIsbn());
 
         ImageView statusCircle = bookDetailView.findViewById(R.id.book_details_status_circle);
         book.setStatusCircleColor(book.getStatus(), statusCircle);
@@ -106,17 +80,5 @@ public class RequestDetailViewFragment extends Fragment
         fragment.setArguments(args);
         getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
     }
-
-    /**
-     * Receives and sets the selected book from the calling fragment, RequestsFragment
-     *
-     * @param selectedBook The book that was selected from RequestsFragment
-     */
-    public void onFragmentInteraction(Book selectedBook, String documentId)
-    {
-        this.selectedBook = selectedBook;
-        this.selectedBookId = documentId;
-    }
-
 
 }
