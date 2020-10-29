@@ -20,7 +20,6 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdapter.BookListViewHolder>
 {
     private Context context;
-    public BookListAdapter.BookListViewHolder bookListViewHolder;
     private int caller;
 
     // Reference to the views for each item
@@ -61,8 +60,7 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
 
     private View.OnClickListener launchDetailView(DetailView bookDetailFragment, Book book, String documentId)
     {
-        View.OnClickListener listener = new View.OnClickListener()
-        {
+        View.OnClickListener listener = new View.OnClickListener() {
             // Handles a click on an item in the recycler view
             @Override
             public void onClick(View v)
@@ -82,23 +80,23 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
     {
         // Set the text on the item view for each book
         String documentId = getSnapshots().getSnapshot(position).getId();
-        bookListViewHolder.title.setText(book.getTitle());
-        bookListViewHolder.author.setText(book.getAuthor());
-        bookListViewHolder.isbn.setText(book.getIsbn());
+        holder.title.setText(book.getTitle());
+        holder.author.setText(book.getAuthor());
+        holder.isbn.setText(book.getIsbn());
         DetailView detailView;
 
         switch (this.caller)
         {
             case R.id.my_books:
-                book.setStatusCircleColor(book.getStatus(), bookListViewHolder.statusCircle);
+                book.setStatusCircleColor(book.getStatus(), holder.statusCircle);
                 detailView = new MyBooksDetailViewFragment();
                 break;
             case R.id.requests:
-                book.setStatusCircleColor(book.getStatus(), bookListViewHolder.statusCircle);
+                book.setStatusCircleColor(book.getStatus(), holder.statusCircle);
                 detailView = new RequestDetailViewFragment();
                 break;
             case R.id.borrow:
-                book.setStatusCircleColor(book.getStatus(), bookListViewHolder.statusCircle);
+                book.setStatusCircleColor(book.getStatus(), holder.statusCircle);
                 detailView = new BorrowDetailViewFragment();
                 break;
             default:
