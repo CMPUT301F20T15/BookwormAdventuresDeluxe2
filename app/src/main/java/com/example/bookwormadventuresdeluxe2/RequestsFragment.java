@@ -74,7 +74,7 @@ public class RequestsFragment extends Fragment implements View.OnClickListener
     {
         //TODO: actually query the books
         FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
-        Query query = rootRef.collection("Books").orderBy("title");
+        Query query = rootRef.collection(getString(R.string.books_collection)).orderBy("title");
 
         FirestoreRecyclerOptions<Book> options = new FirestoreRecyclerOptions.Builder<Book>()
                 .setQuery(query, Book.class)
@@ -89,7 +89,7 @@ public class RequestsFragment extends Fragment implements View.OnClickListener
         requestsRecyclerAdapter = new BookListAdapter(this.getContext(), options, R.id.requests);
         requestsRecyclerView.setAdapter(requestsRecyclerAdapter);
 
-        Query query2 = rootRef.collection("Books").orderBy("title");
+        Query query2 = rootRef.collection(getString(R.string.books_collection)).orderBy("title");
 
         FirestoreRecyclerOptions<Book> options2 = new FirestoreRecyclerOptions.Builder<Book>()
                 .setQuery(query2, Book.class)
