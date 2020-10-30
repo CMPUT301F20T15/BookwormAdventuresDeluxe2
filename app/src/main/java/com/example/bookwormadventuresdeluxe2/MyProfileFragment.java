@@ -50,6 +50,7 @@ public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.Us
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
+        /* Getting my profile */
         Bundle bundle = getArguments();
         myProfile = (UserProfileObject) bundle.getSerializable("myProfile");
 
@@ -72,6 +73,7 @@ public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.Us
         viewEmail = view.findViewById(R.id.view_email);
         viewPhoneNumber = view.findViewById(R.id.view_phone);
 
+        /* Setting TextView */
         viewUsername.setText(myProfile.getUsername());
         viewEmail.setText(myProfile.getEmail());
         viewPhoneNumber.setText(myProfile.getPhoneNumber());
