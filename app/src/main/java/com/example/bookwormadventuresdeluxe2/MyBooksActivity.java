@@ -68,6 +68,7 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
                         bundle.putSerializable("myProfile", userObject);
                         profileFragment.setArguments(bundle);
 
+                        /* Opening MyProfileFragment */
                         replaceFragment(profileFragment);
                         setTitle("Profile");
                     }
