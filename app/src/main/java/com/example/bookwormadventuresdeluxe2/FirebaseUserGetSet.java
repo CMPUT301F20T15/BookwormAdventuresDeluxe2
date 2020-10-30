@@ -1,6 +1,5 @@
 package com.example.bookwormadventuresdeluxe2;
 
-import android.content.res.Resources;
 import android.util.Log;
 import android.widget.EditText;
 

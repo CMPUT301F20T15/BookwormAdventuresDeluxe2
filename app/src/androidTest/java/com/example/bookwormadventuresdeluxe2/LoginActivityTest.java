@@ -1,9 +1,16 @@
+/**
+ * LoginActivityTest.java
+ *
+ * Android tests for LoginActivity, tests multiple input
+ * combinations and buttons. Also tests a successful login
+ * and signout.
+ */
+
 package com.example.bookwormadventuresdeluxe2;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
 import android.widget.EditText;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -11,8 +18,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.EditTextValidator;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.robotium.solo.Solo;
 
 import org.junit.After;
@@ -25,7 +30,8 @@ import org.junit.runner.RunWith;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 /**
- * Tests for login screen, cannot be
+ * Tests for login screen, cannot be run more than 6 times in 5 minutes
+ * or device will be blocked for too many login attempts
  */
 @RunWith(AndroidJUnit4.class)
 public class LoginActivityTest
@@ -43,7 +49,7 @@ public class LoginActivityTest
             new ActivityTestRule<>(LoginActivity.class, true, true);
 
     /**
-     * Runs before all tests and creates solo instance.
+     * Runs before all tests and creates solo instance
      * @throws Exception
      */
     @Before
@@ -101,8 +107,8 @@ public class LoginActivityTest
     @Test
     public void spacesLoginTest()
     {
-        solo.enterText(emailText, " ");
-        solo.enterText(passwordText, " ");
+        solo.enterText(emailText, r.getString(R.string.space));
+        solo.enterText(passwordText, r.getString(R.string.space));
         solo.clickOnButton(r.getString(R.string.login));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
