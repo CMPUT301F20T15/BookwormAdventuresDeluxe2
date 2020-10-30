@@ -21,8 +21,6 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
     RequestsFragment requestsFragment = new RequestsFragment();
     MyProfileFragment profileFragment = new MyProfileFragment();
 
-    UserProfileObject myUserObject;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -66,10 +64,8 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
                     @Override
                     public void onCallback(UserProfileObject userObject)
                     {
-                        myUserObject = userObject;
-
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("myProfile", myUserObject);
+                        bundle.putSerializable("myProfile", userObject);
                         profileFragment.setArguments(bundle);
 
                         replaceFragment(profileFragment);
