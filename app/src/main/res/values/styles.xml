@@ -22,4 +22,9 @@
         <item name="android:textColorPrimary">@android:color/black</item>
     </style>
 
+    <!-- Set Text colour to black   -->
+    <style name="BlackTextThemeNoActionBar" parent="@style/AppTheme.NoActionBar">
+        <item name="android:textColorPrimary">@android:color/black</item>
+    </style>
+
 </resources>

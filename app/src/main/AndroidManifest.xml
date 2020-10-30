@@ -24,7 +24,7 @@
 
         <activity
             android:name=".CreateAccountActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/BlackTextThemeNoActionBar" />
         <activity
             android:name=".AddOrEditBooksActivity"
             android:theme="@style/AppTheme">
