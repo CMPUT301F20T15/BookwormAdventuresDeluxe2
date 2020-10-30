@@ -73,7 +73,6 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
                         setTitle("Profile");
                     }
                 });
-
                 break;
             default:
                 /* We would not expect any other id */
