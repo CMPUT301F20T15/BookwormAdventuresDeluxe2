@@ -139,8 +139,8 @@ public class MyBooksFragment extends Fragment
             data.put("description", newBook.getDescription());
             data.put("isbn", newBook.getIsbn());
             data.put("status", newBook.getStatus());
-            data.put("pickUpAddress", "");
-            data.put("requesters", new ArrayList<String>());
+            data.put("pickUpAddress", newBook.getPickUpAddress());
+            data.put("requesters", newBook.getRequesters());
 
             FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
             rootRef.collection(getString(R.string.books_collection)).add(data);

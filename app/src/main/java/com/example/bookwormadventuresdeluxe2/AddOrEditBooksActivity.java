@@ -21,6 +21,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.util.ArrayList;
+
 public class AddOrEditBooksActivity extends AppCompatActivity
 {
     TextView takePhoto;
@@ -118,7 +120,7 @@ public class AddOrEditBooksActivity extends AppCompatActivity
                 setResult(Activity.RESULT_OK, intent);
                 // status when adding book is available
                 intent.putExtra("NewBook", new Book(UserCredentialAPI.getInstance().getUsername(),
-                                                        title, author, description, isbn, Status.Available));
+                                                        title, author, description, isbn, Status.Available, "", new ArrayList<String>()));
             }
             finish();
         }

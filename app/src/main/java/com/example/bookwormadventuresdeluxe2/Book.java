@@ -29,7 +29,8 @@ public class Book implements Serializable
 
     }
 
-    public Book(String owner, String title, String author, String description, String isbn, Status status)
+    public Book(String owner, String title, String author, String description,
+                String isbn, Status status, String pickUpAddress, ArrayList<String> requesters)
     {
         this.owner = owner;
         this.title = title;
@@ -38,6 +39,8 @@ public class Book implements Serializable
         this.isbn = isbn;
         this.description = description;
         this.status = status;
+        this.pickUpAddress = pickUpAddress;
+        this.requesters = requesters;
     }
 
     public String getOwner()
