@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,6 +21,9 @@ import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
 //TODO: add status specific buttons, functions, and labels
 public class BorrowDetailViewFragment extends DetailView
 {
+    private Button btn1;
+    private Button btn2;
+    private TextView exchange;
 
     public BorrowDetailViewFragment()
     {
@@ -42,7 +46,78 @@ public class BorrowDetailViewFragment extends DetailView
         // setup back button
         super.onCreateView(inflater, container, savedInstanceState);
 
+        this.btn1 = this.bookDetailView.findViewById(R.id.borrowDetail_btn1);
+        this.btn2 = this.bookDetailView.findViewById(R.id.borrowDetail_btn2);
+        this.exchange = this.bookDetailView.findViewById(R.id.borrow_exchange_location);
+
+        //TODO: do different stuff based on book status
+
+        // case request
+        // only able to view book details
+
+        // case accept
+//        this.btn1.setText(getString(R.string.view_location));
+//
+//        this.btn1.setOnClickListener(this::btnViewLocation);
+//
+//        this.btn1.setVisibility(View.VISIBLE);
+
+        // case bPending
+//        this.btn1.setText(getString(R.string.view_location));
+//        this.btn2.setText(getString(R.string.scan));
+//
+//        this.btn1.setOnClickListener(this::btnViewLocation);
+//        this.btn2.setOnClickListener(this::btnScan);
+//
+//        this.btn1.setVisibility(View.VISIBLE);
+//        this.btn2.setVisibility(View.VISIBLE);
+
+        // case Borrow
+//        this.btn1.setText(getString(R.string.set_location));
+//        this.btn2.setText(getString(R.string.return_book));
+//
+//        //TODO: get pickup location from book
+//        this.bookDetailView.findViewById(R.id.borrow_exchange).setVisibility(View.VISIBLE);
+//
+//        this.btn1.setOnClickListener(this::btnSetLocation);
+//        this.btn2.setOnClickListener(this::btnReturnBook);
+//
+//        this.btn1.setVisibility(View.VISIBLE);
+//        this.btn2.setVisibility(View.VISIBLE);
+
+        // case rPending
+//        this.btn1.setText(getString(R.string.wait_owner));
+//
+//        this.btn1.setVisibility(View.VISIBLE);
         return bookDetailView;
+    }
+
+    private void btnSetLocation(View view)
+    {
+        //TODO: actually do the stuff
+        // launch SetLocation
+    }
+
+    private void btnReturnBook(View view)
+    {
+        //TODO: actually do the stuff
+        // Launch Scan ISBN
+        // update book status
+        // launch RequestFragment
+    }
+
+    private void btnScan(View view)
+    {
+        //TODO: actually do the stuff
+        // Launch Scan ISBN
+        // update book status
+        // launch RequestsFragment
+    }
+
+    private void btnViewLocation(View view)
+    {
+        //TODO: actually do the stuff
+        // launch ViewLocation
     }
 
     /**

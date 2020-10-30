@@ -45,4 +45,15 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="notification_title">Notifications</string>
     <string name="owned_by">Owned by</string>
+    <string name="accept">Accept</string>
+    <string name="deny">Deny</string>
+    <string name="exchange">Exchange Location:</string>
+    <string name="set_location_label">Set Location</string>
+    <string name="lend_book">Lend Book</string>
+    <string name="wait_borrower">Waiting for Borrower</string>
+    <string name="accept_return">Accept Return</string>
+    <string name="view_location">View Location</string>
+    <string name="scan">Scan</string>
+    <string name="return_book">Return Book</string>
+    <string name="wait_owner">Waiting for Owner</string>
 </resources>
