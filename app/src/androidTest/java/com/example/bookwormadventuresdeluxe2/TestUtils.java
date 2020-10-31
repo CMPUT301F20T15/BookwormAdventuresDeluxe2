@@ -26,7 +26,7 @@ public class TestUtils
     }
 
     /**
-     * Signs in with the test account
+     * Signs in with the test account. Assumes we are in the LoginActivity.
      */
     public static void signIn(Solo solo, Resources resources)
     {
