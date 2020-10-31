@@ -154,8 +154,18 @@ public class AddOrEditBooksActivity extends AppCompatActivity
                 Intent intent = new Intent();
                 setResult(Activity.RESULT_OK, intent);
                 // status when adding book is available
-                intent.putExtra("NewBook", new Book(UserCredentialAPI.getInstance().getUsername(),
-                        title, author, description, isbn, Status.Available));
+                /* If the user uploaded a photo, make sure it is sent to the new book */
+                if (bookPhotoDowloadUrl != null)
+                {
+                    intent.putExtra("NewBook", new Book(UserCredentialAPI.getInstance().getUsername(),
+                            title, author, description, isbn, Status.Available, bookPhotoDowloadUrl));
+                }
+                else
+                {
+                    intent.putExtra("NewBook", new Book(UserCredentialAPI.getInstance().getUsername(),
+                            title, author, description, isbn, Status.Available));
+                }
+
             }
             finish();
         }
@@ -332,7 +342,7 @@ public class AddOrEditBooksActivity extends AppCompatActivity
         StorageReference storageReference = storage.getReference();
 
         /* If the book already has a photo, we want to delete it before adding a new one */
-        if (this.bookToEdit.getImageUrl().compareTo("") != 0)
+        if (this.bookToEdit != null && this.bookToEdit.getImageUrl().compareTo("") != 0)
         {
             StorageReference currentBookPhoto = storage.getReferenceFromUrl(this.bookToEdit.getImageUrl());
             // https://stackoverflow.com/questions/45103085/deleting-file-from-firebase-storage-using-url

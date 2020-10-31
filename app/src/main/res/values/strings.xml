@@ -40,11 +40,14 @@
     <string name="books_collection">Books</string>
     <string name="users_collection">Users</string>
     <!-- Firestore keywords -->
-    <string name="status">status</string>
     <string name="firestore_title">title</string>
     <string name="firestore_description">description</string>
     <string name="firestore_isbn">isbn</string>
     <string name="firestore_author">author</string>
+    <string name="firestore_owner">owner</string>
+    <string name="firestore_status">status</string>
+    <string name="firestore_pick_up_address">pickUpAddress</string>
+    <string name="firestore_requesters">requesters</string>
     <string name="firestore_imageUrl">imageUrl</string>
 
 

@@ -48,6 +48,18 @@ public class Book implements Serializable
         this.status = status;
     }
 
+    public Book(String owner, String title, String author, String description, String isbn, Status status, String imageUrl)
+    {
+        this.owner = owner;
+        this.title = title;
+        this.author = author;
+        this.description = description;
+        this.isbn = isbn;
+        this.description = description;
+        this.status = status;
+        this.imageUrl = imageUrl;
+    }
+
     public String getOwner()
     {
         return owner;
