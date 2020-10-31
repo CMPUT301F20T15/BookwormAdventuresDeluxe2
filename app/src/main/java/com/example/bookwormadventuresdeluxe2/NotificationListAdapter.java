@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
+
 import java.util.ArrayList;
 
 public class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.NotificationListViewHolder>
@@ -66,7 +68,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         NotificationListViewHolder.author.setText(notifications.get(position).getBook().getAuthor());
         NotificationListViewHolder.isbn.setText(notifications.get(position).getBook().getIsbn());
 
-        notifications.get(position).getBook().setStatusCircleColor(notifications.get(position).getBook().getStatus(), NotificationListViewHolder.statusCircle);
+        notifications.get(position).getBook().setStatusCircleColor(NotificationListViewHolder.statusCircle, UserCredentialAPI.getInstance().getUserId());
     }
 
     @Override

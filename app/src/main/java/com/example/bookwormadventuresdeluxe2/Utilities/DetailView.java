@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -65,6 +66,9 @@ public abstract class DetailView extends Fragment
 
         TextView isbn = bookDetailView.findViewById(R.id.book_details_isbn);
         isbn.setText(book.getIsbn());
+
+        ImageView statusCircle = bookDetailView.findViewById(R.id.book_details_status_circle);
+        book.setStatusCircleColor(statusCircle, UserCredentialAPI.getInstance().getUserId());
     }
 
     /**

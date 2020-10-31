@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * Holds the view for seeing details on a book in the Requested tab
@@ -149,9 +148,6 @@ public class RequestDetailViewFragment extends DetailView
 
         TextView user = bookDetailView.findViewById(R.id.book_request_user);
         user.setText("TODO: get borrower");
-
-        ImageView statusCircle = bookDetailView.findViewById(R.id.book_details_status_circle);
-        book.setStatusCircleColor(book.getStatus(), statusCircle);
 
     }
 

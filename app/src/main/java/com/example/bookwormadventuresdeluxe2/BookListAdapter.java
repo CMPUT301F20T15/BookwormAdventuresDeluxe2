@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
+import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
@@ -84,19 +85,18 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
         holder.author.setText(book.getAuthor());
         holder.isbn.setText(book.getIsbn());
         DetailView detailView;
+        String user = UserCredentialAPI.getInstance().getUserId();
+        book.setStatusCircleColor(holder.statusCircle, user);
 
         switch (this.caller)
         {
             case R.id.my_books:
-                book.setStatusCircleColor(book.getStatus(), holder.statusCircle);
                 detailView = new MyBooksDetailViewFragment();
                 break;
             case R.id.requests:
-                book.setStatusCircleColor(book.getStatus(), holder.statusCircle);
                 detailView = new RequestDetailViewFragment();
                 break;
             case R.id.borrow:
-                book.setStatusCircleColor(book.getStatus(), holder.statusCircle);
                 detailView = new BorrowDetailViewFragment();
                 break;
             default:

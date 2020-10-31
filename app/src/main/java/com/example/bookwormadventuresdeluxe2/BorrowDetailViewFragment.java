@@ -135,9 +135,6 @@ public class BorrowDetailViewFragment extends DetailView
 
         TextView user = bookDetailView.findViewById(R.id.book_request_user);
         user.setText("TODO: get owner");
-
-        ImageView statusCircle = bookDetailView.findViewById(R.id.book_details_status_circle);
-        book.setStatusCircleColor(book.getStatus(), statusCircle);
     }
 
     /**

@@ -7,7 +7,9 @@ package com.example.bookwormadventuresdeluxe2.Utilities;
 public enum Status
 {
     Available,
-    Borrowed,
     Requested,
-    Accepted
+    Accepted,
+    bPending,
+    Borrowed,
+    rPending
 }

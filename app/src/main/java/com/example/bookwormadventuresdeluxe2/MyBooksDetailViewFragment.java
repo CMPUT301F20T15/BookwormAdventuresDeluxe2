@@ -64,9 +64,6 @@ public class MyBooksDetailViewFragment extends DetailView
 
         TextView status = bookDetailView.findViewById(R.id.book_details_status);
         status.setText(book.getStatus().toString());
-
-        ImageView statusCircle = bookDetailView.findViewById(R.id.book_details_status_circle);
-        book.setStatusCircleColor(book.getStatus(), statusCircle);
     }
 
     /**
