@@ -22,7 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * A {@link Fragment} subclass for navbar menu item 4.
  */
 public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.UserCallback
 {

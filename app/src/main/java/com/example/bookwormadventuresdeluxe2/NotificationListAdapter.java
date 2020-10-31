@@ -13,6 +13,9 @@ import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 
 import java.util.ArrayList;
 
+/**
+ * TODO:
+ */
 public class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.NotificationListViewHolder>
 {
     private ArrayList<Notification> notifications;

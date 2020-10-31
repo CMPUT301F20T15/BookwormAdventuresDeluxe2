@@ -11,6 +11,10 @@ import com.google.firebase.firestore.auth.User;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * class holding all information regarding a book
+ * Also implements Status methods
+ */
 public class Book implements Serializable
 {
     // Basic attributes for now, rest added as needed
@@ -130,6 +134,11 @@ public class Book implements Serializable
         }
     }
 
+    /**
+     * Returns the status of the book the given user should see
+     *
+     * @param user The string of the user looking at the book
+     */
     public Status getAugmentStatus(String user)
     {
         switch (status)
@@ -172,6 +181,11 @@ public class Book implements Serializable
         }
     }
 
+    /**
+     * Returns a notification with this book and the given message
+     *
+     * @param message The string to be displayed on notification
+     */
     public Notification createNotification(String message)
     {
         return new Notification(this, message);
