@@ -20,6 +20,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 
 /**
+ * MyProfile view fragment class for displaying and editing your contact details
+ *
  * A simple {@link Fragment} subclass.
  */
 public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.UserCallback
@@ -41,11 +43,17 @@ public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.Us
 
     UserProfileObject myProfile;
 
+    /**
+     * Required empty public constructor
+     */
     public MyProfileFragment()
     {
-        // Required empty public constructor
+
     }
 
+    /**
+     * onCreateView initializer
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -81,6 +89,7 @@ public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.Us
         /* Theme for popup dialog fragment */
         getContext().getTheme().applyStyle(R.style.BlackTextTheme, true);
 
+        /* Getter for FirebaseAuth instance */
         firebaseAuth = FirebaseAuth.getInstance();
 
         return view;
@@ -156,10 +165,12 @@ public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.Us
                     return;
                 }
 
+                /* Attempts to edit FirebaseAuth account and Firebase info*/
                 FirebaseUserGetSet.changeAuthInfo(inputEmail,
                         inputPhone,
                         myProfile.getDocumentId());
 
+                /* After successful edit */
                 if (inputEmail.getError() == null)
                 {
                     /* Updating user object in Fragment*/
@@ -176,6 +187,7 @@ public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.Us
             }
         });
 
+        /* Cancel edit */
         editInfo.findViewById(R.id.edit_cancel).setOnClickListener(new View.OnClickListener()
         {
             @Override
