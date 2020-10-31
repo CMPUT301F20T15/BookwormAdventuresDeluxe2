@@ -130,10 +130,12 @@ public class MyBooksDetailViewFragment extends DetailView
                         .collection(getString(R.string.books_collection))
                         .document(this.selectedBookId);
 
+                // TODO hardcoded
                 bookDocument.update("title", this.selectedBook.getTitle());
                 bookDocument.update("author", this.selectedBook.getAuthor());
                 bookDocument.update("description", this.selectedBook.getDescription());
                 bookDocument.update("isbn", this.selectedBook.getIsbn());
+                bookDocument.update("imageReference", this.selectedBook.getImageReference());
             }
             else if (resultCode == AddOrEditBooksActivity.DELETE_BOOK) /* Delete was pressed */
             {

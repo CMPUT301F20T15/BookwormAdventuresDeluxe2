@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.Status;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
@@ -23,6 +24,7 @@ public class Book implements Serializable
     private String pickUpAddress;
     private ArrayList<String> requesters;
     private String borrower;
+    private String imageReference = "";
 
     // BookListAdapter which is now a FirestoreRecyclerAdapter requires empty constructor
     public Book()
@@ -139,6 +141,16 @@ public class Book implements Serializable
     public void setBorrower(String borrower)
     {
         this.borrower = borrower;
+    }
+
+    public String getImageReference()
+    {
+        return imageReference;
+    }
+
+    public void setImageReference(String imageReference)
+    {
+        this.imageReference = imageReference;
     }
 
     /**

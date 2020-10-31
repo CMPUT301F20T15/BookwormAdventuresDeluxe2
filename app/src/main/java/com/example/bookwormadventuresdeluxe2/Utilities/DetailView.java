@@ -1,16 +1,34 @@
 package com.example.bookwormadventuresdeluxe2.Utilities;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
 import com.example.bookwormadventuresdeluxe2.Book;
 import com.example.bookwormadventuresdeluxe2.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.UUID;
 
 /**
  * abstract class representing all the DetailView fragments
@@ -65,6 +83,60 @@ public abstract class DetailView extends Fragment
 
         TextView isbn = bookDetailView.findViewById(R.id.book_details_isbn);
         isbn.setText(book.getIsbn());
+
+        ImageView bookPhoto = bookDetailView.findViewById(R.id.book_details_image);
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference();
+        StorageReference dateRef = storageReference.child(book.getImageReference());
+        dateRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
+        {
+            @Override
+            public void onSuccess(Uri downloadUrl)
+            {
+                Log.v("HERE 1", String.valueOf(downloadUrl));
+                new DownloadImageTask(bookPhoto).execute(downloadUrl.toString());
+
+//                Bitmap bm = getBitmapFromURL(book.getImageReference());
+//                if (bm != null)
+//                {
+//                    bookPhoto.setImageBitmap(bm);
+//                }
+//                else
+//                {
+//                    Log.v("HERE 2", "fail");
+//
+//                }
+            }
+        });
+
+
+//        FirebaseStorage storage = FirebaseStorage.getInstance();
+//        StorageReference storageReference = storage.getReference();
+//        StorageReference bookPhotoReference = storageReference.child(book.getImageReference());
+
+        Log.v("HERE 1", book.getImageReference());
+
+    }
+
+    public Bitmap getBitmapFromURL(String src)
+    {
+        try
+        {
+            java.net.URL url = new java.net.URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url
+                    .openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e)
+        {
+            Log.v("HERE ", "fail 2");
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**

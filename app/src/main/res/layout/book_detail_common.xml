@@ -20,6 +20,7 @@
             android:layout_height="185sp"
             android:layout_marginTop="32dp"
             android:background="@color/tempPhotoBackground"
+            android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/include"
