@@ -71,8 +71,8 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
     @Override
     public void onBackPressed()
     {
-        ExitConfirmationDialogFragment areYouSure = new ExitConfirmationDialogFragment();
-        areYouSure.show(getSupportFragmentManager(), "TAG");
+        ExitConfirmationDialogFragment exitConfirmation = new ExitConfirmationDialogFragment();
+        exitConfirmation.show(getSupportFragmentManager(), "ConfirmExit");
     }
 
 
