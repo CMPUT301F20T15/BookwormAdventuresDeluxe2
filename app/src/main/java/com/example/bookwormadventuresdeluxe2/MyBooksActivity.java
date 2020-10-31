@@ -3,7 +3,6 @@ package com.example.bookwormadventuresdeluxe2;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -68,6 +67,13 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
         return true;
     }
 
+    // https://developer.android.com/guide/topics/ui/dialogs
+    @Override
+    public void onBackPressed()
+    {
+        ExitConfirmationDialogFragment areYouSure = new ExitConfirmationDialogFragment();
+        areYouSure.show(getSupportFragmentManager(), "TAG");
+    }
 
 
     public void replaceFragment(Fragment fragment)
