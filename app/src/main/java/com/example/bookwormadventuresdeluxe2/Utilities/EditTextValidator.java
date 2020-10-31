@@ -1,3 +1,10 @@
+/**
+ * EditTextValidator.java
+ *
+ * Utility class for EditText error handling. Matches target
+ * EditText and wanted output.
+ */
+
 package com.example.bookwormadventuresdeluxe2.Utilities;
 
 import android.widget.EditText;
@@ -121,13 +128,15 @@ public class EditTextValidator
      *
      * @param password1 password on which error is set
      * @param password2 editText on which error is set
+     * @return boolean stating is password is long enough
      */
-    public static void weakPass(EditText password1, EditText password2)
+    public static boolean weakPass(EditText password1, EditText password2)
     {
         if (password1.getText().toString().length() >= 6)
         {
             password1.setError(null);
             password2.setError(null);
+            return false;
         }
         else
         {
@@ -135,7 +144,7 @@ public class EditTextValidator
             password2.setError(WEAKPASS);
             password2.requestFocus();
             password1.requestFocus();
+            return true;
         }
     }
-
 }
