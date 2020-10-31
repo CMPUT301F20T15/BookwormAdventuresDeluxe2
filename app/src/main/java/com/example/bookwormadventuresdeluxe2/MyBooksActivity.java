@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MyBooksActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener
@@ -55,8 +56,22 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
                 break;
             case R.id.profile_menu_item:
                 /* Respond to  Profile click*/
-                replaceFragment(profileFragment);
-                setTitle("Profile");
+
+                /* Pulling UserProfileObject from database */
+                FirebaseUserGetSet.getUser(UserCredentialAPI.getInstance().getUsername(), new FirebaseUserGetSet.UserCallback()
+                {
+                    @Override
+                    public void onCallback(UserProfileObject userObject)
+                    {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("myProfile", userObject);
+                        profileFragment.setArguments(bundle);
+
+                        /* Opening MyProfileFragment */
+                        replaceFragment(profileFragment);
+                        setTitle("Profile");
+                    }
+                });
                 break;
             default:
                 /* We would not expect any other id */
@@ -74,7 +89,6 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
         ExitConfirmationDialogFragment exitConfirmation = new ExitConfirmationDialogFragment();
         exitConfirmation.show(getSupportFragmentManager(), "ConfirmExit");
     }
-
 
     public void replaceFragment(Fragment fragment)
     {
