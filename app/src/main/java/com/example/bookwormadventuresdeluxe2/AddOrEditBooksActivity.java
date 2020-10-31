@@ -1,11 +1,15 @@
 package com.example.bookwormadventuresdeluxe2;
 
+/**
+ * This activity houses the functionality for adding or editing a new book. When in
+ * editing mode, the fields are populated with the values of the selected book
+ * and the user may update these fields as they wish. In adding mode, the fields are
+ * blank and the user must enter the information from scratch.
+ */
+
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,7 +32,6 @@ import com.example.bookwormadventuresdeluxe2.Utilities.Status;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -38,7 +41,6 @@ import com.google.firebase.storage.UploadTask;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -57,8 +59,7 @@ public class AddOrEditBooksActivity extends AppCompatActivity
     public static int ADD_BOOK = 0;
     public static int EDIT_BOOK = 1;
     public static int DELETE_BOOK = 2;
-    public static int REQUEST_IMAGE_CAPTURE = 3;
-    public static int REQUEST_IMAGE_UPLOAD = 4;
+    public static int REQUEST_IMAGE_UPLOAD = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -91,6 +92,7 @@ public class AddOrEditBooksActivity extends AppCompatActivity
                 authorView.setText(bookToEdit.getAuthor());
                 descriptionView.setText(bookToEdit.getDescription());
                 isbnView.setText(bookToEdit.getIsbn());
+                bookToEdit.setPhoto(this.bookToEdit, bookPicture);
             }
         }
 
@@ -102,27 +104,18 @@ public class AddOrEditBooksActivity extends AppCompatActivity
     }
 
     /**
+     * Allows the user to upload a photo for the book from their gallery
+     * of images on their phone
      * https://developer.android.com/training/camera/photobasics
-     * TODO
      *
      * @param view
      */
-    public void takePhoto(View view)
+    public void uploadPhoto(View view)
     {
-//        Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        try
-//        {
-//            startActivityForResult(takePhotoIntent, REQUEST_IMAGE_CAPTURE);
-//        } catch (ActivityNotFoundException e)
-//        {
-//            // TODO display error state to the user
-//            Log.v("HERE ", String.valueOf(e));
-//        }
         Intent uploadPhotoIntent = new Intent();
         uploadPhotoIntent.setType("image/*");
         uploadPhotoIntent.setAction(Intent.ACTION_GET_CONTENT);
-        // todo hardcoded
-        startActivityForResult(Intent.createChooser(uploadPhotoIntent, "Select Photo"), REQUEST_IMAGE_UPLOAD);
+        startActivityForResult(Intent.createChooser(uploadPhotoIntent, getResources().getString(R.string.select_photo)), REQUEST_IMAGE_UPLOAD);
     }
 
 
@@ -150,7 +143,7 @@ public class AddOrEditBooksActivity extends AppCompatActivity
                 this.bookToEdit.setAuthor(authorView.getText().toString());
                 this.bookToEdit.setDescription(descriptionView.getText().toString());
                 this.bookToEdit.setIsbn(isbnView.getText().toString());
-                this.bookToEdit.setImageReference(bookPhotoDowloadUrl);
+                this.bookToEdit.setImageUrl(bookPhotoDowloadUrl);
 
                 Intent intent = new Intent();
                 setResult(this.EDIT_BOOK, intent);
@@ -218,9 +211,9 @@ public class AddOrEditBooksActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        // I added this so the back button in the app bar would just end this activity
-        // Not start a new MyBooksActivity
-        // https://stackoverflow.com/questions/14437745/how-to-override-action-bar-back-button-in-android
+        /* I added this so the back button in the app bar would just end this activity
+         * Not start a new MyBooksActivity
+         * https://stackoverflow.com/questions/14437745/how-to-override-action-bar-back-button-in-android */
         switch (item.getItemId())
         {
             case android.R.id.home:
@@ -250,7 +243,7 @@ public class AddOrEditBooksActivity extends AppCompatActivity
     }
 
     /**
-     * This where the activity handles the barcode scanned
+     * This where the activity handles the barcode scanned and uploads photos
      *
      * @param requestCode
      * @param resultCode
@@ -262,21 +255,6 @@ public class AddOrEditBooksActivity extends AppCompatActivity
         if (requestCode == REQUEST_IMAGE_UPLOAD && resultCode == RESULT_OK)
         {
             uploadPhoto(intent.getData());
-        }
-        else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
-
-        {
-//            Uri selectedImage = intent.getData();
-//            Bundle extras = intent.getExtras();
-//            Bitmap imageBitmap = (Bitmap) extras.get("data");
-//            bookPicture.setImageBitmap(imageBitmap);
-//
-//            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-//            String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), imageBitmap, "Title", null);
-//            bookPhotoFilePath = Uri.parse(path);
-//            StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
-//            ref.putFile(bookPhotoFilePath);
         }
         else
         {
@@ -353,6 +331,29 @@ public class AddOrEditBooksActivity extends AppCompatActivity
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference();
 
+        /* If the book already has a photo, we want to delete it before adding a new one */
+        if (this.bookToEdit.getImageUrl().compareTo("") != 0)
+        {
+            StorageReference currentBookPhoto = storage.getReferenceFromUrl(this.bookToEdit.getImageUrl());
+            // https://stackoverflow.com/questions/45103085/deleting-file-from-firebase-storage-using-url
+            currentBookPhoto.delete().addOnSuccessListener(new OnSuccessListener<Void>()
+            {
+                @Override
+                public void onSuccess(Void aVoid)
+                {
+                    // File deleted successfully
+                }
+            }).addOnFailureListener(new OnFailureListener()
+            {
+                @Override
+                public void onFailure(@NonNull Exception exception)
+                {
+                    /* Should delete manually from firebase */
+                    Log.v("uploadPhoto", "Old photo was not deleted");
+                }
+            });
+        }
+
         // https://code.tutsplus.com/tutorials/image-upload-to-firebase-in-android-application--cms-29934
         if (selectedImage != null)
         {
@@ -360,6 +361,7 @@ public class AddOrEditBooksActivity extends AppCompatActivity
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
 
+            /* Create a unique ID for the uploaded photo and store it in Fire Storage */
             StorageReference bookPhotoReference = storageReference.child("images/" + UUID.randomUUID().toString());
             bookPhotoReference.putFile(selectedImage)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>()
@@ -368,8 +370,7 @@ public class AddOrEditBooksActivity extends AppCompatActivity
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
                         {
                             progressDialog.dismiss();
-                            Toast.makeText(AddOrEditBooksActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
-
+                            /* Update the image view in current screen with uploaded image */
                             Bitmap bitmap = null;
                             try
                             {
@@ -381,7 +382,17 @@ public class AddOrEditBooksActivity extends AppCompatActivity
                                 e.printStackTrace();
                             }
 
-                            bookPhotoDowloadUrl = bookPhotoReference.getPath();
+                            /* Get the download URL for the newly added image so it can be mapped to the
+                             * corresponding book and stored in FireStore */
+                            StorageReference dataRef = FirebaseStorage.getInstance().getReference().child(bookPhotoReference.getPath());
+                            dataRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
+                            {
+                                @Override
+                                public void onSuccess(Uri downloadUrl)
+                                {
+                                    bookPhotoDowloadUrl = downloadUrl.toString();
+                                }
+                            });
                         }
                     })
                     .addOnFailureListener(new OnFailureListener()

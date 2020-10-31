@@ -1,15 +1,20 @@
 package com.example.bookwormadventuresdeluxe2;
 
+/**
+ * Book holds all of the relevant information pertaining to a book in the library. It has
+ * a set of private fields which define its attributes along with corresponding getters
+ * and setters to retrieve and manipulate the information.
+ */
+
 import android.graphics.PorterDuff;
 import android.widget.ImageView;
 
 import androidx.core.content.res.ResourcesCompat;
 
+import com.example.bookwormadventuresdeluxe2.Utilities.DownloadImageTask;
 import com.example.bookwormadventuresdeluxe2.Utilities.Status;
-import com.google.firebase.storage.StorageReference;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Book implements Serializable
@@ -24,7 +29,7 @@ public class Book implements Serializable
     private String pickUpAddress;
     private ArrayList<String> requesters;
     private String borrower;
-    private String imageReference = "";
+    private String imageUrl = "";
 
     // BookListAdapter which is now a FirestoreRecyclerAdapter requires empty constructor
     public Book()
@@ -143,14 +148,14 @@ public class Book implements Serializable
         this.borrower = borrower;
     }
 
-    public String getImageReference()
+    public String getImageUrl()
     {
-        return imageReference;
+        return imageUrl;
     }
 
-    public void setImageReference(String imageReference)
+    public void setImageUrl(String imageUrl)
     {
-        this.imageReference = imageReference;
+        this.imageUrl = imageUrl;
     }
 
     /**
@@ -184,6 +189,17 @@ public class Book implements Serializable
     public Notification createNotification(String message)
     {
         return new Notification(this, message);
+    }
+
+    /**
+     * Sets the photo corresponding to the given imageView with the image url of the given book
+     *
+     * @param book
+     * @param imageView
+     */
+    public void setPhoto(Book book, ImageView imageView)
+    {
+        new DownloadImageTask(imageView).execute(book.getImageUrl());
     }
 }
 
