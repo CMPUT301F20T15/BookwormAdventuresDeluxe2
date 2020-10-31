@@ -109,7 +109,7 @@ public class EditTextValidator
      */
     public static boolean passwordsMatch(EditText password1, EditText password2)
     {
-        if (password1.getText().toString().compareTo(password2.getText().toString()) == 0)
+        if (password1.getText().toString().trim().compareTo(password2.getText().toString().trim()) == 0)
         {
             return true;
         }
@@ -132,7 +132,7 @@ public class EditTextValidator
      */
     public static boolean weakPass(EditText password1, EditText password2)
     {
-        if (password1.getText().toString().length() >= 6)
+        if (password1.getText().toString().trim().length() >= 6)
         {
             password1.setError(null);
             password2.setError(null);

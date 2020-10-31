@@ -148,7 +148,7 @@ public class CreateAccountActivity extends AppCompatActivity implements Firebase
 
                                         createUser(editTextUsername.getText().toString().trim(),
                                                 editTextEmail.getText().toString().trim(),
-                                                editTextPassword.getText().toString());
+                                                editTextPassword.getText().toString().trim());
                                     }
                                 });
                     }
