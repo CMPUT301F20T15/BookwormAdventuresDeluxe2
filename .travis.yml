@@ -3,7 +3,6 @@ jdk: oraclejdk8
 dist: trusty
 os: linux
 cache: false # Turn off caching to prevent any caching problems
-sudo: false # Use Travis Container-Based Infrastructure (faster builds)
 
 # Specify the branches we want to run TravisCI on (we will also run it on PRs)
 branches:
