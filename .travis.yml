@@ -37,7 +37,7 @@ android:
 
 before_install:
   # clear android files
-  - rm -rn ~/.android/avd/*
+  - rm -rf ~/.android/avd/*
   # To add new encrypted files: travis encrypt-file secrets.xml secrets.xml.enc -r CMPUT301F20T15/BookwormAdventuresDeluxe2 --com
   - openssl aes-256-cbc -K $encrypted_3d990a7f02ba_key -iv $encrypted_3d990a7f02ba_iv -in travis_secrets/secrets.xml.enc -out app/src/main/res/values/secrets.xml -d
   - yes | sdkmanager "platforms;android-$ANDROID_EMU_API_LEVEL"
