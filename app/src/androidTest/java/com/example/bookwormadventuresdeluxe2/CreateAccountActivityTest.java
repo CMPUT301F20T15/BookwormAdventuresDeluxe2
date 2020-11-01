@@ -137,6 +137,104 @@ public class CreateAccountActivityTest
     }
 
     /**
+     * Tests for empty username and username with only space input
+     */
+    @Test
+    public void emptyAndSpaceUsernameTest()
+    {
+        solo.enterText(emailText, r.getString(R.string.test_create_account_email));
+        solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
+        solo.enterText(password1Text, r.getString(R.string.test_account1_password));
+        solo.enterText(password2Text, r.getString(R.string.test_account1_password));
+
+        solo.clickOnButton(r.getString(R.string.create_account));
+
+        Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
+        Assert.assertNotNull(usernameText.getError());
+
+        solo.enterText(usernameText, r.getString(R.string.space));
+
+        solo.clickOnButton(r.getString(R.string.create_account));
+
+        Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
+        Assert.assertNotNull(usernameText.getError());
+    }
+
+    /**
+     * Tests for empty email and email with only space input
+     */
+    @Test
+    public void emptyAndSpaceEmailTest()
+    {
+        solo.enterText(usernameText, r.getString(R.string.test_create_account_username));
+        solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
+        solo.enterText(password1Text, r.getString(R.string.test_account1_password));
+        solo.enterText(password2Text, r.getString(R.string.test_account1_password));
+
+        solo.clickOnButton(r.getString(R.string.create_account));
+
+        Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
+        Assert.assertNotNull(emailText.getError());
+
+        solo.enterText(emailText, r.getString(R.string.space));
+
+        solo.clickOnButton(r.getString(R.string.create_account));
+
+        Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
+        Assert.assertNotNull(emailText.getError());
+    }
+
+    /**
+     * Tests for empty phone number
+     */
+    @Test
+    public void emptyPhoneNumberTest()
+    {
+        solo.enterText(usernameText, r.getString(R.string.test_create_account_username));
+        solo.enterText(emailText, r.getString(R.string.test_create_account_email));
+        solo.enterText(password1Text, r.getString(R.string.test_account1_password));
+        solo.enterText(password2Text, r.getString(R.string.test_account1_password));
+
+        solo.clickOnButton(r.getString(R.string.create_account));
+
+        Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
+        Assert.assertNotNull(phoneNumberText.getError());
+
+        solo.enterText(phoneNumberText, r.getString(R.string.space));
+
+        solo.clickOnButton(r.getString(R.string.create_account));
+
+        Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
+        Assert.assertNotNull(phoneNumberText.getError());
+    }
+
+    /**
+     * Tests for empty password and password with space input
+     */
+    @Test
+    public void emptyAndSpacePasswordTest()
+    {
+        solo.enterText(usernameText, r.getString(R.string.test_create_account_username));
+        solo.enterText(emailText, r.getString(R.string.test_create_account_email));
+        solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
+
+        solo.clickOnButton(r.getString(R.string.create_account));
+
+        Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
+        Assert.assertNotNull(password1Text.getError());
+        Assert.assertNotNull(password2Text.getError());
+
+        solo.enterText(password1Text, r.getString(R.string.space));
+        solo.enterText(password2Text, r.getString(R.string.space));
+
+        solo.clickOnButton(r.getString(R.string.create_account));
+
+        Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
+        Assert.assertNotNull(password1Text.getError());
+        Assert.assertNotNull(password2Text.getError());
+    }
+
+    /**
      * Tests create account button with a taken username
      */
     @Test
@@ -145,7 +243,6 @@ public class CreateAccountActivityTest
         solo.enterText(usernameText, r.getString(R.string.test_account1_username));
 
         solo.enterText(emailText, r.getString(R.string.test_create_account_email));
-
         solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
         solo.enterText(password1Text, r.getString(R.string.test_account1_password));
         solo.enterText(password2Text, r.getString(R.string.test_account1_password));
@@ -166,7 +263,6 @@ public class CreateAccountActivityTest
         solo.enterText(emailText, r.getString(R.string.test_account1_email));
 
         solo.enterText(usernameText, r.getString(R.string.test_create_account_username));
-
         solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
         solo.enterText(password1Text, r.getString(R.string.test_account1_password));
         solo.enterText(password2Text, r.getString(R.string.test_account1_password));
@@ -187,7 +283,6 @@ public class CreateAccountActivityTest
         solo.enterText(emailText, r.getString(R.string.wrong_email));
 
         solo.enterText(usernameText, r.getString(R.string.test_create_account_username));
-
         solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
         solo.enterText(password1Text, r.getString(R.string.test_account1_password));
         solo.enterText(password2Text, r.getString(R.string.test_account1_password));
@@ -196,6 +291,50 @@ public class CreateAccountActivityTest
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.INVALIDEMAIL));
 
+        Assert.assertNotNull(emailText.getError());
+    }
+
+    /**
+     * Tests for taken username and taken email input at the same time
+     */
+    @Test
+    public void takenUsernameAndTakenEmailTest()
+    {
+        solo.enterText(usernameText, r.getString(R.string.test_account1_username));
+        solo.enterText(emailText, r.getString(R.string.test_account1_email));
+
+        solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
+        solo.enterText(password1Text, r.getString(R.string.test_account1_password));
+        solo.enterText(password2Text, r.getString(R.string.test_account1_password));
+
+        solo.clickOnButton(r.getString(R.string.create_account));
+
+        Assert.assertTrue(solo.waitForText(EditTextValidator.USERNAMETAKEN));
+        Assert.assertTrue(solo.waitForText(EditTextValidator.EMAILTAKEN));
+
+        Assert.assertNotNull(usernameText.getError());
+        Assert.assertNotNull(emailText.getError());
+    }
+
+    /**
+     * Tests for taken username and non-email string input at the same time
+     */
+    @Test
+    public void takenUsernameAndInvalidEmailTest()
+    {
+        solo.enterText(usernameText, r.getString(R.string.test_account1_username));
+        solo.enterText(emailText, r.getString(R.string.wrong_email));
+
+        solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
+        solo.enterText(password1Text, r.getString(R.string.test_account1_password));
+        solo.enterText(password2Text, r.getString(R.string.test_account1_password));
+
+        solo.clickOnButton(r.getString(R.string.create_account));
+
+        Assert.assertTrue(solo.waitForText(EditTextValidator.USERNAMETAKEN));
+        Assert.assertTrue(solo.waitForText(EditTextValidator.INVALIDEMAIL));
+
+        Assert.assertNotNull(usernameText.getError());
         Assert.assertNotNull(emailText.getError());
     }
 
@@ -209,7 +348,6 @@ public class CreateAccountActivityTest
 
         solo.enterText(emailText, r.getString(R.string.test_create_account_email));
         solo.enterText(usernameText, r.getString(R.string.test_create_account_username));
-
         solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
         solo.enterText(password1Text, r.getString(R.string.test_account1_password));
 
@@ -231,7 +369,26 @@ public class CreateAccountActivityTest
 
         solo.enterText(emailText, r.getString(R.string.test_create_account_email));
         solo.enterText(usernameText, r.getString(R.string.test_create_account_username));
+        solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
 
+        solo.clickOnButton(r.getString(R.string.create_account));
+
+        Assert.assertTrue(solo.waitForText(EditTextValidator.WEAKPASS));
+
+        Assert.assertNotNull(password1Text.getError());
+        Assert.assertNotNull(password2Text.getError());
+    }
+
+    /**
+     * Tests create account button with password 5 characters and a space
+     */
+    @Test public void shortPasswordAndSpaceTest()
+    {
+        solo.enterText(password1Text, r.getString(R.string.short_pass) + r.getString(R.string.space));
+        solo.enterText(password2Text, r.getString(R.string.short_pass) + r.getString(R.string.space));
+
+        solo.enterText(emailText, r.getString(R.string.test_create_account_email));
+        solo.enterText(usernameText, r.getString(R.string.test_create_account_username));
         solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
 
         solo.clickOnButton(r.getString(R.string.create_account));
