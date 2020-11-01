@@ -18,7 +18,9 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 /**
- * TODO:
+ * BookListAdapter is a FirestoreRecycler data which acts as middleware between the books
+ * on Firestore and the UI that displays them by providing view updaters and onClickListeners
+ * for items in the RecyclerView.
  */
 // https://stackoverflow.com/questions/49277797/how-to-display-data-from-firestore-in-a-recyclerview-with-android
 public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdapter.BookListViewHolder>
@@ -64,7 +66,8 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
 
     private View.OnClickListener launchDetailView(DetailView bookDetailFragment, Book book, String documentId)
     {
-        View.OnClickListener listener = new View.OnClickListener() {
+        View.OnClickListener listener = new View.OnClickListener()
+        {
             // Handles a click on an item in the recycler view
             @Override
             public void onClick(View v)
@@ -103,8 +106,7 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
                 detailView = new BorrowDetailViewFragment();
                 break;
             default:
-                Log.d("Error", "Error in BookListAdapter: caller not found");
-                detailView = new MyBooksDetailViewFragment();
+                throw new IllegalArgumentException();
         }
 
         holder.itemView.setOnClickListener(launchDetailView(detailView, book, documentId));

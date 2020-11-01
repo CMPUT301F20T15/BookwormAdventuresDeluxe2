@@ -12,8 +12,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * class holding all information regarding a book
- * Also implements Status methods
+ * Book holds all of the relevant information pertaining to a book in the library. It has
+ * a set of private fields which define its attributes along with corresponding getters
+ * and setters to retrieve and manipulate the information.
  */
 public class Book implements Serializable
 {
@@ -24,6 +25,7 @@ public class Book implements Serializable
     private String isbn;
     private String description;
     private Status status;
+    private String pickUpAddress;
     private ArrayList<String> requesters;
     private String borrower;
 
@@ -33,8 +35,9 @@ public class Book implements Serializable
 
     }
 
-    public Book(String title, String author, String description, String isbn, Status status)
+    public Book(String owner, String title, String author, String description, String isbn, Status status)
     {
+        this.owner = owner;
         this.title = title;
         this.author = author;
         this.description = description;
@@ -44,6 +47,16 @@ public class Book implements Serializable
         this.requesters = new ArrayList<String>();
         this.owner = "";
         this.borrower = "";
+    }
+
+    public String getOwner()
+    {
+        return owner;
+    }
+
+    public void setOwner(String owner)
+    {
+        this.owner = owner;
     }
 
     public String getTitle()
@@ -96,14 +109,44 @@ public class Book implements Serializable
         this.status = status;
     }
 
-    public String getOwner()
+    public String getPickUpAddress()
     {
-        return owner;
+        return pickUpAddress;
+    }
+
+    public void setPickUpAddress(String pickUpAddress)
+    {
+        this.pickUpAddress = pickUpAddress;
     }
 
     public ArrayList<String> getRequesters()
     {
         return requesters;
+    }
+
+    public void setRequesters(ArrayList<String> requesters)
+    {
+        this.requesters = requesters;
+    }
+
+    public void addRequester(String requester)
+    {
+        this.requesters.add(requester);
+    }
+
+    public void deleteRequester(String requester)
+    {
+        this.requesters.remove(requester);
+    }
+
+    public String getBorrower()
+    {
+        return borrower;
+    }
+
+    public void setBorrower(String borrower)
+    {
+        this.borrower = borrower;
     }
 
     /**

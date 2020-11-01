@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
@@ -148,7 +147,6 @@ public class RequestDetailViewFragment extends DetailView
 
         TextView user = bookDetailView.findViewById(R.id.book_request_user);
         user.setText("TODO: get borrower");
-
     }
 
     /**

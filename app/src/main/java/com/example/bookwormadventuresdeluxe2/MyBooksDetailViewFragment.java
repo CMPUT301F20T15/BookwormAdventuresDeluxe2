@@ -6,12 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
-import androidx.fragment.app.Fragment;
 
+import com.example.bookwormadventuresdeluxe2.Utilities.Status;
+import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -63,7 +63,7 @@ public class MyBooksDetailViewFragment extends DetailView
         super.updateView(book);
 
         TextView status = bookDetailView.findViewById(R.id.book_details_status);
-        status.setText(book.getStatus().toString());
+        status.setText(book.getAugmentStatus(UserCredentialAPI.getInstance().getUserId()).toString());
     }
 
     /**

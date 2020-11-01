@@ -35,6 +35,7 @@
     <string name="take_photo">Take Photo</string>
     <string name="describe_the_book">Describe the Book</string>
     <string name="detail_join">by</string>
+    <string name="exit_confirmation_message">Are you sure you want to exit the app?</string>
     <!-- Firestore collections -->
     <string name="books_collection">Books</string>
     <string name="users_collection">Users</string>
@@ -56,4 +57,12 @@
     <string name="scan">Scan</string>
     <string name="return_book">Return Book</string>
     <string name="wait_owner">Waiting for Owner</string>
+
+    <!-- Test input strings -->
+    <string name="wrong_activity">Wrong Activity</string>
+    <string name="space"> </string>
+    <string name="wrong_email">wrongemail</string>
+    <string name="wrong_pass">wrongpassword</string>
+    <string name="short_pass">wrong</string>
+
 </resources>

@@ -75,15 +75,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/borrowDetail_btn1" />
 
+
         <TextView
             android:id="@+id/book_request_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginBottom="4dp"
-            android:text="user"
-            app:layout_constraintBottom_toBottomOf="@+id/book_details_status"
+            android:layout_marginBottom="12dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/book_details_isbn_title"
             app:layout_constraintStart_toEndOf="@+id/book_details_status" />
 
         <Button
@@ -148,9 +150,11 @@
             android:text=""
             android:textColor="@android:color/black"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@+id/request_exchange"
+            app:layout_constraintBottom_toBottomOf="@+id/borrow_exchange"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/request_exchange"
-            app:layout_constraintTop_toTopOf="@+id/request_exchange" />
+            app:layout_constraintStart_toEndOf="@+id/borrow_exchange"
+            app:layout_constraintTop_toTopOf="@+id/borrow_exchange" />
+            app:layout_constraintTop_toBottomOf="@+id/book_detail_common" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
