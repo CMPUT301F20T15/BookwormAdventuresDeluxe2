@@ -2,7 +2,8 @@ language: android
 jdk: oraclejdk8
 dist: trusty
 os: linux
-cache: false
+cache: false # Turn off caching to prevent any caching problems
+sudo: false # Use Travis Container-Based Infrastructure (faster builds)
 
 env:
   global:
@@ -10,7 +11,7 @@ env:
     - ANDROID_BUILD_TOOLS_VERSION=30.0.2
     - ANDROID_EMU_API_LEVEL=22
     - ANDROID_ABI=armeabi-v7a
-    - ADB_INSTALL_TIMEOUT=5 # 5 minute timeout to prevent unresponsive shell error
+    - ADB_INSTALL_TIMEOUT=8 # 8 minute timeout to prevent unresponsive shell error
     - QEMU_AUDIO_DRV=none # Remove audio
 
 android:
