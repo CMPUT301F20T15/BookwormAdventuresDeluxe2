@@ -3,6 +3,7 @@ jdk: oraclejdk8
 dist: trusty
 os: linux
 cache: false # Turn off caching to prevent any caching problems
+sudo: false # Use Travis Container-Based Infrastructure (faster builds)
 
 # Specify the branches we want to run TravisCI on (we will also run it on PRs)
 branches:
@@ -12,8 +13,8 @@ branches:
 env:
   global:
     - ANDROID_API_LEVEL=30
-    - ANDROID_BUILD_TOOLS_VERSION=30.0.0
-    - ANDROID_EMU_API_LEVEL=20
+    - ANDROID_BUILD_TOOLS_VERSION=30.0.2
+    - ANDROID_EMU_API_LEVEL=22
     - ANDROID_ABI=armeabi-v7a
     - ADB_INSTALL_TIMEOUT=8 # 8 minute timeout to prevent unresponsive shell error
     - QEMU_AUDIO_DRV=none # Remove audio
