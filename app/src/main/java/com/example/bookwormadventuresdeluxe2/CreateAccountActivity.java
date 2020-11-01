@@ -100,37 +100,11 @@ public class CreateAccountActivity extends AppCompatActivity implements Firebase
         {
             public void onClick(View v)
             {
-                Boolean noEmpties = true;
-
-                /* Set Empty EditText Error codes */
-                if (TextUtils.isEmpty(confirmPassword.getText().toString().trim()))
+                /* Check if there are no empty fields*/
+                if (!EditTextValidator.createAccountEmpties(editTextUsername, editTextEmail, editTextPhoneNumber,
+                                                            editTextPassword, confirmPassword))
                 {
-                    EditTextValidator.isEmpty(confirmPassword);
-                    noEmpties = false;
-                }
-                if (TextUtils.isEmpty(editTextPassword.getText().toString().trim()))
-                {
-                    EditTextValidator.isEmpty(editTextPassword);
-                    noEmpties = false;
-                }
-                if (TextUtils.isEmpty(editTextPhoneNumber.getText().toString().trim()))
-                {
-                    EditTextValidator.isEmpty(editTextPhoneNumber);
-                    noEmpties = false;
-                }
-                if (TextUtils.isEmpty(editTextEmail.getText().toString().trim()))
-                {
-                    EditTextValidator.isEmpty(editTextEmail);
-                    noEmpties = false;
-                }
-                if (TextUtils.isEmpty(editTextUsername.getText().toString().trim()))
-                {
-                    EditTextValidator.isEmpty(editTextUsername);
-                    noEmpties = false;
-                }
-                if (noEmpties)
-                {
-                    /* Check is passwords match and display error if not*/
+                    /* Check is passwords match and long enough, display error if not*/
                     if (EditTextValidator.passwordsMatch(editTextPassword, confirmPassword)
                             && !EditTextValidator.weakPass(editTextPassword, confirmPassword))
                     {

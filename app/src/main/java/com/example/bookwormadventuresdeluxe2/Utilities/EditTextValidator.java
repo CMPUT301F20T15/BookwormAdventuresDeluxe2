@@ -7,6 +7,7 @@
 
 package com.example.bookwormadventuresdeluxe2.Utilities;
 
+import android.text.TextUtils;
 import android.widget.EditText;
 
 /**
@@ -146,5 +147,50 @@ public class EditTextValidator
             password1.requestFocus();
             return true;
         }
+    }
+
+    /**
+     * Checker for CreateAccountActivity empty fields
+     *
+     * @param username username EditText
+     * @param email email EditText
+     * @param phoneNumber phone number EditText
+     * @param password1 password EditText
+     * @param password2 confirm password EditText
+     * @return boolean if empties exist or not
+     */
+    public static boolean createAccountEmpties(EditText username, EditText email,
+                                               EditText phoneNumber, EditText password1,
+                                               EditText password2)
+    {
+        Boolean empties = false;
+
+        /* Set Empty EditText Error codes */
+        if (TextUtils.isEmpty(password2.getText().toString().trim()))
+        {
+            EditTextValidator.isEmpty(password2);
+            empties = true;
+        }
+        if (TextUtils.isEmpty(password1.getText().toString().trim()))
+        {
+            EditTextValidator.isEmpty(password1);
+            empties = true;
+        }
+        if (TextUtils.isEmpty(phoneNumber.getText().toString().trim()))
+        {
+            EditTextValidator.isEmpty(phoneNumber);
+            empties = true;
+        }
+        if (TextUtils.isEmpty(email.getText().toString().trim()))
+        {
+            EditTextValidator.isEmpty(email);
+            empties = true;
+        }
+        if (TextUtils.isEmpty(username.getText().toString().trim()))
+        {
+            EditTextValidator.isEmpty(username);
+            empties = true;
+        }
+        return empties;
     }
 }
