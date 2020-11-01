@@ -1,6 +1,7 @@
 language: android
 jdk: oraclejdk8
 dist: trusty
+os: linux
 
 env:
   global:
@@ -12,42 +13,31 @@ env:
 
 android:
   components:
-    # Uncomment the lines below if you want to
-    # use the latest revision of Android SDK Tools
     - tools
     - platform-tools
-
-    # The BuildTools version used by your project
     - build-tools-$ANDROID_BUILD_TOOLS_VERSION
-
-    # The SDK version used to compile your project
     - android-$ANDROID_API_LEVEL
     - android-$ANDROID_EMU_API_LEVEL
-
-    # Additional components
     - extra-google-google_play_services
     - extra-google-m2repository
     - extra-android-m2repository
     - extra-android-support
-
-    # Specify at least one system image,
-    # if you need to run emulator(s) during your tests
     - sys-img-$ANDROID_ABI-google_apis-$ANDROID_EMU_API_LEVEL
-
   licenses:
-      - 'android-sdk-preview-license-52d11cd2'
-      - 'android-sdk-license-.+'
-      - 'google-gdk-license-.+'
+    - android-sdk-preview-license-52d11cd2
+    - android-sdk-license-.+
+    - google-gdk-license-.+
 
 before_install:
-  - openssl aes-256-cbc -K $encrypted_0a6446eb3ae3_key -iv $encrypted_0a6446eb3ae3_iv -in api_keys.xml.enc -out ../app/src/main/res/values/api_keys.xml -d
-  - openssl aes-256-cbc -K $encrypted_0a6446eb3ae3_key -iv $encrypted_0a6446eb3ae3_iv -in test_accounts.xml.enc -out ../app/src/main/res/values/test_accounts.xml -d
+  # To add new encrypted files: travis encrypt-file filename.xml filename.xml.enc -r CMPUT301F20T15/BookwormAdventuresDeluxe2 --com
+  - ls
+  - openssl aes-256-cbc -K $encrypted_65b98582a5d1_key -iv $encrypted_65b98582a5d1_iv -in api_keys.xml.enc -out api_keys.xml -d
+  - openssl aes-256-cbc -K $encrypted_d40dcf0a74f7_key -iv $encrypted_d40dcf0a74f7_iv -in test_accounts.xml.enc -out test_accounts.xml -d
   - yes | sdkmanager "platforms;android-$ANDROID_EMU_API_LEVEL"
   - yes | sdkmanager "platforms;android-$ANDROID_API_LEVEL"
 
 before_script:
   - chmod +x gradlew
-
   # Start the emulator
   - echo no | android create avd --force -n test -t android-$ANDROID_EMU_API_LEVEL --abi google_apis/$ANDROID_ABI
   - emulator -avd test -no-window &
