@@ -11,7 +11,7 @@ env:
     - ANDROID_BUILD_TOOLS_VERSION=30.0.2
     - ANDROID_EMU_API_LEVEL=22
     - ANDROID_ABI=armeabi-v7a
-    - ADB_INSTALL_TIMEOUT=8 # 8 minute timeout to prevent unresponsive shell error
+    - ADB_INSTALL_TIMEOUT=15 # 15 minute timeout to prevent unresponsive shell error
     - QEMU_AUDIO_DRV=none # Remove audio
 
 android:
