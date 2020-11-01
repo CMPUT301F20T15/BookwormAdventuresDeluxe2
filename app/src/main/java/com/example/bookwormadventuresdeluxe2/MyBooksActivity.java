@@ -3,13 +3,13 @@ package com.example.bookwormadventuresdeluxe2;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.zxing.integration.android.IntentIntegrator;
 
 public class MyBooksActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener
 {
@@ -19,6 +19,8 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
     SearchFragment searchFragment = new SearchFragment();
     RequestsFragment requestsFragment = new RequestsFragment();
     MyProfileFragment profileFragment = new MyProfileFragment();
+
+    public static int ISBN_SCAN = 65537;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -69,7 +71,6 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
     }
 
 
-
     public void replaceFragment(Fragment fragment)
     {
         /* Update fragment Container with new fragment
@@ -88,6 +89,15 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == IntentIntegrator.REQUEST_CODE)
+        {
+            // https://stackoverflow.com/questions/6147884/onactivityresult-is-not-being-called-in-fragment
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.my_books);
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+        else
+        {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

@@ -12,12 +12,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
+import com.example.bookwormadventuresdeluxe2.Utilities.Status;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +37,7 @@ public class MyBooksFragment extends Fragment
 
     ImageButton notificationButton;
     ImageButton filterButton;
+    ImageButton scanButton;
 
     public MyBooksFragment()
     {
@@ -56,7 +60,10 @@ public class MyBooksFragment extends Fragment
         this.filterButton.setVisibility(View.VISIBLE);
         this.filterButton.setOnClickListener(this::onFilterClick);
 
-        // TODO: Setup scan button
+        /* Setup Filter button */
+        this.scanButton = myBooksView.findViewById(R.id.app_header_scan_button);
+        this.scanButton.setVisibility(View.VISIBLE);
+        this.scanButton.setOnClickListener(this::onScanClick);
 
         /* Setup notification button */
         this.notificationButton = myBooksView.findViewById(R.id.app_header_notification_button);
@@ -89,8 +96,8 @@ public class MyBooksFragment extends Fragment
         /* Initialize the filterMenu. This will update the queries using the adapter */
         this.filterMenu = new FilterMenu(myBooksRecyclerAdapter, query);
 
-        FloatingActionButton btn = (FloatingActionButton) getView().findViewById(R.id.my_books_add_button);
-        btn.setOnClickListener(new View.OnClickListener()
+        FloatingActionButton addBookButton = (FloatingActionButton) getView().findViewById(R.id.my_books_add_button);
+        addBookButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -125,8 +132,11 @@ public class MyBooksFragment extends Fragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intentData)
     {
+
         super.onActivityResult(requestCode, resultCode, intentData);
+
         getActivity();
+
         if (requestCode == AddOrEditBooksActivity.ADD_BOOK && resultCode == Activity.RESULT_OK)
         {
             Book newBook = (Book) intentData.getSerializableExtra("NewBook");
@@ -146,13 +156,45 @@ public class MyBooksFragment extends Fragment
             rootRef.collection(getString(R.string.books_collection)).add(data);
             myBooksRecyclerAdapter.notifyDataSetChanged();
         }
+        else if (requestCode == IntentIntegrator.REQUEST_CODE)
+        {
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intentData);
+            if (result != null)
+            {
+                if (result.getContents() != null)
+                {
+                    String barcode = result.getContents();
+                    FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+                    Query query = rootRef.collection(getString(R.string.books_collection))
+                            .whereEqualTo("isbn", barcode);
+
+                    DetailView bookDetailFragment = new MyBooksDetailViewFragment();
+                    Book book = new Book("Hudson", "tits", "autor", "", "1234", Status.Accepted);
+//                    bookDetailFragment.onFragmentInteraction(book, "abcdefghij");
+                    // Opens the book in detail view
+
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.frame_container, bookDetailFragment).commit();
+
+                }
+            }
+        }
     }
+
 
     private void onNotificationClick(View view)
     {
         NotificationFragment notificationFragment = new NotificationFragment();
         getFragmentManager().beginTransaction().replace(R.id.frame_container, notificationFragment).commit();
     }
+
+    private void onScanClick(View view)
+    {
+        IntentIntegrator integrator = new IntentIntegrator(getActivity());
+        integrator.setBeepEnabled(false);
+        integrator.initiateScan();
+    }
+
 
     /**
      * Launch the filter menu fragment when the filter button is clicked
