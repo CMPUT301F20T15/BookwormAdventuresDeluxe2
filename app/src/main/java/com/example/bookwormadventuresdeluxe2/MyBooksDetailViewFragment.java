@@ -63,7 +63,7 @@ public class MyBooksDetailViewFragment extends DetailView
         super.updateView(book);
 
         TextView status = bookDetailView.findViewById(R.id.book_details_status);
-        status.setText(book.getAugmentStatus(UserCredentialAPI.getInstance().getUserId()).toString());
+        status.setText(book.getAugmentStatus(UserCredentialAPI.getInstance().getUsername()).toString());
     }
 
     /**

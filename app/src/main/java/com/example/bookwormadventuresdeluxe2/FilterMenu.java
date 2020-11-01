@@ -12,6 +12,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
 
 import java.security.InvalidParameterException;
+import java.util.Arrays;
 
 /**
  * Fragment class for the filter menu
@@ -70,7 +71,7 @@ public class FilterMenu extends Fragment implements View.OnClickListener
      */
     @Override
     public void onClick(View view)
-    {
+    { //TODO: fix this to work with real status
         Query nextQuery;
         switch (view.getId())
         {
@@ -84,7 +85,10 @@ public class FilterMenu extends Fragment implements View.OnClickListener
                 nextQuery = rootQuery.whereEqualTo(getString(R.string.status), getString(R.string.accepted));
                 break;
             case R.id.borrowed_button:
-                nextQuery = rootQuery.whereEqualTo(getString(R.string.status), getString(R.string.borrowed));
+                nextQuery = rootQuery.whereIn(getString(R.string.status), Arrays.asList(
+                        getString(R.string.bPending),
+                        getString(R.string.borrowed),
+                        getString(R.string.rPending)));
                 break;
             case R.id.all_button:
                 nextQuery = rootQuery;

@@ -9,17 +9,21 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+
+import java.util.Arrays;
 
 /**
  * A {@link Fragment} subclass for navbar menu item 2.
@@ -72,12 +76,16 @@ public class RequestsFragment extends Fragment implements View.OnClickListener
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
-        //TODO: actually query the books
         FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
-        Query query = rootRef.collection(getString(R.string.books_collection)).orderBy("title");
+        Query requests = rootRef.collection(getString(R.string.books_collection)).whereEqualTo(
+                getString(R.string.owner), UserCredentialAPI.getInstance().getUsername()).whereIn(getString(R.string.status), Arrays.asList(
+                getString(R.string.requested),
+                getString(R.string.accepted),
+                getString(R.string.bPending),
+                getString(R.string.rPending)));
 
-        FirestoreRecyclerOptions<Book> options = new FirestoreRecyclerOptions.Builder<Book>()
-                .setQuery(query, Book.class)
+        FirestoreRecyclerOptions<Book> requestsOptions = new FirestoreRecyclerOptions.Builder<Book>()
+                .setQuery(requests, Book.class)
                 .build();
 
         requestsRecyclerView = (RecyclerView) view.findViewById(R.id.requests_recycler_view);
@@ -86,13 +94,14 @@ public class RequestsFragment extends Fragment implements View.OnClickListener
         requestsRecyclerLayoutManager = new LinearLayoutManager(this.getContext());
         requestsRecyclerView.setLayoutManager(requestsRecyclerLayoutManager);
 
-        requestsRecyclerAdapter = new BookListAdapter(this.getContext(), options, R.id.requests);
+        requestsRecyclerAdapter = new BookListAdapter(this.getContext(), requestsOptions, R.id.requests);
         requestsRecyclerView.setAdapter(requestsRecyclerAdapter);
 
-        Query query2 = rootRef.collection(getString(R.string.books_collection)).orderBy("title");
+        Query borrow = rootRef.collection(getString(R.string.books_collection)).whereArrayContains(
+                getString(R.string.requesters), UserCredentialAPI.getInstance().getUsername());
 
-        FirestoreRecyclerOptions<Book> options2 = new FirestoreRecyclerOptions.Builder<Book>()
-                .setQuery(query2, Book.class)
+        FirestoreRecyclerOptions<Book> borrowOptions = new FirestoreRecyclerOptions.Builder<Book>()
+                .setQuery(borrow, Book.class)
                 .build();
 
         borrowRecyclerView = (RecyclerView) view.findViewById(R.id.borrow_recycler_view);
@@ -101,9 +110,15 @@ public class RequestsFragment extends Fragment implements View.OnClickListener
         borrowRecyclerLayoutManager = new LinearLayoutManager(this.getContext());
         borrowRecyclerView.setLayoutManager(borrowRecyclerLayoutManager);
 
-        borrowRecyclerAdapter = new BookListAdapter(this.getContext(), options2, R.id.borrow);
+        borrowRecyclerAdapter = new BookListAdapter(this.getContext(), borrowOptions, R.id.borrow);
         borrowRecyclerView.setAdapter(borrowRecyclerAdapter);
+
         borrowRecyclerView.setVisibility(View.INVISIBLE);
+
+        Bundle arg = this.getArguments();
+        if(arg != null && arg.getBoolean(getString(R.string.borrow))) {
+            onClick(view);
+        }
     }
 
     // For listening to firebase for updates to the books list

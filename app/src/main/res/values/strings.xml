@@ -6,6 +6,8 @@
     <string name="requested">Requested</string>
     <string name="accepted">Accepted</string>
     <string name="borrowed">Borrowed</string>
+    <string name="bPending">bPending</string>
+    <string name="rPending">rPending</string>
     <string name="email">Email</string>
     <string name="phone_number">Phone Number</string>
     <string name="edit_contact">Edit Contact Info</string>
@@ -40,7 +42,9 @@
     <string name="books_collection">Books</string>
     <string name="users_collection">Users</string>
     <!-- Firestore keywords -->
+    <string name="owner">owner</string>
     <string name="status">status</string>
+    <string name="requesters">requesters</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

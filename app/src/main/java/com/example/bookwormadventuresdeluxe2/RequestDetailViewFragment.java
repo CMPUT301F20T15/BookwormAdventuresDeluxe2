@@ -9,6 +9,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
 
 /**
  * Holds the view for seeing details on a book in the Requested tab
@@ -20,6 +24,7 @@ public class RequestDetailViewFragment extends DetailView
     private Button btn1;
     private Button btn2;
     private TextView exchange;
+    private DocumentReference bookDocument;
 
     public RequestDetailViewFragment()
     {
@@ -47,44 +52,56 @@ public class RequestDetailViewFragment extends DetailView
         this.exchange = this.bookDetailView.findViewById(R.id.request_exchange_location);
 
         //TODO: do different stuff based on book status
+        switch (selectedBook.getStatus())
+        {
 
-        // case request
-//        this.btn1.setText(getString(R.string.accept));
-//        this.btn2.setText(getString(R.string.deny));
-//
-//        this.btn1.setOnClickListener(this::btnAccept);
-//        this.btn2.setOnClickListener(this::btnDeny);
-//
-//        this.btn1.setVisibility(View.VISIBLE);
-//        this.btn2.setVisibility(View.VISIBLE);
+            case Requested:
+                this.btn1.setText(getString(R.string.accept));
+                this.btn2.setText(getString(R.string.deny));
 
-        // case accept
-//        this.btn1.setText(getString(R.string.set_location_label));
-//        this.btn2.setText(getString(R.string.lend_book));
-//
-//        this.btn1.setOnClickListener(this::btnSetLocation);
-//        this.btn2.setOnClickListener(this::btnLendBook);
-//
-//        //TODO: get pickup location from book
+                this.btn1.setOnClickListener(this::btnAccept);
+                this.btn2.setOnClickListener(this::btnDeny);
+
+                this.btn1.setVisibility(View.VISIBLE);
+                this.btn2.setVisibility(View.VISIBLE);
+                break;
+
+            case Accepted:
+                this.btn1.setText(getString(R.string.set_location_label));
+                this.btn2.setText(getString(R.string.lend_book));
+
+                this.btn1.setOnClickListener(this::btnSetLocation);
+                this.btn2.setOnClickListener(this::btnLendBook);
+
+                //TODO: get pickup location from book
 //        this.bookDetailView.findViewById(R.id.request_exchange).setVisibility(View.VISIBLE);
-//
-//        this.btn1.setVisibility(View.VISIBLE);
-//        this.btn2.setVisibility(View.VISIBLE);
 
-        // case bPending
-//        this.btn1.setText(getString(R.string.wait_borrower));
-//
-//        this.btn1.setVisibility(View.VISIBLE);
+                this.btn1.setVisibility(View.VISIBLE);
+                this.btn2.setVisibility(View.VISIBLE);
+                break;
 
-        // case rPending
-//        this.btn1.setText(getString(R.string.accept_return));
-//        this.btn2.setText(getString(R.string.view_location));
-//
-//        this.btn1.setOnClickListener(this::btnAcceptReturn);
-//        this.btn2.setOnClickListener(this::btnViewLocation);
-//
-//        this.btn1.setVisibility(View.VISIBLE);
-//        this.btn2.setVisibility(View.VISIBLE);
+            case bPending:
+                this.btn1.setText(getString(R.string.wait_borrower));
+
+                this.btn1.setVisibility(View.VISIBLE);
+                break;
+
+            case rPending:
+                this.btn1.setText(getString(R.string.accept_return));
+                this.btn2.setText(getString(R.string.view_location));
+
+                this.btn1.setOnClickListener(this::btnAcceptReturn);
+                this.btn2.setOnClickListener(this::btnViewLocation);
+
+                this.btn1.setVisibility(View.VISIBLE);
+                this.btn2.setVisibility(View.VISIBLE);
+                break;
+        }
+
+        this.bookDocument = FirebaseFirestore
+                .getInstance()
+                .collection(getString(R.string.books_collection))
+                .document(this.selectedBookId);
 
         return bookDetailView;
     }
@@ -99,16 +116,16 @@ public class RequestDetailViewFragment extends DetailView
     {
         //TODO: actually do the stuff
         // Launch Scan ISBN
-        // update book status
-        // launch RequestsFragment
+        this.bookDocument.update(getString(R.string.status), getString(R.string.available));
+        this.bookDocument.update(getString(R.string.requesters), new ArrayList<String>());
+        onBackClick(view);
     }
 
     private void btnLendBook(View view)
     {
-        //TODO: actually do the stuff
-        // Launch Scan ISBN
-        // update book status
-        // launch RequestsFragment
+        //TODO: launch scan
+        this.bookDocument.update(getString(R.string.status), getString(R.string.bPending));
+        onBackClick(view);
     }
 
     private void btnSetLocation(View view)
@@ -119,17 +136,28 @@ public class RequestDetailViewFragment extends DetailView
 
     private void btnDeny(View view)
     {
-        //TODO: actually do the stuff
-        // get borrower id
-        // remove borrower from book request list
-        // launch RequestsFragment
+        //TODO: get the requester
+        String requester = "iborrow";
+        ArrayList<String> requesters = this.selectedBook.getRequesters();
+        requesters.remove(requester);
+
+        this.bookDocument.update(getString(R.string.requesters), requesters);
+        if (requesters.size() == 0)
+        {
+            this.bookDocument.update(getString(R.string.status), getString(R.string.available));
+        }
+        onBackClick(view);
     }
 
     private void btnAccept(View view)
     {
-        //TODO: actually do the stuff
-        // change book status to accepted (clear book request list)
-        // launch new RequestDetailViewFragment with updated book
+        //TODO: get the requester, notify requester
+        ArrayList<String> borrower = new ArrayList<String>();
+        borrower.add("iborrow");
+
+        this.bookDocument.update(getString(R.string.requesters), borrower);
+        this.bookDocument.update(getString(R.string.status), getString(R.string.accepted));
+        onBackClick(view);
     }
 
     /**

@@ -71,7 +71,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         NotificationListViewHolder.author.setText(notifications.get(position).getBook().getAuthor());
         NotificationListViewHolder.isbn.setText(notifications.get(position).getBook().getIsbn());
 
-        notifications.get(position).getBook().setStatusCircleColor(NotificationListViewHolder.statusCircle, UserCredentialAPI.getInstance().getUserId());
+        notifications.get(position).getBook().setStatusCircleColor(NotificationListViewHolder.statusCircle, UserCredentialAPI.getInstance().getUsername());
     }
 
     @Override

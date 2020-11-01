@@ -2,8 +2,6 @@ package com.example.bookwormadventuresdeluxe2;
 
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * Holds the view for seeing details on a book in the borrowed tab
@@ -22,6 +22,7 @@ public class BorrowDetailViewFragment extends DetailView
     private Button btn1;
     private Button btn2;
     private TextView exchange;
+    private DocumentReference bookDocument;
 
     public BorrowDetailViewFragment()
     {
@@ -49,44 +50,55 @@ public class BorrowDetailViewFragment extends DetailView
         this.exchange = this.bookDetailView.findViewById(R.id.borrow_exchange_location);
 
         //TODO: do different stuff based on book status
+        switch(selectedBook.getStatus())
+        {
+            case Requested:
+                break;
 
-        // case request
-        // only able to view book details
+            case Accepted:
+        this.btn1.setText(getString(R.string.view_location));
 
-        // case accept
-//        this.btn1.setText(getString(R.string.view_location));
-//
-//        this.btn1.setOnClickListener(this::btnViewLocation);
-//
-//        this.btn1.setVisibility(View.VISIBLE);
+        this.btn1.setOnClickListener(this::btnViewLocation);
 
-        // case bPending
-//        this.btn1.setText(getString(R.string.view_location));
-//        this.btn2.setText(getString(R.string.scan));
-//
-//        this.btn1.setOnClickListener(this::btnViewLocation);
-//        this.btn2.setOnClickListener(this::btnScan);
-//
-//        this.btn1.setVisibility(View.VISIBLE);
-//        this.btn2.setVisibility(View.VISIBLE);
+        this.btn1.setVisibility(View.VISIBLE);
+        break;
 
-        // case Borrow
-//        this.btn1.setText(getString(R.string.set_location));
-//        this.btn2.setText(getString(R.string.return_book));
-//
-//        //TODO: get pickup location from book
+            case bPending:
+        this.btn1.setText(getString(R.string.view_location));
+        this.btn2.setText(getString(R.string.scan));
+
+        this.btn1.setOnClickListener(this::btnViewLocation);
+        this.btn2.setOnClickListener(this::btnScan);
+
+        this.btn1.setVisibility(View.VISIBLE);
+        this.btn2.setVisibility(View.VISIBLE);
+        break;
+
+            case Borrowed:
+        this.btn1.setText(getString(R.string.set_location));
+        this.btn2.setText(getString(R.string.return_book));
+
+        //TODO: get pickup location from book
 //        this.bookDetailView.findViewById(R.id.borrow_exchange).setVisibility(View.VISIBLE);
-//
-//        this.btn1.setOnClickListener(this::btnSetLocation);
-//        this.btn2.setOnClickListener(this::btnReturnBook);
-//
-//        this.btn1.setVisibility(View.VISIBLE);
-//        this.btn2.setVisibility(View.VISIBLE);
 
-        // case rPending
-//        this.btn1.setText(getString(R.string.wait_owner));
-//
-//        this.btn1.setVisibility(View.VISIBLE);
+        this.btn1.setOnClickListener(this::btnSetLocation);
+        this.btn2.setOnClickListener(this::btnReturnBook);
+
+        this.btn1.setVisibility(View.VISIBLE);
+        this.btn2.setVisibility(View.VISIBLE);
+        break;
+
+            case rPending:
+        this.btn1.setText(getString(R.string.wait_owner));
+
+        this.btn1.setVisibility(View.VISIBLE);
+        }
+
+        this.bookDocument = FirebaseFirestore
+                .getInstance()
+                .collection(getString(R.string.books_collection))
+                .document(this.selectedBookId);
+
         return bookDetailView;
     }
 
@@ -100,16 +112,17 @@ public class BorrowDetailViewFragment extends DetailView
     {
         //TODO: actually do the stuff
         // Launch Scan ISBN
-        // update book status
-        // launch RequestFragment
+        this.bookDocument.update(getString(R.string.status), getString(R.string.rPending));
+        // notify owner
+        onBackClick(view);
     }
 
     private void btnScan(View view)
     {
         //TODO: actually do the stuff
         // Launch Scan ISBN
-        // update book status
-        // launch RequestsFragment
+        this.bookDocument.update(getString(R.string.status), getString(R.string.borrowed));
+        onBackClick(view);
     }
 
     private void btnViewLocation(View view)
@@ -145,6 +158,7 @@ public class BorrowDetailViewFragment extends DetailView
         RequestsFragment fragment = new RequestsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
+        args.putBoolean(getString(R.string.borrow), true);
         getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
     }
 }

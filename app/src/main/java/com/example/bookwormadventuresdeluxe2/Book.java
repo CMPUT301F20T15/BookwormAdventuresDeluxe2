@@ -9,7 +9,9 @@ import com.example.bookwormadventuresdeluxe2.Utilities.Status;
 import com.google.firebase.firestore.auth.User;
 
 import java.io.Serializable;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Book holds all of the relevant information pertaining to a book in the library. It has
@@ -27,7 +29,6 @@ public class Book implements Serializable
     private Status status;
     private String pickUpAddress;
     private ArrayList<String> requesters;
-    private String borrower;
 
     // BookListAdapter which is now a FirestoreRecyclerAdapter requires empty constructor
     public Book()
@@ -45,8 +46,6 @@ public class Book implements Serializable
         this.description = description;
         this.status = status;
         this.requesters = new ArrayList<String>();
-        this.owner = "";
-        this.borrower = "";
     }
 
     public String getOwner()
@@ -139,16 +138,6 @@ public class Book implements Serializable
         this.requesters.remove(requester);
     }
 
-    public String getBorrower()
-    {
-        return borrower;
-    }
-
-    public void setBorrower(String borrower)
-    {
-        this.borrower = borrower;
-    }
-
     /**
      * Sets the color of an image view based on the given status
      *
@@ -170,10 +159,6 @@ public class Book implements Serializable
                 break;
             case Borrowed:
                 statusCircle.getDrawable().setColorFilter(ResourcesCompat.getColor(GlobalApplication.getAppContext().getResources(), R.color.borrowed, null), PorterDuff.Mode.SRC_ATOP);
-                break;
-            default:
-                /* We would not expect any other id */
-                throw new IllegalArgumentException();
         }
     }
 
@@ -220,7 +205,7 @@ public class Book implements Serializable
                 }
             default:
                 /* We would not expect any other id */
-                throw new IllegalArgumentException();
+                throw new InvalidParameterException("Unknown status passed to Book.getAugmentStatus()");
         }
     }
 

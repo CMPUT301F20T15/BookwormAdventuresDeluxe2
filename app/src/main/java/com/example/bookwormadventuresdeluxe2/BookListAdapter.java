@@ -91,7 +91,7 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
         holder.author.setText(book.getAuthor());
         holder.isbn.setText(book.getIsbn());
         DetailView detailView;
-        String user = UserCredentialAPI.getInstance().getUserId();
+        String user = UserCredentialAPI.getInstance().getUsername();
         book.setStatusCircleColor(holder.statusCircle, user);
 
         switch (this.caller)

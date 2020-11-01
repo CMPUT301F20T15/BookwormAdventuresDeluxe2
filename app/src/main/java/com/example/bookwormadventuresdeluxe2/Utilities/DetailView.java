@@ -68,7 +68,7 @@ public abstract class DetailView extends Fragment
         isbn.setText(book.getIsbn());
 
         ImageView statusCircle = bookDetailView.findViewById(R.id.book_details_status_circle);
-        book.setStatusCircleColor(statusCircle, UserCredentialAPI.getInstance().getUserId());
+        book.setStatusCircleColor(statusCircle, UserCredentialAPI.getInstance().getUsername());
     }
 
     /**
