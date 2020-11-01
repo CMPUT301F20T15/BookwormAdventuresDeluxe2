@@ -199,13 +199,6 @@ public class CreateAccountActivityTest
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
         Assert.assertNotNull(phoneNumberText.getError());
-
-        solo.enterText(phoneNumberText, r.getString(R.string.space));
-
-        solo.clickOnButton(r.getString(R.string.create_account));
-
-        Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
-        Assert.assertNotNull(phoneNumberText.getError());
     }
 
     /**
