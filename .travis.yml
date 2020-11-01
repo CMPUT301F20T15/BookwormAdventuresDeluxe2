@@ -5,6 +5,11 @@ os: linux
 cache: false # Turn off caching to prevent any caching problems
 sudo: false # Use Travis Container-Based Infrastructure (faster builds)
 
+# Specify the branches we want to run TravisCI on (we will also run it on PRs)
+branches:
+  only:
+    - master
+
 env:
   global:
     - ANDROID_API_LEVEL=30
