@@ -154,6 +154,6 @@ public class LoginActivityTest
         solo.finishOpenedActivities();
 
         // Try to prevent us from getting rate-limited
-        solo.sleep(5000);
+        solo.sleep(30000);
     }
 }
