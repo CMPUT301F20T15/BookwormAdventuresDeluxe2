@@ -1,5 +1,6 @@
 package com.example.bookwormadventuresdeluxe2;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -8,10 +9,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
+
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
+import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
 /**
@@ -37,6 +42,7 @@ public class RequestDetailViewFragment extends DetailView
         return fragment;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -51,7 +57,6 @@ public class RequestDetailViewFragment extends DetailView
         this.btn2 = this.bookDetailView.findViewById(R.id.requestDetail_btn2);
         this.exchange = this.bookDetailView.findViewById(R.id.request_exchange_location);
 
-        //TODO: do different stuff based on book status
         switch (selectedBook.getStatus())
         {
 
@@ -82,6 +87,8 @@ public class RequestDetailViewFragment extends DetailView
 
             case bPending:
                 this.btn1.setText(getString(R.string.wait_borrower));
+                this.btn1.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
+                this.btn1.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
 
                 this.btn1.setVisibility(View.VISIBLE);
                 break;
@@ -114,8 +121,7 @@ public class RequestDetailViewFragment extends DetailView
 
     private void btnAcceptReturn(View view)
     {
-        //TODO: actually do the stuff
-        // Launch Scan ISBN
+        //TODO: Launch Scan ISBN
         this.bookDocument.update(getString(R.string.status), getString(R.string.available));
         this.bookDocument.update(getString(R.string.requesters), new ArrayList<String>());
         onBackClick(view);
@@ -171,7 +177,14 @@ public class RequestDetailViewFragment extends DetailView
         super.updateView(book);
 
         TextView status = bookDetailView.findViewById(R.id.book_details_status);
-        status.setText(book.getStatus().toString() + " " + getString(R.string.detail_join));
+        switch(book.getStatus()) {
+            case Requested:
+            case Accepted: status.setText(getString(R.string.request_detail_requested)); break;
+            case bPending:
+            case Borrowed: status.setText(getString(R.string.request_detail_borrowed)); break;
+            case rPending: status.setText(getString(R.string.request_detail_return)); break;
+            default: throw new InvalidParameterException("Invalid book status in RequestDetailView updateView");
+        }
 
         TextView user = bookDetailView.findViewById(R.id.book_request_user);
         user.setText("TODO: get borrower");

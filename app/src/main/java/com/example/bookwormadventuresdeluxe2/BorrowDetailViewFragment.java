@@ -1,5 +1,6 @@
 package com.example.bookwormadventuresdeluxe2;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -7,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
 import com.google.firebase.firestore.DocumentReference;
@@ -35,6 +38,7 @@ public class BorrowDetailViewFragment extends DetailView
         return fragment;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -49,7 +53,6 @@ public class BorrowDetailViewFragment extends DetailView
         this.btn2 = this.bookDetailView.findViewById(R.id.borrowDetail_btn2);
         this.exchange = this.bookDetailView.findViewById(R.id.borrow_exchange_location);
 
-        //TODO: do different stuff based on book status
         switch(selectedBook.getStatus())
         {
             case Requested:
@@ -90,6 +93,8 @@ public class BorrowDetailViewFragment extends DetailView
 
             case rPending:
         this.btn1.setText(getString(R.string.wait_owner));
+        this.btn1.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
+        this.btn1.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
 
         this.btn1.setVisibility(View.VISIBLE);
         }
