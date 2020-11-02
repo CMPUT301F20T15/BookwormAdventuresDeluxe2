@@ -39,4 +39,4 @@ jobs:
         profile: pixel_3a
         emulator-build: 6855416
         api-level: 29
-        script: ./gradlew connectedCheck --stacktrace --scan
+        script: ./gradlew connectedCheck --stacktrace
