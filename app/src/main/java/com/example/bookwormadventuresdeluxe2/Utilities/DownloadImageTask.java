@@ -54,6 +54,8 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap>
         if (result != null)
         {
             bmImage.setImageBitmap(result);
+            bmImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
         }
     }
 }

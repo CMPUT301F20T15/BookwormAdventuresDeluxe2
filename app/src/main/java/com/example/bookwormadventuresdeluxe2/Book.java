@@ -7,6 +7,7 @@ package com.example.bookwormadventuresdeluxe2;
  */
 
 import android.graphics.PorterDuff;
+import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -35,17 +36,6 @@ public class Book implements Serializable
     public Book()
     {
 
-    }
-
-    public Book(String owner, String title, String author, String description, String isbn, Status status)
-    {
-        this.owner = owner;
-        this.title = title;
-        this.author = author;
-        this.description = description;
-        this.isbn = isbn;
-        this.description = description;
-        this.status = status;
     }
 
     public Book(String owner, String title, String author, String description, String isbn, Status status, String imageUrl)
@@ -211,6 +201,12 @@ public class Book implements Serializable
      */
     public void setPhoto(Book book, ImageView imageView)
     {
+        if (book.getImageUrl().compareTo("") == 0)
+        {
+            imageView.setScaleType(ImageView.ScaleType.CENTER);
+            imageView.setImageDrawable(ResourcesCompat.getDrawable(GlobalApplication.getAppContext().getResources(), R.drawable.ic_camera, null));
+            return;
+        }
         new DownloadImageTask(imageView).execute(book.getImageUrl());
     }
 }

@@ -52,7 +52,7 @@ public class AddOrEditBooksActivity extends AppCompatActivity
     boolean editingBook = false;
     Button deleteButton;
     Book bookToEdit;
-    String bookPhotoDowloadUrl;
+    String bookPhotoDowloadUrl = "";
 
     FirebaseAuth firebaseAuth;
 
@@ -154,17 +154,8 @@ public class AddOrEditBooksActivity extends AppCompatActivity
                 Intent intent = new Intent();
                 setResult(Activity.RESULT_OK, intent);
                 // status when adding book is available
-                /* If the user uploaded a photo, make sure it is sent to the new book */
-                if (bookPhotoDowloadUrl != null)
-                {
-                    intent.putExtra("NewBook", new Book(UserCredentialAPI.getInstance().getUsername(),
-                            title, author, description, isbn, Status.Available, bookPhotoDowloadUrl));
-                }
-                else
-                {
-                    intent.putExtra("NewBook", new Book(UserCredentialAPI.getInstance().getUsername(),
-                            title, author, description, isbn, Status.Available));
-                }
+                intent.putExtra("NewBook", new Book(UserCredentialAPI.getInstance().getUsername(),
+                        title, author, description, isbn, Status.Available, bookPhotoDowloadUrl));
 
             }
             finish();
