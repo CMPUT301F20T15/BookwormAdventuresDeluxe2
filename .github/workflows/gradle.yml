@@ -35,8 +35,9 @@ jobs:
     - name: Run lint with Gradle
       run: ./gradlew lint
 
-    - name: Run interface tests with Gradle
-      run: ./gradlew androidTest
-
-    - name: Run Unit tests with Gradle
+    - name: Execute Unit Tests
       run: ./gradlew test
+
+    - name: Android Test Report
+      uses: asadmansr/android-test-report-action@v1.2.0
+      if: ${{ always() }}
