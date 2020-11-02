@@ -35,5 +35,8 @@ jobs:
     - name: Run lint with Gradle
       run: ./gradlew lint
 
-    - name: Test with Gradle
+    - name: Run interface tests with Gradle
+      run: ./gradlew androidTest
+
+    - name: Run Unit tests with Gradle
       run: ./gradlew test
