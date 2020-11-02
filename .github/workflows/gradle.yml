@@ -18,9 +18,10 @@ jobs:
       with:
         java-version: 1.8
 
-    - name: Grant permission to for the decryption script
+    - name: Grant permission to the decryption script
       run: chmod +x ./encrypted_secret/decrypt.sh
 
+    - uses: actions/checkout@v2
     - name: Decrypt the secrets file
       run: ./encrypted_secret/decrypt.sh
       env:
