@@ -1,12 +1,9 @@
 package com.example.bookwormadventuresdeluxe2;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,14 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A {@link Fragment} subclass for navbar menu item 3
@@ -59,7 +51,9 @@ public class SearchFragment extends Fragment
         UserCredentialAPI userCredentialApi = UserCredentialAPI.getInstance();
 
         //TODO: update query to target not equal wanted because crashes at rPending and bPending
-        Query booksOfCurrentUser = rootRef.collection(getString(R.string.books_collection)).whereNotEqualTo("owner", UserCredentialAPI.getInstance().getUsername()).whereEqualTo("status", "Available");
+        Query booksOfCurrentUser = rootRef.collection(getString(R.string.books_collection))
+                                            .whereNotEqualTo("owner", UserCredentialAPI.getInstance().getUsername())
+                                            .whereEqualTo("status", "Available");
 
         FirestoreRecyclerOptions<Book> options = new FirestoreRecyclerOptions.Builder<Book>()
                 .setQuery(booksOfCurrentUser, Book.class)

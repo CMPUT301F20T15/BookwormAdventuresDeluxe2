@@ -115,6 +115,7 @@ public class FirebaseUserGetSet
      *
      * @param inputEmail New email to be written
      * @param inputPhone New phone number to be written
+     * @param documentID Document name to be targetted
      */
     public static void changeAuthInfo(EditText inputEmail, EditText inputPhone, String documentID)
     {
