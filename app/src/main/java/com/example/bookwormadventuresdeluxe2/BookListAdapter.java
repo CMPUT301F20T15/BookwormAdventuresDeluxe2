@@ -1,6 +1,8 @@
 package com.example.bookwormadventuresdeluxe2;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,6 +87,7 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
         holder.author.setText(book.getAuthor());
         holder.isbn.setText(book.getIsbn());
         DetailView detailView;
+        Bundle source = new Bundle();
 
         switch (this.caller)
         {
@@ -98,7 +101,15 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
                 break;
             case R.id.borrow:
                 book.setStatusCircleColor(book.getStatus(), holder.statusCircle);
+                source.putString(context.getString(R.string.book_click_source_fragment), context.getString(R.string.borrow));
                 detailView = new BorrowDetailViewFragment();
+                detailView.setArguments(source);
+                break;
+            case R.id.search_books:
+                book.setStatusCircleColor(book.getStatus(), holder.statusCircle);
+                source.putString(context.getString(R.string.book_click_source_fragment), context.getString(R.string.search_title));
+                detailView = new BorrowDetailViewFragment();
+                detailView.setArguments(source);
                 break;
             default:
                 Log.d("Error", "Error in BookListAdapter: caller not found");

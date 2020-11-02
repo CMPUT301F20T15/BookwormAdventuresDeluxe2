@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.EditTextValidator;
+import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -24,7 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
  *
  * A simple {@link Fragment} subclass.
  */
-public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.UserCallback
+public class ProfileFragment extends Fragment implements FirebaseUserGetSet.UserCallback
 {
     private static final String TAG = "MyProfileFragment";
 
@@ -40,12 +41,12 @@ public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.Us
     View view;
 
     FirebaseAuth firebaseAuth;
-    UserProfileObject myProfile;
+    UserProfileObject profile;
 
     /**
      * Required empty public constructor
      */
-    public MyProfileFragment()
+    public ProfileFragment()
     {
 
     }
@@ -59,21 +60,36 @@ public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.Us
     {
         /* Getting my profile */
         Bundle bundle = getArguments();
-        myProfile = (UserProfileObject) bundle.getSerializable("myProfile");
+        profile = (UserProfileObject) bundle.getSerializable(getString(R.string.profile_object));
 
         /* Inflate the layout for this fragment */
         view = inflater.inflate(R.layout.fragment_my_profile, container, false);
 
         /* Set title */
         appHeaderText = view.findViewById(R.id.app_header_title);
-        appHeaderText.setText(R.string.my_profile_title);
 
         /* Buttons */
-        signOutButton = view.findViewById(R.id.profile_logout);
-        signOutButton.setOnClickListener(this::signOut);
-
         edit = view.findViewById(R.id.profile_edit);
-        edit.setOnClickListener(this::editFragment);
+        signOutButton = view.findViewById(R.id.profile_logout);
+
+        /* My profile, initialize buttons */
+        if (profile.getUsername().equals(UserCredentialAPI.getInstance().getUsername()))
+        {
+            appHeaderText.setText(R.string.my_profile_title);
+            signOutButton.setOnClickListener(this::signOut);
+            edit.setOnClickListener(this::editFragment);
+        }
+
+        /* Not my profile, hide buttons*/
+        else
+        {
+//            this.view = inflater.inflate(R.layout.fragment_borrow_detail_view, null, false);
+//            // setup back button
+//            super.onCreateView(inflater, container, savedInstanceState);
+            appHeaderText.setText(R.string.other_user_profile_title);
+            edit.setVisibility(view.GONE);
+            signOutButton.setVisibility(view.GONE);
+        }
 
         /* Set display texts */
         viewUsername = view.findViewById(R.id.view_username);
@@ -81,9 +97,9 @@ public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.Us
         viewPhoneNumber = view.findViewById(R.id.view_phone);
 
         /* Setting TextView */
-        viewUsername.setText(myProfile.getUsername());
-        viewEmail.setText(myProfile.getEmail());
-        viewPhoneNumber.setText(myProfile.getPhoneNumber());
+        viewUsername.setText(profile.getUsername());
+        viewEmail.setText(profile.getEmail());
+        viewPhoneNumber.setText(profile.getPhoneNumber());
 
         /* Theme for popup dialog fragment */
         getContext().getTheme().applyStyle(R.style.BlackTextTheme, true);
@@ -119,8 +135,8 @@ public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.Us
         inputPhone.setInputType(InputType.TYPE_CLASS_PHONE);
 
         /* Setting text to user's details */
-        inputEmail.setText(myProfile.getEmail());
-        inputPhone.setText(myProfile.getPhoneNumber());
+        inputEmail.setText(profile.getEmail());
+        inputPhone.setText(profile.getPhoneNumber());
 
         /* Create popup dialog for editing profile */
         final AlertDialog builder = new AlertDialog.Builder(this.getContext()).create();
@@ -137,8 +153,8 @@ public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.Us
                 boolean hasValidationError = false;
 
                 /* Checks if no changes were made */
-                if (myProfile.getEmail().equals(inputEmail.getText().toString())
-                        && myProfile.getPhoneNumber().equals(inputPhone.getText().toString()))
+                if (profile.getEmail().equals(inputEmail.getText().toString())
+                        && profile.getPhoneNumber().equals(inputPhone.getText().toString()))
                 {
                     builder.dismiss();
                     return;
@@ -167,14 +183,14 @@ public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.Us
                 /* Attempts to edit FirebaseAuth account and Firebase info*/
                 FirebaseUserGetSet.changeAuthInfo(inputEmail,
                         inputPhone,
-                        myProfile.getDocumentId());
+                        profile.getDocumentId());
 
                 /* After successful edit */
                 if (inputEmail.getError() == null)
                 {
                     /* Updating user object in Fragment*/
-                    myProfile.setEmail(inputEmail.getText().toString().trim());
-                    myProfile.setPhoneNumber(inputPhone.getText().toString().trim());
+                    profile.setEmail(inputEmail.getText().toString().trim());
+                    profile.setPhoneNumber(inputPhone.getText().toString().trim());
 
                     /* Updating TextView in fragment */
                     viewEmail.setText(inputEmail.getText().toString().trim());
@@ -219,5 +235,10 @@ public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.Us
             /* Take User back to Login Page */
             startActivity(intent);
         }
+    }
+
+    public void onBackClick(View v)
+    {
+
     }
 }

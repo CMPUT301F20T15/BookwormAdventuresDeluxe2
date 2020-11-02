@@ -22,6 +22,8 @@
     <string name="set_location">Set Pickup Location</string>
     <string name="scan_isbn">Scan ISBN</string>
     <string name="my_profile_title">My Profile</string>
+    <string name="other_user_profile_title">User Profile</string>
+    <string name="profile_object">profile</string>
     <string name="requests_title">Requests</string>
     <string name="search_title">Search</string>
     <string name="sign_out">Sign Out</string>
@@ -36,6 +38,7 @@
     <string name="describe_the_book">Describe the Book</string>
     <string name="detail_join">by</string>
     <string name="exit_confirmation_message">Are you sure you want to exit the app?</string>
+    <string name="book_click_source_fragment">source</string>
     <!-- Firestore collections -->
     <string name="books_collection">Books</string>
     <string name="users_collection">Users</string>
