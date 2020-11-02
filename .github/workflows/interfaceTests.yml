@@ -1,4 +1,4 @@
-name: Java CI with Gradle
+name: UI Tests
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: macos-latest
+    runs-on: macOS-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -32,15 +32,8 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
 
-    - name: Run lint with Gradle
-      run: ./gradlew lint
-
-    - name: Execute Unit Tests
-      run: ./gradlew test
-
-    ##- name: Print Unit Test Report
-    ##  uses: asadmansr/android-test-report-action@v1.2.0
-    ##  if: ${{ always() }}
-
-    - name: Run Interface Tests
-      uses: vgaidarji/android-github-actions-emulator@v1.0.1
+    - name: Run UI Tests
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 30
+        script: ./gradlew connectedCheck
