@@ -28,6 +28,11 @@ import java.io.FileFilter;
 import java.util.Arrays;
 
 /**
+ * Holds a list of books that the current user owns that require require action
+ * to proceed with the borrow/return process, and another list of books that the
+ * user has requested or are currently in the process of borrowing. From here the
+ * user may click on the books to view status specific tasks
+ *
  * A {@link Fragment} subclass for navbar menu item 2.
  */
 public class RequestsFragment extends Fragment implements View.OnClickListener

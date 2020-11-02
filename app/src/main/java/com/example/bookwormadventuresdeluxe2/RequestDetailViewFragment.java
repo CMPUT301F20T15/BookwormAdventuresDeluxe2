@@ -21,9 +21,8 @@ import java.util.ArrayList;
 
 /**
  * Holds the view for seeing details on a book in the Requested tab
- * The user will be able to interact with request options on the book
+ * The user will be able to interact with status dependant request options on the book
  */
-//TODO: add status specific buttons, functions, and labels
 public class RequestDetailViewFragment extends DetailView
 {
     private Button btn1;
@@ -119,6 +118,12 @@ public class RequestDetailViewFragment extends DetailView
         // launch ViewLocation
     }
 
+    /**
+     * Updates the status of the book, resets
+     * books requesters list
+     *
+     * @param view The view that was clicked on
+     */
     private void btnAcceptReturn(View view)
     {
         //TODO: Launch Scan ISBN
@@ -127,6 +132,11 @@ public class RequestDetailViewFragment extends DetailView
         onBackClick(view);
     }
 
+    /**
+     * Updates the status of the book
+     *
+     * @param view The view that was clicked on
+     */
     private void btnLendBook(View view)
     {
         //TODO: launch scan
@@ -140,6 +150,12 @@ public class RequestDetailViewFragment extends DetailView
         // launch SetLocation
     }
 
+    /**
+     * Updates the status of the book, removes the
+     * requester from books requesters list
+     *
+     * @param view The view that was clicked on
+     */
     private void btnDeny(View view)
     {
         //TODO: get the requester
@@ -155,6 +171,12 @@ public class RequestDetailViewFragment extends DetailView
         onBackClick(view);
     }
 
+    /**
+     * Updates the status of the book, sends a notification
+     * to the borrower
+     *
+     * @param view The view that was clicked on
+     */
     private void btnAccept(View view)
     {
         //TODO: get the requester, notify requester

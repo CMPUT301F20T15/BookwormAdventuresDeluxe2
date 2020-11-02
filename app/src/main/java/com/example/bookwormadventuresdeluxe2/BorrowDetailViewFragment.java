@@ -19,7 +19,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * Holds the view for seeing details on a book in the borrowed tab
  * The user will be able to interact with borrow options on the book
  */
-//TODO: add status specific buttons, functions, and labels
 public class BorrowDetailViewFragment extends DetailView
 {
     private Button btn1;
@@ -53,50 +52,50 @@ public class BorrowDetailViewFragment extends DetailView
         this.btn2 = this.bookDetailView.findViewById(R.id.borrowDetail_btn2);
         this.exchange = this.bookDetailView.findViewById(R.id.borrow_exchange_location);
 
-        switch(selectedBook.getStatus())
+        switch (selectedBook.getStatus())
         {
             case Requested:
                 break;
 
             case Accepted:
-        this.btn1.setText(getString(R.string.view_location));
+                this.btn1.setText(getString(R.string.view_location));
 
-        this.btn1.setOnClickListener(this::btnViewLocation);
+                this.btn1.setOnClickListener(this::btnViewLocation);
 
-        this.btn1.setVisibility(View.VISIBLE);
-        break;
+                this.btn1.setVisibility(View.VISIBLE);
+                break;
 
             case bPending:
-        this.btn1.setText(getString(R.string.view_location));
-        this.btn2.setText(getString(R.string.scan));
+                this.btn1.setText(getString(R.string.view_location));
+                this.btn2.setText(getString(R.string.scan));
 
-        this.btn1.setOnClickListener(this::btnViewLocation);
-        this.btn2.setOnClickListener(this::btnScan);
+                this.btn1.setOnClickListener(this::btnViewLocation);
+                this.btn2.setOnClickListener(this::btnScan);
 
-        this.btn1.setVisibility(View.VISIBLE);
-        this.btn2.setVisibility(View.VISIBLE);
-        break;
+                this.btn1.setVisibility(View.VISIBLE);
+                this.btn2.setVisibility(View.VISIBLE);
+                break;
 
             case Borrowed:
-        this.btn1.setText(getString(R.string.set_location));
-        this.btn2.setText(getString(R.string.return_book));
+                this.btn1.setText(getString(R.string.set_location));
+                this.btn2.setText(getString(R.string.return_book));
 
-        //TODO: get pickup location from book
+                //TODO: get pickup location from book
 //        this.bookDetailView.findViewById(R.id.borrow_exchange).setVisibility(View.VISIBLE);
 
-        this.btn1.setOnClickListener(this::btnSetLocation);
-        this.btn2.setOnClickListener(this::btnReturnBook);
+                this.btn1.setOnClickListener(this::btnSetLocation);
+                this.btn2.setOnClickListener(this::btnReturnBook);
 
-        this.btn1.setVisibility(View.VISIBLE);
-        this.btn2.setVisibility(View.VISIBLE);
-        break;
+                this.btn1.setVisibility(View.VISIBLE);
+                this.btn2.setVisibility(View.VISIBLE);
+                break;
 
             case rPending:
-        this.btn1.setText(getString(R.string.wait_owner));
-        this.btn1.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
-        this.btn1.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
+                this.btn1.setText(getString(R.string.wait_owner));
+                this.btn1.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
+                this.btn1.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
 
-        this.btn1.setVisibility(View.VISIBLE);
+                this.btn1.setVisibility(View.VISIBLE);
         }
 
         this.bookDocument = FirebaseFirestore
@@ -113,6 +112,11 @@ public class BorrowDetailViewFragment extends DetailView
         // launch SetLocation
     }
 
+    /**
+     * Updates the status of the book
+     *
+     * @param view The view that was clicked on
+     */
     private void btnReturnBook(View view)
     {
         //TODO: actually do the stuff
@@ -122,6 +126,11 @@ public class BorrowDetailViewFragment extends DetailView
         onBackClick(view);
     }
 
+    /**
+     * Updates the status of the book
+     *
+     * @param view The view that was clicked on
+     */
     private void btnScan(View view)
     {
         //TODO: actually do the stuff
