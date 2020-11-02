@@ -152,8 +152,5 @@ public class LoginActivityTest
     public void tearDown() throws Exception
     {
         solo.finishOpenedActivities();
-
-        // Try to prevent us from getting rate-limited
-        solo.sleep(30000);
     }
 }
