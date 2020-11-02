@@ -103,7 +103,7 @@ public class LoginActivityTest
     /**
      * Tests for incorrect password error
      */
-    /*@Test
+    @Test
     public void wrongPasswordTest()
     {
         solo.enterText(emailText, resources.getString(R.string.test_account1_email));
@@ -113,12 +113,12 @@ public class LoginActivityTest
         Assert.assertTrue(solo.waitForText(EditTextValidator.WRONGPASSWORD));
 
         Assert.assertNotNull(passwordText.getError());
-    }*/
+    }
 
     /**
      * Test for invalid or non-existing email input
      */
-    /*@Test
+    @Test
     public void invalidEmailTest()
     {
         solo.enterText(emailText, resources.getString(R.string.wrong_email));
@@ -128,7 +128,7 @@ public class LoginActivityTest
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMAILNOTFOUND));
 
         Assert.assertNotNull(emailText.getError());
-    }*/
+    }
 
     /**
      * Tests successfully logging into an account
