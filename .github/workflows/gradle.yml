@@ -38,6 +38,9 @@ jobs:
     - name: Execute Unit Tests
       run: ./gradlew test
 
-    - name: Android Test Report
+    - name: Print Unit Test Report
       uses: asadmansr/android-test-report-action@v1.2.0
       if: ${{ always() }}
+
+    - name: Run Interface Tests
+      uses: vgaidarji/android-github-actions-emulator@v1.0.1
