@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -23,6 +24,7 @@ import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.io.FileFilter;
 import java.util.Arrays;
 
 /**
@@ -37,9 +39,12 @@ public class RequestsFragment extends Fragment implements View.OnClickListener
     private RecyclerView borrowRecyclerView;
     private BookListAdapter borrowRecyclerAdapter;
     private RecyclerView.LayoutManager borrowRecyclerLayoutManager;
+    private FilterMenu borrowFilterMenu;
+    private FilterMenu requestFilterMenu;
 
     View view;
     Button toggle;
+    ImageButton filterButton;
     TextView current;
     MaterialTextView appHeaderText;
     boolean borrow;
@@ -64,7 +69,9 @@ public class RequestsFragment extends Fragment implements View.OnClickListener
         appHeaderText.setText(R.string.requests_title);
 
         /* Show filter button */
-        view.findViewById(R.id.app_header_filter_button).setVisibility(View.VISIBLE);
+        this.filterButton = this.view.findViewById(R.id.app_header_filter_button);
+        this.filterButton.setVisibility(View.VISIBLE);
+        this.filterButton.setOnClickListener(this::onFilterClick);
 
         GradientDrawable shape = new GradientDrawable();
         toggle.setBackground(shape);
@@ -115,8 +122,13 @@ public class RequestsFragment extends Fragment implements View.OnClickListener
 
         borrowRecyclerView.setVisibility(View.INVISIBLE);
 
+        /* Initialize the filterMenu. This will update the queries using the adapter */
+        this.requestFilterMenu = new FilterMenu(requestsRecyclerAdapter, requests, R.id.requests);
+        this.borrowFilterMenu = new FilterMenu(borrowRecyclerAdapter, borrow, R.id.borrow);
+
         Bundle arg = this.getArguments();
-        if(arg != null && arg.getBoolean(getString(R.string.borrow))) {
+        if (arg != null && arg.getBoolean(getString(R.string.borrow)))
+        {
             onClick(view);
         }
     }
@@ -146,6 +158,36 @@ public class RequestsFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    /**
+     * Launch the filter menu fragment when the filter button is clicked
+     *
+     * @param view
+     */
+    private void onFilterClick(View view)
+    {
+        FilterMenu filterMenu;
+        if (this.borrow)
+        {
+            filterMenu = this.borrowFilterMenu;
+        }
+        else
+        {
+            filterMenu = this.requestFilterMenu;
+        }
+
+        View fragmentRootView = filterMenu.getView();
+        if (fragmentRootView == null)
+        {
+            /* Fragment was hidden, show it */
+            getFragmentManager().beginTransaction().add(R.id.frame_container, filterMenu).commit();
+        }
+        else
+        {
+            /* Fragment is shown, hide it */
+            getFragmentManager().beginTransaction().remove(filterMenu).commit();
+        }
+    }
+
     // User wants to change tab, swap the lists and labels
     @Override
     public void onClick(View view)
@@ -153,6 +195,22 @@ public class RequestsFragment extends Fragment implements View.OnClickListener
         ConstraintLayout layout = this.view.findViewById(R.id.requests);
         ConstraintSet cons = new ConstraintSet();
         cons.clone(layout);
+
+        FilterMenu filterMenu;
+        if (this.borrow)
+        {
+            filterMenu = this.borrowFilterMenu;
+        }
+        else
+        {
+            filterMenu = this.requestFilterMenu;
+        }
+        View fragmentRootView = filterMenu.getView();
+        if (fragmentRootView != null)
+        {
+            /* Fragment is shown, hide it */
+            getFragmentManager().beginTransaction().remove(filterMenu).commit();
+        }
 
         if (borrow)
         { // currently in borrow
