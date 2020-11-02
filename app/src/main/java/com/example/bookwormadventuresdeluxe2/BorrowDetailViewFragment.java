@@ -98,6 +98,7 @@ public class BorrowDetailViewFragment extends DetailView
                                 .beginTransaction()
                                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                                 .replace(R.id.frame_container, profileFragment)
+                                .addToBackStack(null)
                                 .commit();
                     }
                 });

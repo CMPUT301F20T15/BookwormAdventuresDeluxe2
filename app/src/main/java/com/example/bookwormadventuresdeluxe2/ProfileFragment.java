@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -25,7 +26,7 @@ import com.google.firebase.auth.FirebaseAuth;
  *
  * A simple {@link Fragment} subclass.
  */
-public class ProfileFragment extends Fragment implements FirebaseUserGetSet.UserCallback
+public class ProfileFragment extends Fragment
 {
     private static final String TAG = "MyProfileFragment";
 
@@ -42,6 +43,8 @@ public class ProfileFragment extends Fragment implements FirebaseUserGetSet.User
 
     FirebaseAuth firebaseAuth;
     UserProfileObject profile;
+
+    ImageButton backButton;
 
     /**
      * Required empty public constructor
@@ -63,32 +66,22 @@ public class ProfileFragment extends Fragment implements FirebaseUserGetSet.User
         profile = (UserProfileObject) bundle.getSerializable(getString(R.string.profile_object));
 
         /* Inflate the layout for this fragment */
-        view = inflater.inflate(R.layout.fragment_my_profile, container, false);
+        view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         /* Set title */
         appHeaderText = view.findViewById(R.id.app_header_title);
 
-        /* Buttons */
         edit = view.findViewById(R.id.profile_edit);
         signOutButton = view.findViewById(R.id.profile_logout);
 
         /* My profile, initialize buttons */
         if (profile.getUsername().equals(UserCredentialAPI.getInstance().getUsername()))
         {
-            appHeaderText.setText(R.string.my_profile_title);
-            signOutButton.setOnClickListener(this::signOut);
-            edit.setOnClickListener(this::editFragment);
+            myProfile();
         }
-
-        /* Not my profile, hide buttons*/
         else
         {
-//            this.view = inflater.inflate(R.layout.fragment_borrow_detail_view, null, false);
-//            // setup back button
-//            super.onCreateView(inflater, container, savedInstanceState);
-            appHeaderText.setText(R.string.other_user_profile_title);
-            edit.setVisibility(view.GONE);
-            signOutButton.setVisibility(view.GONE);
+            otherProfile();
         }
 
         /* Set display texts */
@@ -111,12 +104,29 @@ public class ProfileFragment extends Fragment implements FirebaseUserGetSet.User
     }
 
     /**
-     * Callback for UserProfileObject
+     * Initializer for viewing and editing my profile
      */
-    @Override
-    public void onCallback(UserProfileObject userObject)
+    public void myProfile()
     {
+        /* Buttons and title*/
+        appHeaderText.setText(R.string.my_profile_title);
+        signOutButton.setOnClickListener(this::signOut);
+        edit.setOnClickListener(this::editFragment);
+    }
 
+    /**
+     * Initializer for viewing other person's profile
+     */
+    public void otherProfile()
+    {
+        /* Back button for viewing other profiles*/
+        backButton = view.findViewById(R.id.app_header_back_button);
+        backButton.setVisibility(View.VISIBLE);
+        backButton.setOnClickListener(this::onBackClick);
+
+        appHeaderText.setText(R.string.other_user_profile_title);
+        edit.setVisibility(view.GONE);
+        signOutButton.setVisibility(view.GONE);
     }
 
     /**
@@ -237,8 +247,13 @@ public class ProfileFragment extends Fragment implements FirebaseUserGetSet.User
         }
     }
 
+    /**
+     * Takes the user back to the the previous screen
+     *
+     * @param v The view that was clicked on
+     */
     public void onBackClick(View v)
     {
-
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 }
