@@ -37,6 +37,6 @@ jobs:
       with:
         arch: x86
         profile: pixel_3a
+        emulator-build: 6855416
         api-level: 29
-        disable-animations: false
         script: ./gradlew connectedCheck --stacktrace
