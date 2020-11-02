@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: macOS-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -38,4 +38,5 @@ jobs:
         arch: x86
         profile: pixel_3a
         api-level: 29
+        disable-animations: false
         script: ./gradlew connectedCheck --stacktrace
