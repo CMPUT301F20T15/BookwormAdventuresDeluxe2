@@ -17,11 +17,11 @@
             android:layout_height="185sp"
             android:layout_marginTop="32dp"
             android:background="@color/tempPhotoBackground"
-            android:scaleType="centerCrop"
+            android:scaleType="center"
+            android:src="@drawable/ic_camera"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_camera" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/take_photo"

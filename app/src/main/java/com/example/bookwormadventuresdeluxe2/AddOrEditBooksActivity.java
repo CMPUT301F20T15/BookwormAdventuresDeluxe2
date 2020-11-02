@@ -377,6 +377,7 @@ public class AddOrEditBooksActivity extends AppCompatActivity
                             {
                                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
                                 bookPicture.setImageBitmap(bitmap);
+                                bookPicture.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
                             } catch (IOException e)
                             {
