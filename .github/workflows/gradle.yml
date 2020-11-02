@@ -20,6 +20,8 @@ jobs:
 
     - name: Grant permission to for the decryption script
       run: chmod +x ./encrypted_secret/decrypt.sh
+      env:
+        ENCRYPTION_KEY_PASSWORD: ${{ secrets.ENCRYPTION_KEY_PASSWORD }}
 
     - name: Decrypt the secrets file
       run: ./encrypted_secret/decrypt.sh
