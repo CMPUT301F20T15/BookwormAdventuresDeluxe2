@@ -3,7 +3,6 @@ package com.example.bookwormadventuresdeluxe2;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
 import android.widget.EditText;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -11,8 +10,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.EditTextValidator;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.robotium.solo.Solo;
 
 import org.junit.After;
@@ -151,7 +148,7 @@ public class LoginActivityTest
         solo.enterText(passwordText, r.getString(R.string.test_account1_password));
         solo.clickOnButton(r.getString(R.string.login));
 
-        solo.waitForText(r.getString(R.string.navbar_text_label_4));
+        solo.waitForActivity(MyBooksActivity.class);
 
         solo.assertCurrentActivity(r.getString(R.string.wrong_activity), MyBooksActivity.class);
 
@@ -172,10 +169,15 @@ public class LoginActivityTest
 
     /**
      * Closes the activity after each test
+     *
      * @throws Exception
      */
     @After
-    public void tearDown() throws Exception{
+    public void tearDown() throws Exception
+    {
         solo.finishOpenedActivities();
+
+        // Try to prevent us from getting rate-limited
+        solo.sleep(5000);
     }
 }
