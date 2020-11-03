@@ -152,12 +152,22 @@ public class CreateAccountActivityTest
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
         Assert.assertNotNull(usernameText.getError());
 
+        Assert.assertNull(emailText.getError());
+        Assert.assertNull(phoneNumberText.getError());
+        Assert.assertNull(password1Text.getError());
+        Assert.assertNull(password2Text.getError());
+
         solo.enterText(usernameText, resources.getString(R.string.space));
 
         solo.clickOnButton(resources.getString(R.string.create_account));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
         Assert.assertNotNull(usernameText.getError());
+
+        Assert.assertNull(emailText.getError());
+        Assert.assertNull(phoneNumberText.getError());
+        Assert.assertNull(password1Text.getError());
+        Assert.assertNull(password2Text.getError());
     }
 
     /**
@@ -176,12 +186,22 @@ public class CreateAccountActivityTest
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
         Assert.assertNotNull(emailText.getError());
 
+        Assert.assertNull(usernameText.getError());
+        Assert.assertNull(phoneNumberText.getError());
+        Assert.assertNull(password1Text.getError());
+        Assert.assertNull(password2Text.getError());
+
         solo.enterText(emailText, resources.getString(R.string.space));
 
         solo.clickOnButton(resources.getString(R.string.create_account));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
         Assert.assertNotNull(emailText.getError());
+
+        Assert.assertNull(usernameText.getError());
+        Assert.assertNull(phoneNumberText.getError());
+        Assert.assertNull(password1Text.getError());
+        Assert.assertNull(password2Text.getError());
     }
 
     /**
@@ -199,6 +219,11 @@ public class CreateAccountActivityTest
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
         Assert.assertNotNull(phoneNumberText.getError());
+
+        Assert.assertNull(usernameText.getError());
+        Assert.assertNull(emailText.getError());
+        Assert.assertNull(password1Text.getError());
+        Assert.assertNull(password2Text.getError());
     }
 
     /**
@@ -217,6 +242,10 @@ public class CreateAccountActivityTest
         Assert.assertNotNull(password1Text.getError());
         Assert.assertNotNull(password2Text.getError());
 
+        Assert.assertNull(usernameText.getError());
+        Assert.assertNull(emailText.getError());
+        Assert.assertNull(phoneNumberText.getError());
+
         solo.enterText(password1Text, resources.getString(R.string.space));
         solo.enterText(password2Text, resources.getString(R.string.space));
 
@@ -225,6 +254,10 @@ public class CreateAccountActivityTest
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
         Assert.assertNotNull(password1Text.getError());
         Assert.assertNotNull(password2Text.getError());
+
+        Assert.assertNull(usernameText.getError());
+        Assert.assertNull(emailText.getError());
+        Assert.assertNull(phoneNumberText.getError());
     }
 
     /**
@@ -245,6 +278,11 @@ public class CreateAccountActivityTest
         Assert.assertTrue(solo.waitForText(EditTextValidator.USERNAMETAKEN));
 
         Assert.assertNotNull(usernameText.getError());
+
+        Assert.assertNull(emailText.getError());
+        Assert.assertNull(phoneNumberText.getError());
+        Assert.assertNull(password1Text.getError());
+        Assert.assertNull(password2Text.getError());
     }
 
     /**
@@ -265,6 +303,12 @@ public class CreateAccountActivityTest
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMAILTAKEN));
 
         Assert.assertNotNull(emailText.getError());
+
+        Assert.assertNull(usernameText.getError());
+        Assert.assertNull(phoneNumberText.getError());
+        Assert.assertNull(password1Text.getError());
+        Assert.assertNull(password2Text.getError());
+
     }
 
     /**
@@ -285,6 +329,11 @@ public class CreateAccountActivityTest
         Assert.assertTrue(solo.waitForText(EditTextValidator.INVALIDEMAIL));
 
         Assert.assertNotNull(emailText.getError());
+
+        Assert.assertNull(usernameText.getError());
+        Assert.assertNull(phoneNumberText.getError());
+        Assert.assertNull(password1Text.getError());
+        Assert.assertNull(password2Text.getError());
     }
 
     /**
@@ -307,6 +356,10 @@ public class CreateAccountActivityTest
 
         Assert.assertNotNull(usernameText.getError());
         Assert.assertNotNull(emailText.getError());
+
+        Assert.assertNull(phoneNumberText.getError());
+        Assert.assertNull(password1Text.getError());
+        Assert.assertNull(password2Text.getError());
     }
 
     /**
@@ -329,6 +382,10 @@ public class CreateAccountActivityTest
 
         Assert.assertNotNull(usernameText.getError());
         Assert.assertNotNull(emailText.getError());
+
+        Assert.assertNull(phoneNumberText.getError());
+        Assert.assertNull(password1Text.getError());
+        Assert.assertNull(password2Text.getError());
     }
 
     /**
@@ -350,6 +407,10 @@ public class CreateAccountActivityTest
 
         Assert.assertNotNull(password1Text.getError());
         Assert.assertNotNull(password2Text.getError());
+
+        Assert.assertNull(usernameText.getError());
+        Assert.assertNull(emailText.getError());
+        Assert.assertNull(phoneNumberText.getError());
     }
 
     /**
@@ -370,6 +431,10 @@ public class CreateAccountActivityTest
 
         Assert.assertNotNull(password1Text.getError());
         Assert.assertNotNull(password2Text.getError());
+
+        Assert.assertNull(usernameText.getError());
+        Assert.assertNull(emailText.getError());
+        Assert.assertNull(phoneNumberText.getError());
     }
 
     /**
@@ -390,6 +455,10 @@ public class CreateAccountActivityTest
 
         Assert.assertNotNull(password1Text.getError());
         Assert.assertNotNull(password2Text.getError());
+
+        Assert.assertNull(usernameText.getError());
+        Assert.assertNull(emailText.getError());
+        Assert.assertNull(phoneNumberText.getError());
     }
 
     /**
