@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bookwormadventuresdeluxe2.Utilities.Status;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.textview.MaterialTextView;
@@ -51,12 +52,12 @@ public class SearchFragment extends Fragment
         UserCredentialAPI userCredentialApi = UserCredentialAPI.getInstance();
 
         //TODO: update query to target not equal wanted because crashes at rPending and bPending
-        Query booksOfCurrentUser = rootRef.collection(getString(R.string.books_collection))
+        Query availableBooksNotMine = rootRef.collection(getString(R.string.books_collection))
                                             .whereNotEqualTo("owner", UserCredentialAPI.getInstance().getUsername())
-                                            .whereEqualTo("status", "Available");
+                                            .whereEqualTo("status", Status.Available);
 
         FirestoreRecyclerOptions<Book> options = new FirestoreRecyclerOptions.Builder<Book>()
-                .setQuery(booksOfCurrentUser, Book.class)
+                .setQuery(availableBooksNotMine, Book.class)
                 .build();
 
         searchBooksRecyclerView = (RecyclerView) view.findViewById(R.id.search_recycler_view);

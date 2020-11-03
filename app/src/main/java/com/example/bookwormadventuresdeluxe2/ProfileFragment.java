@@ -75,11 +75,12 @@ public class ProfileFragment extends Fragment
         edit = view.findViewById(R.id.profile_edit);
         signOutButton = view.findViewById(R.id.profile_logout);
 
-        /* My profile, initialize buttons */
+        /* My profile */
         if (profile.getUsername().equals(UserCredentialAPI.getInstance().getUsername()))
         {
             myProfile();
         }
+        /* Not my profile */
         else
         {
             otherProfile();
@@ -109,7 +110,7 @@ public class ProfileFragment extends Fragment
      */
     public void myProfile()
     {
-        /* Buttons and title*/
+        /* Show signout and edit button*/
         appHeaderText.setText(R.string.my_profile_title);
         signOutButton.setOnClickListener(this::signOut);
         edit.setOnClickListener(this::editFragment);
@@ -120,7 +121,7 @@ public class ProfileFragment extends Fragment
      */
     public void otherProfile()
     {
-        /* Back button for viewing other profiles*/
+        /* Show back button and hide myProfile buttons */
         backButton = view.findViewById(R.id.app_header_back_button);
         backButton.setVisibility(View.VISIBLE);
         backButton.setOnClickListener(this::onBackClick);
