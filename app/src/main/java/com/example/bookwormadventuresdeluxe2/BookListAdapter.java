@@ -7,6 +7,7 @@ package com.example.bookwormadventuresdeluxe2;
  */
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,6 +103,7 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
         String user = UserCredentialAPI.getInstance().getUsername();
         book.setStatusCircleColor(holder.statusCircle, user);
         book.setPhoto(book, holder.bookPhoto);
+        Bundle source = new Bundle();
 
         switch (this.caller)
         {
@@ -112,7 +114,14 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
                 detailView = new RequestDetailViewFragment();
                 break;
             case R.id.borrow:
+                source.putString(context.getString(R.string.book_click_source_fragment), context.getString(R.string.borrow));
                 detailView = new BorrowDetailViewFragment();
+                detailView.setArguments(source);
+                break;
+            case R.id.search_books:
+                source.putString(context.getString(R.string.book_click_source_fragment), context.getString(R.string.search_title));
+                detailView = new BorrowDetailViewFragment();
+                detailView.setArguments(source);
                 break;
             default:
                 throw new IllegalArgumentException();

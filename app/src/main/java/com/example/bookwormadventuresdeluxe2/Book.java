@@ -215,6 +215,7 @@ public class Book implements Serializable
         switch (status)
         {
             case Available:
+                return Status.Available;
             case Requested:
                 if (this.requesters != null && (this.requesters.contains(user) || user.equals(this.owner) && this.requesters.size() > 0))
                 {
