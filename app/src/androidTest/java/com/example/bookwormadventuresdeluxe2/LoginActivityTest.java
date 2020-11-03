@@ -99,9 +99,9 @@ public class LoginActivityTest
     @Test
     public void spacesLoginTest()
     {
-        solo.enterText(emailText, r.getString(R.string.space));
-        solo.enterText(passwordText, r.getString(R.string.space));
-        solo.clickOnButton(r.getString(R.string.login));
+        solo.enterText(emailText, resources.getString(R.string.space));
+        solo.enterText(passwordText, resources.getString(R.string.space));
+        solo.clickOnButton(resources.getString(R.string.login));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
 

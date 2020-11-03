@@ -46,7 +46,7 @@ public class CreateAccountActivityTest
     private Solo solo;
 
     private Context appContext;
-    private Resources r;
+    private Resources resources;
 
     private EditText usernameText;
     private EditText emailText;
@@ -74,7 +74,7 @@ public class CreateAccountActivityTest
         appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
         /* Gets resource files */
-        r = appContext.getResources();
+        resources = appContext.getResources();
 
         usernameText = (EditText) solo.getView(R.id.create_username);
         emailText = (EditText) solo.getView(R.id.create_email);
@@ -83,7 +83,7 @@ public class CreateAccountActivityTest
         password2Text = (EditText) solo.getView(R.id.confirm_password);
 
         fb = FirebaseFirestore.getInstance();
-        colRef = fb.collection(r.getString(R.string.users_collection));
+        colRef = fb.collection(resources.getString(R.string.users_collection));
     }
 
     /**
@@ -102,7 +102,7 @@ public class CreateAccountActivityTest
     @Test
     public void emptyCreateAccountTest()
     {
-        solo.clickOnButton(r.getString(R.string.create_account));
+        solo.clickOnButton(resources.getString(R.string.create_account));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
 
@@ -119,13 +119,13 @@ public class CreateAccountActivityTest
     @Test
     public void spacesCreateAccountTest()
     {
-        solo.enterText(usernameText, r.getString(R.string.space));
-        solo.enterText(emailText, r.getString(R.string.space));
-        solo.enterText(phoneNumberText, r.getString(R.string.space));
-        solo.enterText(password1Text, r.getString(R.string.space));
-        solo.enterText(password2Text, r.getString(R.string.space));
+        solo.enterText(usernameText, resources.getString(R.string.space));
+        solo.enterText(emailText, resources.getString(R.string.space));
+        solo.enterText(phoneNumberText, resources.getString(R.string.space));
+        solo.enterText(password1Text, resources.getString(R.string.space));
+        solo.enterText(password2Text, resources.getString(R.string.space));
 
-        solo.clickOnButton(r.getString(R.string.create_account));
+        solo.clickOnButton(resources.getString(R.string.create_account));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
 
@@ -142,19 +142,19 @@ public class CreateAccountActivityTest
     @Test
     public void emptyAndSpaceUsernameTest()
     {
-        solo.enterText(emailText, r.getString(R.string.test_create_account_email));
-        solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
-        solo.enterText(password1Text, r.getString(R.string.test_account1_password));
-        solo.enterText(password2Text, r.getString(R.string.test_account1_password));
+        solo.enterText(emailText, resources.getString(R.string.test_create_account_email));
+        solo.enterText(phoneNumberText, resources.getString(R.string.test_account1_phone));
+        solo.enterText(password1Text, resources.getString(R.string.test_account1_password));
+        solo.enterText(password2Text, resources.getString(R.string.test_account1_password));
 
-        solo.clickOnButton(r.getString(R.string.create_account));
+        solo.clickOnButton(resources.getString(R.string.create_account));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
         Assert.assertNotNull(usernameText.getError());
 
-        solo.enterText(usernameText, r.getString(R.string.space));
+        solo.enterText(usernameText, resources.getString(R.string.space));
 
-        solo.clickOnButton(r.getString(R.string.create_account));
+        solo.clickOnButton(resources.getString(R.string.create_account));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
         Assert.assertNotNull(usernameText.getError());
@@ -166,19 +166,19 @@ public class CreateAccountActivityTest
     @Test
     public void emptyAndSpaceEmailTest()
     {
-        solo.enterText(usernameText, r.getString(R.string.test_create_account_username));
-        solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
-        solo.enterText(password1Text, r.getString(R.string.test_account1_password));
-        solo.enterText(password2Text, r.getString(R.string.test_account1_password));
+        solo.enterText(usernameText, resources.getString(R.string.test_create_account_username));
+        solo.enterText(phoneNumberText, resources.getString(R.string.test_account1_phone));
+        solo.enterText(password1Text, resources.getString(R.string.test_account1_password));
+        solo.enterText(password2Text, resources.getString(R.string.test_account1_password));
 
-        solo.clickOnButton(r.getString(R.string.create_account));
+        solo.clickOnButton(resources.getString(R.string.create_account));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
         Assert.assertNotNull(emailText.getError());
 
-        solo.enterText(emailText, r.getString(R.string.space));
+        solo.enterText(emailText, resources.getString(R.string.space));
 
-        solo.clickOnButton(r.getString(R.string.create_account));
+        solo.clickOnButton(resources.getString(R.string.create_account));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
         Assert.assertNotNull(emailText.getError());
@@ -190,12 +190,12 @@ public class CreateAccountActivityTest
     @Test
     public void emptyPhoneNumberTest()
     {
-        solo.enterText(usernameText, r.getString(R.string.test_create_account_username));
-        solo.enterText(emailText, r.getString(R.string.test_create_account_email));
-        solo.enterText(password1Text, r.getString(R.string.test_account1_password));
-        solo.enterText(password2Text, r.getString(R.string.test_account1_password));
+        solo.enterText(usernameText, resources.getString(R.string.test_create_account_username));
+        solo.enterText(emailText, resources.getString(R.string.test_create_account_email));
+        solo.enterText(password1Text, resources.getString(R.string.test_account1_password));
+        solo.enterText(password2Text, resources.getString(R.string.test_account1_password));
 
-        solo.clickOnButton(r.getString(R.string.create_account));
+        solo.clickOnButton(resources.getString(R.string.create_account));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
         Assert.assertNotNull(phoneNumberText.getError());
@@ -207,20 +207,20 @@ public class CreateAccountActivityTest
     @Test
     public void emptyAndSpacePasswordTest()
     {
-        solo.enterText(usernameText, r.getString(R.string.test_create_account_username));
-        solo.enterText(emailText, r.getString(R.string.test_create_account_email));
-        solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
+        solo.enterText(usernameText, resources.getString(R.string.test_create_account_username));
+        solo.enterText(emailText, resources.getString(R.string.test_create_account_email));
+        solo.enterText(phoneNumberText, resources.getString(R.string.test_account1_phone));
 
-        solo.clickOnButton(r.getString(R.string.create_account));
+        solo.clickOnButton(resources.getString(R.string.create_account));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
         Assert.assertNotNull(password1Text.getError());
         Assert.assertNotNull(password2Text.getError());
 
-        solo.enterText(password1Text, r.getString(R.string.space));
-        solo.enterText(password2Text, r.getString(R.string.space));
+        solo.enterText(password1Text, resources.getString(R.string.space));
+        solo.enterText(password2Text, resources.getString(R.string.space));
 
-        solo.clickOnButton(r.getString(R.string.create_account));
+        solo.clickOnButton(resources.getString(R.string.create_account));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMPTY));
         Assert.assertNotNull(password1Text.getError());
@@ -233,14 +233,14 @@ public class CreateAccountActivityTest
     @Test
     public void takenUsernameTest()
     {
-        solo.enterText(usernameText, r.getString(R.string.test_account1_username));
+        solo.enterText(usernameText, resources.getString(R.string.test_account1_username));
 
-        solo.enterText(emailText, r.getString(R.string.test_create_account_email));
-        solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
-        solo.enterText(password1Text, r.getString(R.string.test_account1_password));
-        solo.enterText(password2Text, r.getString(R.string.test_account1_password));
+        solo.enterText(emailText, resources.getString(R.string.test_create_account_email));
+        solo.enterText(phoneNumberText, resources.getString(R.string.test_account1_phone));
+        solo.enterText(password1Text, resources.getString(R.string.test_account1_password));
+        solo.enterText(password2Text, resources.getString(R.string.test_account1_password));
 
-        solo.clickOnButton(r.getString(R.string.create_account));
+        solo.clickOnButton(resources.getString(R.string.create_account));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.USERNAMETAKEN));
 
@@ -253,14 +253,14 @@ public class CreateAccountActivityTest
     @Test
     public void takenEmailTest()
     {
-        solo.enterText(emailText, r.getString(R.string.test_account1_email));
+        solo.enterText(emailText, resources.getString(R.string.test_account1_email));
 
-        solo.enterText(usernameText, r.getString(R.string.test_create_account_username));
-        solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
-        solo.enterText(password1Text, r.getString(R.string.test_account1_password));
-        solo.enterText(password2Text, r.getString(R.string.test_account1_password));
+        solo.enterText(usernameText, resources.getString(R.string.test_create_account_username));
+        solo.enterText(phoneNumberText, resources.getString(R.string.test_account1_phone));
+        solo.enterText(password1Text, resources.getString(R.string.test_account1_password));
+        solo.enterText(password2Text, resources.getString(R.string.test_account1_password));
 
-        solo.clickOnButton(r.getString(R.string.create_account));
+        solo.clickOnButton(resources.getString(R.string.create_account));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMAILTAKEN));
 
@@ -273,14 +273,14 @@ public class CreateAccountActivityTest
     @Test
     public void invalidEmailTest()
     {
-        solo.enterText(emailText, r.getString(R.string.wrong_email));
+        solo.enterText(emailText, resources.getString(R.string.wrong_email));
 
-        solo.enterText(usernameText, r.getString(R.string.test_create_account_username));
-        solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
-        solo.enterText(password1Text, r.getString(R.string.test_account1_password));
-        solo.enterText(password2Text, r.getString(R.string.test_account1_password));
+        solo.enterText(usernameText, resources.getString(R.string.test_create_account_username));
+        solo.enterText(phoneNumberText, resources.getString(R.string.test_account1_phone));
+        solo.enterText(password1Text, resources.getString(R.string.test_account1_password));
+        solo.enterText(password2Text, resources.getString(R.string.test_account1_password));
 
-        solo.clickOnButton(r.getString(R.string.create_account));
+        solo.clickOnButton(resources.getString(R.string.create_account));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.INVALIDEMAIL));
 
@@ -293,14 +293,14 @@ public class CreateAccountActivityTest
     @Test
     public void takenUsernameAndTakenEmailTest()
     {
-        solo.enterText(usernameText, r.getString(R.string.test_account1_username));
-        solo.enterText(emailText, r.getString(R.string.test_account1_email));
+        solo.enterText(usernameText, resources.getString(R.string.test_account1_username));
+        solo.enterText(emailText, resources.getString(R.string.test_account1_email));
 
-        solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
-        solo.enterText(password1Text, r.getString(R.string.test_account1_password));
-        solo.enterText(password2Text, r.getString(R.string.test_account1_password));
+        solo.enterText(phoneNumberText, resources.getString(R.string.test_account1_phone));
+        solo.enterText(password1Text, resources.getString(R.string.test_account1_password));
+        solo.enterText(password2Text, resources.getString(R.string.test_account1_password));
 
-        solo.clickOnButton(r.getString(R.string.create_account));
+        solo.clickOnButton(resources.getString(R.string.create_account));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.USERNAMETAKEN));
         Assert.assertTrue(solo.waitForText(EditTextValidator.EMAILTAKEN));
@@ -315,14 +315,14 @@ public class CreateAccountActivityTest
     @Test
     public void takenUsernameAndInvalidEmailTest()
     {
-        solo.enterText(usernameText, r.getString(R.string.test_account1_username));
-        solo.enterText(emailText, r.getString(R.string.wrong_email));
+        solo.enterText(usernameText, resources.getString(R.string.test_account1_username));
+        solo.enterText(emailText, resources.getString(R.string.wrong_email));
 
-        solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
-        solo.enterText(password1Text, r.getString(R.string.test_account1_password));
-        solo.enterText(password2Text, r.getString(R.string.test_account1_password));
+        solo.enterText(phoneNumberText, resources.getString(R.string.test_account1_phone));
+        solo.enterText(password1Text, resources.getString(R.string.test_account1_password));
+        solo.enterText(password2Text, resources.getString(R.string.test_account1_password));
 
-        solo.clickOnButton(r.getString(R.string.create_account));
+        solo.clickOnButton(resources.getString(R.string.create_account));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.USERNAMETAKEN));
         Assert.assertTrue(solo.waitForText(EditTextValidator.INVALIDEMAIL));
@@ -337,14 +337,14 @@ public class CreateAccountActivityTest
     @Test
     public void nonMatchingPasswordsTest()
     {
-        solo.enterText(password2Text, r.getString(R.string.wrong_pass));
+        solo.enterText(password2Text, resources.getString(R.string.wrong_pass));
 
-        solo.enterText(emailText, r.getString(R.string.test_create_account_email));
-        solo.enterText(usernameText, r.getString(R.string.test_create_account_username));
-        solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
-        solo.enterText(password1Text, r.getString(R.string.test_account1_password));
+        solo.enterText(emailText, resources.getString(R.string.test_create_account_email));
+        solo.enterText(usernameText, resources.getString(R.string.test_create_account_username));
+        solo.enterText(phoneNumberText, resources.getString(R.string.test_account1_phone));
+        solo.enterText(password1Text, resources.getString(R.string.test_account1_password));
 
-        solo.clickOnButton(r.getString(R.string.create_account));
+        solo.clickOnButton(resources.getString(R.string.create_account));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.PASSWORDSDONTMATCH));
 
@@ -357,14 +357,14 @@ public class CreateAccountActivityTest
      */
     @Test public void shortPasswordTest()
     {
-        solo.enterText(password1Text, r.getString(R.string.short_pass));
-        solo.enterText(password2Text, r.getString(R.string.short_pass));
+        solo.enterText(password1Text, resources.getString(R.string.short_pass));
+        solo.enterText(password2Text, resources.getString(R.string.short_pass));
 
-        solo.enterText(emailText, r.getString(R.string.test_create_account_email));
-        solo.enterText(usernameText, r.getString(R.string.test_create_account_username));
-        solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
+        solo.enterText(emailText, resources.getString(R.string.test_create_account_email));
+        solo.enterText(usernameText, resources.getString(R.string.test_create_account_username));
+        solo.enterText(phoneNumberText, resources.getString(R.string.test_account1_phone));
 
-        solo.clickOnButton(r.getString(R.string.create_account));
+        solo.clickOnButton(resources.getString(R.string.create_account));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.WEAKPASS));
 
@@ -377,14 +377,14 @@ public class CreateAccountActivityTest
      */
     @Test public void shortPasswordAndSpaceTest()
     {
-        solo.enterText(password1Text, r.getString(R.string.short_pass) + r.getString(R.string.space));
-        solo.enterText(password2Text, r.getString(R.string.short_pass) + r.getString(R.string.space));
+        solo.enterText(password1Text, resources.getString(R.string.short_pass) + resources.getString(R.string.space));
+        solo.enterText(password2Text, resources.getString(R.string.short_pass) + resources.getString(R.string.space));
 
-        solo.enterText(emailText, r.getString(R.string.test_create_account_email));
-        solo.enterText(usernameText, r.getString(R.string.test_create_account_username));
-        solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
+        solo.enterText(emailText, resources.getString(R.string.test_create_account_email));
+        solo.enterText(usernameText, resources.getString(R.string.test_create_account_username));
+        solo.enterText(phoneNumberText, resources.getString(R.string.test_account1_phone));
 
-        solo.clickOnButton(r.getString(R.string.create_account));
+        solo.clickOnButton(resources.getString(R.string.create_account));
 
         Assert.assertTrue(solo.waitForText(EditTextValidator.WEAKPASS));
 
@@ -398,34 +398,34 @@ public class CreateAccountActivityTest
     @Test
     public void createAccountTest()
     {
-        solo.enterText(emailText, r.getString(R.string.test_create_account_email));
-        solo.enterText(usernameText, r.getString(R.string.test_create_account_username));
+        solo.enterText(emailText, resources.getString(R.string.test_create_account_email));
+        solo.enterText(usernameText, resources.getString(R.string.test_create_account_username));
 
-        solo.enterText(phoneNumberText, r.getString(R.string.test_account1_phone));
-        solo.enterText(password1Text, r.getString(R.string.test_account1_password));
-        solo.enterText(password2Text, r.getString(R.string.test_account1_password));
+        solo.enterText(phoneNumberText, resources.getString(R.string.test_account1_phone));
+        solo.enterText(password1Text, resources.getString(R.string.test_account1_password));
+        solo.enterText(password2Text, resources.getString(R.string.test_account1_password));
 
-        solo.clickOnButton(r.getString(R.string.create_account));
+        solo.clickOnButton(resources.getString(R.string.create_account));
 
-        solo.waitForText(r.getString(R.string.navbar_text_label_4));
+        solo.waitForText(resources.getString(R.string.navbar_text_label_4));
 
-        solo.assertCurrentActivity(r.getString(R.string.wrong_activity), MyBooksActivity.class);
+        solo.assertCurrentActivity(resources.getString(R.string.wrong_activity), MyBooksActivity.class);
 
-        signOut();
+        createAccountSignOut();
     }
 
     /**
      * Signs out of created test account after deleting account
      */
-    public void signOut()
+    public void createAccountSignOut()
     {
-        solo.clickOnText(r.getString(R.string.navbar_text_label_4));
+        solo.clickOnText(resources.getString(R.string.navbar_text_label_4));
 
-        solo.waitForText(r.getString(R.string.sign_out));
+        solo.waitForText(resources.getString(R.string.sign_out));
 
         deleteCreateTestAccount();
 
-        solo.clickOnButton(r.getString(R.string.sign_out));
+        solo.clickOnButton(resources.getString(R.string.sign_out));
     }
 
     /**
@@ -433,7 +433,7 @@ public class CreateAccountActivityTest
      */
     public void deleteCreateTestAccount()
     {
-        colRef.whereEqualTo("username", r.getString(R.string.test_create_account_username))
+        colRef.whereEqualTo("username", resources.getString(R.string.test_create_account_username))
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
                 {
