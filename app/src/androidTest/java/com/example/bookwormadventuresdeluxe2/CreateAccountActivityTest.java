@@ -429,7 +429,7 @@ public class CreateAccountActivityTest
     }
 
     /**
-     * Deletes created tests account in FirebaseAuth and Firebase database
+     * Deletes created test account in FirebaseAuth and Firebase database
      */
     public void deleteCreateTestAccount()
     {
