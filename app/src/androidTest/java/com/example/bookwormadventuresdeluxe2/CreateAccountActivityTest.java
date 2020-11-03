@@ -337,12 +337,12 @@ public class CreateAccountActivityTest
     @Test
     public void nonMatchingPasswordsTest()
     {
+        solo.enterText(password1Text, resources.getString(R.string.test_account1_password));
         solo.enterText(password2Text, resources.getString(R.string.wrong_pass));
 
         solo.enterText(emailText, resources.getString(R.string.test_create_account_email));
         solo.enterText(usernameText, resources.getString(R.string.test_create_account_username));
         solo.enterText(phoneNumberText, resources.getString(R.string.test_account1_phone));
-        solo.enterText(password1Text, resources.getString(R.string.test_account1_password));
 
         solo.clickOnButton(resources.getString(R.string.create_account));
 
@@ -406,8 +406,6 @@ public class CreateAccountActivityTest
         solo.enterText(password2Text, resources.getString(R.string.test_account1_password));
 
         solo.clickOnButton(resources.getString(R.string.create_account));
-
-        solo.waitForText(resources.getString(R.string.navbar_text_label_4));
 
         solo.assertCurrentActivity(resources.getString(R.string.wrong_activity), MyBooksActivity.class);
 
