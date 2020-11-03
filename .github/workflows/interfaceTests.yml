@@ -1,4 +1,4 @@
-name: UI Tests
+"""name: UI Tests
 
 on:
   push:
@@ -40,4 +40,4 @@ jobs:
         emulator-build: 6855416
         api-level: 29
         emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -timezone Canada/Edmonton
-        script: ./gradlew connectedCheck --stacktrace
+        script: ./gradlew connectedCheck --stacktrace"""
