@@ -42,4 +42,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="notification_title">Notifications</string>
     <string name="map_edit_text_hint">Enter Address, City or Postal Code</string>
+    <string name="set_exchange_location">Set Exchange Location</string>
+    <string name="view_location_pending_request">Pending Request</string>
 </resources>

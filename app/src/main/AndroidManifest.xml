@@ -36,15 +36,12 @@
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
-        <activity android:name=".MyBooksActivity" />
+        <activity
+            android:name=".MyBooksActivity"
+            android:launchMode="singleTop" />
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <activity
-            android:name=".SetLocationActivity"
-            android:theme="@style/BlackTextTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -52,8 +49,15 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".SetLocationActivity"
+            android:theme="@style/BlackTextTheme">
+
+        </activity>
+        <activity
             android:name=".ViewLocationActivity"
-            android:theme="@style/BlackTextTheme" />
+            android:theme="@style/BlackTextTheme">
+
+        </activity>
     </application>
 
 </manifest>

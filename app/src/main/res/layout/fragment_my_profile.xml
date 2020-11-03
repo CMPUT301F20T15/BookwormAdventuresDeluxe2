@@ -118,6 +118,29 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profile_edit" />
 
+        <Button
+            android:id="@+id/setLocationDemobutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="SetLocationActivityDemo"
+            app:backgroundTint="@color/colorPrimaryDark"
+            app:layout_constraintBottom_toTopOf="@+id/profile_edit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/viewLocationDemoButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="View Location Demo"
+            app:backgroundTint="@color/colorPrimaryDark"
+            app:layout_constraintBottom_toTopOf="@+id/setLocationDemobutton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.503"
+            app:layout_constraintStart_toStartOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

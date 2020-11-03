@@ -1,5 +1,6 @@
 package com.example.bookwormadventuresdeluxe2;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -24,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MyProfileFragment extends Fragment implements View.OnClickListener
 {
     private static final String TAG = "MyProfileFragment";
+    public static final Integer SetLocationActivityResultCode = 1;
     Button edit;
     Button signOutButton;
     MaterialTextView appHeaderText;
@@ -51,6 +54,31 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener
         /* Set title */
         appHeaderText = view.findViewById(R.id.app_header_title);
         appHeaderText.setText(R.string.my_profile_title);
+
+        /* Set Location Demo*/
+        Button setLocationButton = view.findViewById(R.id.setLocationDemobutton);
+        setLocationButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent setLocationActivityIntent = new Intent(getActivity(), SetLocationActivity.class);
+                startActivityForResult(setLocationActivityIntent, SetLocationActivityResultCode);
+            }
+        });
+
+        /* Set View Location Demo*/
+        Button viewLocationDemo = view.findViewById(R.id.viewLocationDemoButton);
+        viewLocationDemo.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent viewLocationIntent = new Intent(getActivity(), ViewLocationActivity.class);
+                viewLocationIntent.putExtra("location", "53.510787,-113.5140128");
+                startActivity(viewLocationIntent);
+            }
+        });
 
         firebaseAuth = FirebaseAuth.getInstance();
         return view;
@@ -128,6 +156,25 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener
         {
             /* Log message to debug*/
             Log.d(TAG, e.getMessage());
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == SetLocationActivityResultCode)
+        {
+            if (resultCode == Activity.RESULT_OK)
+            {
+                String pickUpLocation = data.getStringExtra("pickUpLocation");
+                Toast.makeText(getContext(), pickUpLocation, Toast.LENGTH_LONG).show();
+            }
+            if (resultCode == Activity.RESULT_CANCELED)
+            {
+                //Write your code if there's no result
+            }
         }
     }
 }

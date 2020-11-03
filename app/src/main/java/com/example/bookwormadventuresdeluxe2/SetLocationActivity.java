@@ -2,8 +2,10 @@ package com.example.bookwormadventuresdeluxe2;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -15,12 +17,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -52,17 +57,44 @@ import com.google.android.gms.tasks.Task;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+/**
+ * Allows user to pick an exchange location by placing a marker on a map
+ * Usage:
+ * <p>
+ * Inside calling fragment or activity add the following to start this activity for result
+ * Intent setLocationActivityIntent = new Intent(getActivity(), SetLocationActivity.class);
+ * startActivityForResult(setLocationActivityIntent, SetLocationActivityResultCode);
+ * <p>
+ * And override method onActivityResult and add the following:
+ * if (requestCode == SetLocationActivityResultCode)
+ * {
+ * if (resultCode == Activity.RESULT_OK)
+ * {
+ * String pickUpLocation = data.getStringExtra("pickUpLocation");
+ * Toast.makeText(getContext(), pickUpLocation, Toast.LENGTH_LONG).show();
+ * }
+ * if (resultCode == Activity.RESULT_CANCELED)
+ * {
+ * //Write your code if there's no result
+ * }
+ * }
+ */
 public class SetLocationActivity extends AppCompatActivity implements OnMapReadyCallback,
-        GoogleMap.OnMapClickListener, GoogleMap.OnMarkerDragListener, SearchView.OnQueryTextListener, LocationListener
+        GoogleMap.OnMapClickListener, GoogleMap.OnMarkerDragListener, SearchView.OnQueryTextListener
 {
-    public static final String TAG = "SetLocationActivityTag";
-    private static final int LOCATION_REQUEST_CODE = 1001;
+    public static final String TAG = "SetLocationActivity";
+    private static final int LOCATION_REQUEST_CODE = 1001; // identification code for onRequestPermissionsResult method
     public static final long UPDATE_INTERVAL = 5000; // 5 seconds
-    public static final long FASTEST_INTERVAL = 5000;
-    private static final int MAX_ADDRESS_RESULT = 4;
+    public static final long FASTEST_INTERVAL = 5000; //  5 seconds
+    public static final int CAMERA_ZOOM_LEVEL = 14; // can be between 1-20
+    public static final double defaultLatitude = 53.5188629; // default is uAlberta
+    public static final double defaultLongitude = -113.5041364;
     private SearchView addressSearchView;
     private Button setLocationButton;
+    private TextView appHeaderTitle;
+    private ImageButton backButton;
 
     private ArrayList<String> locationPermissions = new ArrayList<>();
     private ArrayList<String> permissionsToRequest;
@@ -74,102 +106,188 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     private Geocoder geocoder;
     private SupportMapFragment mapFragment;
 
+    private String pickUpLocation;
+
+    /* Called when there is a change in the user location */
     LocationCallback locationCallback = new LocationCallback()
     {
-        @Override
-        public void onLocationResult(LocationResult locationResult)
-        {
-            if (locationResult == null)
-            {
-                return;
-            }
-            for (Location location : locationResult.getLocations())
-            {
-                Log.d("new tag", location.toString());
-            }
-        }
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        setTitle("Set Location");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_location);
+        /* Set Header */
+        appHeaderTitle = findViewById(R.id.app_header_title);
+        appHeaderTitle.setText(R.string.set_exchange_location);
 
-        geocoder = new Geocoder(this);
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        /* Set Back Button Listener */
+        backButton = findViewById(R.id.app_header_back_button);
+        backButton.setVisibility(View.VISIBLE);
+        backButton.setOnClickListener(this::onBackClick);
+
+        geocoder = new Geocoder(this); // to search for location using name ro LatLng
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this); // for location updates
         /* Add required location permissions to a list*/
         locationPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         locationPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
 
-
         addressSearchView = findViewById(R.id.address_search_view);
         setLocationButton = findViewById(R.id.set_location_button);
+        setLocationButton.setOnClickListener(this::onSetLocationButtonClick);
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        /*  Obtain the SupportMapFragment */
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
-        mapFragment.getMapAsync(this);
+        /* If permissions were granted, set On Map ready Callback.
+         * Else we set this after asking permissions required for enabling user location
+         * */
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        {
+            mapFragment.getMapAsync(this);
+        }
 
-        // Configure location request
-        locationRequest = new LocationRequest();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(UPDATE_INTERVAL);
-        locationRequest.setFastestInterval(FASTEST_INTERVAL);
 
         /* Search Address */
         addressSearchView.setOnQueryTextListener(this);
-        /* source: https://stackoverflow.com/questions/33566780/searchview-query-hint-before-clicking-it*/
+        /*
+         * Show address search view hint at all times and hide keyboard
+         * source: https://stackoverflow.com/questions/33566780/searchview-query-hint-before-clicking-it
+         */
         addressSearchView.setIconified(false);
-        new Handler().postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                addressSearchView.clearFocus();
-            }
-        }, 300);
+        addressSearchView.clearFocus();
+
+
     }
 
+    /**
+     * Return pick up location to parent
+     *
+     * @param view
+     */
+    private void onSetLocationButtonClick(View view)
+    {
+        if (pickUpLocation != null)
+        {
+            /* Return intent with result*/
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("pickUpLocation", pickUpLocation);
+            setResult(Activity.RESULT_OK, returnIntent);
+            finish();
+        }
+        else
+        {
+            /* Ask to place marker if not placed */
+            Toast.makeText(SetLocationActivity.this, "Place a marker on the map to set pickup location", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * Take user to parent activity
+     *
+     * @param view
+     */
+    private void onBackClick(View view)
+    {
+        super.onBackPressed();
+    }
+
+    /**
+     * Start location updates or
+     * ask for location permissions
+     */
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        /* Check settings and start location updates*/
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        {
+            checkSettingsAndStartLocationUpdates();
+        }
+        else
+        {
+            /* Ask only for the requests that were not granted */
+            permissionsToRequest = permissionsToRequest(locationPermissions);
+            ActivityCompat.requestPermissions(SetLocationActivity.this,
+                    permissionsToRequest.toArray(new String[permissionsToRequest.size()]),
+                    LOCATION_REQUEST_CODE);
+
+        }
+
+    }
+
+    /**
+     * Starts location updates when user has GPS on
+     */
     private void checkSettingsAndStartLocationUpdates()
     {
-        LocationSettingsRequest request = new LocationSettingsRequest.Builder()
-                .addLocationRequest(locationRequest).build();
-        SettingsClient client = LocationServices.getSettingsClient(this);
-
-        Task<LocationSettingsResponse> locationSettingsResponseTask = client.checkLocationSettings(request);
-
-        /* start location updates*/
-        locationSettingsResponseTask.addOnSuccessListener(new OnSuccessListener<LocationSettingsResponse>()
+        try
         {
-            @Override
-            public void onSuccess(LocationSettingsResponse locationSettingsResponse)
-            {
-                startLocationUpdates();
-            }
-        });
+            // Configure location request
+            locationRequest = new LocationRequest();
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            locationRequest.setInterval(UPDATE_INTERVAL);
+            locationRequest.setFastestInterval(FASTEST_INTERVAL);
 
-        /* attempt to resolve exception eg: user has turned of GPS  */
-        locationSettingsResponseTask.addOnFailureListener(new OnFailureListener()
-        {
-            @Override
-            public void onFailure(@NonNull Exception e)
+            // Set up client to check GPS availability
+            LocationSettingsRequest request = new LocationSettingsRequest.Builder()
+                    .addLocationRequest(locationRequest).build();
+            SettingsClient client = LocationServices.getSettingsClient(SetLocationActivity.this);
+
+            Task<LocationSettingsResponse> locationSettingsResponseTask = client.checkLocationSettings(request);
+
+            /* On success start location updates*/
+            locationSettingsResponseTask.addOnSuccessListener(SetLocationActivity.this, new OnSuccessListener<LocationSettingsResponse>()
             {
-                if (e instanceof ResolvableApiException)
+                @Override
+                public void onSuccess(LocationSettingsResponse locationSettingsResponse)
                 {
-                    ResolvableApiException apiException = (ResolvableApiException) e;
-                    try
+                    startLocationUpdates();
+                }
+            });
+
+            /* On failure attempt to resolve exception eg: user has turned of GPS  */
+            locationSettingsResponseTask.addOnFailureListener(SetLocationActivity.this, new OnFailureListener()
+            {
+                @Override
+                public void onFailure(@NonNull Exception e)
+                {
+                    Toast.makeText(SetLocationActivity.this, "On failure", Toast.LENGTH_LONG).show();
+                    if (e instanceof ResolvableApiException)
                     {
-                        apiException.startResolutionForResult(SetLocationActivity.this, LOCATION_REQUEST_CODE);
-                    } catch (IntentSender.SendIntentException ex)
-                    {
-                        ex.printStackTrace();
+                        // Location settings are not satisfied, but this can be fixed
+                        // by showing the user a dialog.
+                        try
+                        {
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            ResolvableApiException apiException = (ResolvableApiException) e;
+                            apiException.startResolutionForResult(SetLocationActivity.this, LOCATION_REQUEST_CODE);
+                        } catch (IntentSender.SendIntentException ex)
+                        {
+                            Log.d(TAG, "onFailure: " + ex.getMessage());
+                        }
                     }
                 }
-            }
-        });
+            });
+
+        } catch (Exception e)
+        {
+            Log.d("Check GPS Settings ", e.getMessage());
+        }
     }
 
+    /**
+     * Request location updates if permissions were granted
+     */
     private void startLocationUpdates()
     {
         if (ActivityCompat.checkSelfPermission(this,
@@ -184,36 +302,12 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
                 Looper.myLooper());
     }
 
+    /**
+     * Detach location change listener
+     */
     private void stopLocationUpdates()
     {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
-    }
-
-    /**
-     * Ask for location permissions
-     * G
-     */
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-        {
-            checkSettingsAndStartLocationUpdates();
-        }
-        else
-        {
-            /* Ask only for the requests not granted */
-            permissionsToRequest = permissionsToRequest(locationPermissions);
-            ActivityCompat.requestPermissions(SetLocationActivity.this,
-                    permissionsToRequest.toArray(new String[permissionsToRequest.size()]),
-                    LOCATION_REQUEST_CODE);
-
-        }
-
     }
 
     /**
@@ -226,32 +320,8 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
         stopLocationUpdates();
     }
 
-    private void getLastLocation()
-    {
-        /* Check location permission*/
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-        {
-            return;
-        }
-        Task<Location> locationTask = fusedLocationProviderClient.getLastLocation();
-        System.out.println("on Entry");
-
-        locationTask.addOnSuccessListener(new OnSuccessListener<Location>()
-        {
-            @Override
-            public void onSuccess(Location location)
-            {
-                Log.d(TAG, "on Success: " + location.toString());
-            }
-        });
-
-    }
-
     /**
-     * Gets last location if permissions have been granted
+     * Gets last location if all permissions have been granted
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
@@ -260,6 +330,7 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
 
         if (requestCode == LOCATION_REQUEST_CODE)
         {
+            /* Find the permissions not granted*/
             for (String perm : permissionsToRequest)
             {
                 if (!hasPermission(perm))
@@ -268,22 +339,22 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
                 }
             }
 
+            /* Ask for permissions not granted*/
             if (permissionsRejected.size() > 0)
             {
-
+                /* Show Warning Dialog if permission denied and provide option to allow permission again or cancel*/
                 if (ActivityCompat.shouldShowRequestPermissionRationale(SetLocationActivity.this, permissionsRejected.get(0)))
                 {
                     new AlertDialog.Builder(SetLocationActivity.this)
-                            .setMessage("Location Permissions are required.")
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener()
+                            .setMessage("Location permissions are required to view current location.")
+                            .setPositiveButton("Allow", new DialogInterface.OnClickListener()
                             {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i)
                                 {
-
+                                    /* request permissions again */
                                     ActivityCompat.requestPermissions(SetLocationActivity.this, permissionsRejected.toArray(
                                             new String[permissionsRejected.size()]), LOCATION_REQUEST_CODE);
-
                                 }
                             })
                             .setNegativeButton("Cancel", null)
@@ -296,20 +367,24 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
             else
             {
                 checkSettingsAndStartLocationUpdates();
-                enableUserLocation();
-                zoomToUserLocation();
             }
+            mapFragment.getMapAsync(this);        /* Permissions were requested, set On Map ready Callback */
         }
     }
 
+    /**
+     * Process when map ready
+     *
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap)
     {
         map = googleMap;
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-        map.setOnMapClickListener(this);
-        map.setOnMarkerDragListener(this);
+        map.setOnMapClickListener(this); // Listener to set marker
+        map.setOnMarkerDragListener(this);// Listener to drag and move marker
 
         /* Enable user location if permission granted*/
         if (ActivityCompat.checkSelfPermission(this,
@@ -317,41 +392,14 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
                 && ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
         {
+
             enableUserLocation();
-            zoomToUserLocation();
-        }
-        else
-        {
-            /* Ask only for the requests not granted */
-            permissionsToRequest = permissionsToRequest(locationPermissions);
-            ActivityCompat.requestPermissions(SetLocationActivity.this,
-                    permissionsToRequest.toArray(new String[permissionsToRequest.size()]),
-                    LOCATION_REQUEST_CODE);
         }
 
-        try
-        {
-            List<Address> addresses = geocoder.getFromLocationName("london", MAX_ADDRESS_RESULT);
-            if (addresses.size() > 0)
-            {
-                Address address = addresses.get(0); // Get Best match
-                LatLng location = new LatLng(address.getLatitude(), address.getLongitude());
-                MarkerOptions markerOptions = new MarkerOptions()
-                        .position(location)
-                        .title("Pickup Location")
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                map.addMarker(markerOptions);
+        /* Move Camera to default location */
+        LatLng latLng = new LatLng(defaultLatitude, defaultLongitude);
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, CAMERA_ZOOM_LEVEL));
 
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16));
-            }
-
-        } catch (IOException e)
-        {
-            Log.d(TAG, e.getMessage());
-        }
-
-
-        // remove
     }
 
     /**
@@ -361,35 +409,24 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     @SuppressLint("MissingPermission")
     private void enableUserLocation()
     {
-        map.setMyLocationEnabled(true);
-        map.setPadding(0, 320, 0, 0); /* Move Get My location button under TextBox*/
-    }
 
-    @SuppressLint("MissingPermission")
-    private void zoomToUserLocation()
-    {
-        Task<Location> locationTask = fusedLocationProviderClient.getLastLocation();
-
-        locationTask.addOnSuccessListener(new OnSuccessListener<Location>()
+        if (map != null)
         {
-            @Override
-            public void onSuccess(Location location)
-            {
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
-            }
-        });
+            map.setMyLocationEnabled(true);
+            map.setPadding(0, 500, 0, 0); // Move Get My location button under TextBox
+        }
+
     }
 
-    @Override
-    public void onLocationChanged(@NonNull Location location)
-    {
-        Log.d("Loc changed", "Meow meow meow");
-        zoomToUserLocation();
-    }
-
+    /**
+     * Returns a list of permissions not granted from a list of permissions passed in
+     *
+     * @param wantedPermissions the list of permssions required
+     * @return list of permissions requiring approval
+     */
     private ArrayList<String> permissionsToRequest(ArrayList<String> wantedPermissions)
     {
+        /* List of permissions not granted */
         ArrayList<String> result = new ArrayList<>();
 
         for (String perm : wantedPermissions)
@@ -403,7 +440,10 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
         return result;
     }
 
-    /* Can check if permission was previously accepted on SDK > M*/
+    /**
+     * Can check if permission was previously accepted on SDK > M
+     * On sdk < M user must have accepted before download
+     */
     private boolean hasPermission(String perm)
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
@@ -413,54 +453,92 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
         return true;
     }
 
+    /**
+     * Add new marker on Map click
+     *
+     * @param latLng map click location
+     */
     @Override
     public void onMapClick(LatLng latLng)
+
     {
+        /* Hide Search View keyboard*/
+        addressSearchView.clearFocus();
+
         try
         {
             /* Clear previous markers */
             map.clear();
-            List<Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+            List<Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1); // Find address
             if (addresses.size() > 0)
             {
+                /* Find first address match */
                 Address address = addresses.get(0);
                 String streetAddress = address.getAddressLine(0);
+                addressSearchView.setQuery(streetAddress, false); // update address search_view text
+
+                /* Add new marker*/
                 map.addMarker(new MarkerOptions()
                         .position(latLng)
                         .title(streetAddress)
                         .draggable(true)
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
+                /* Set Marker as current pickupLocation */
+                pickUpLocation = String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude);
+                /* Move view to new marker */
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, CAMERA_ZOOM_LEVEL));
+                /* Update Search View Text with Marker address */
+
             }
         } catch (IOException e)
         {
-            Log.d(TAG, "Error Setting new Marker in onMapLongClick");
+            Log.d(TAG, "Error Setting new Marker in onMapLongClick " + e.getMessage());
         }
     }
 
+    /**
+     * Required to implement GoogleMap.OnMarkerDragListener
+     *
+     * @param marker
+     */
     @Override
     public void onMarkerDragStart(Marker marker)
     {
 
     }
 
+    /**
+     * Required to implement GoogleMap.OnMarkerDragListener
+     *
+     * @param marker
+     */
     @Override
     public void onMarkerDrag(Marker marker)
     {
 
     }
 
+    /**
+     * Update marker when it is dropped after move
+     *
+     * @param marker
+     */
     @Override
     public void onMarkerDragEnd(Marker marker)
     {
         LatLng latLng = marker.getPosition();
         try
         {
-            List<Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+            List<Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1); // find address
             if (addresses.size() > 0)
             {
-                Address address = addresses.get(0);
-                String streetAddress = address.getAddressLine(0);
-                marker.setTitle(streetAddress);
+                Address address = addresses.get(0); // get first match
+                String streetAddress = address.getAddressLine(0); // find address name
+                marker.setTitle(streetAddress); // update marker title
+                addressSearchView.setQuery(streetAddress, false); // update address search_view text
+                pickUpLocation = String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude); // Update pickup location
+
             }
         } catch (IOException e)
         {
@@ -468,28 +546,36 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
-    /* Search View On Location entered */
+    /**
+     * Search View On Location entered
+     */
     @Override
     public boolean onQueryTextSubmit(String s)
     {
+        /* Clear previous markers */
+        map.clear();
+        /* Extract location String */
         String location = addressSearchView.getQuery().toString();
-        /* Find address if location is not null*/
+        /* Find address if Search_View text is not null*/
         if (location != null || !location.equals(""))
         {
             try
             {
-                List<Address> addresses = geocoder.getFromLocationName(location, 1);
+                List<Address> addresses = geocoder.getFromLocationName(location, 1); // find address
                 if (addresses.size() > 0)
                 {
-                    Address address = addresses.get(0);
+                    Address address = addresses.get(0); // choose first match
                     String streetAddress = address.getAddressLine(0);
                     LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+
+                    /* Add marker */
                     map.addMarker(new MarkerOptions()
                             .position(latLng)
                             .title(streetAddress)
                             .draggable(true)
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, CAMERA_ZOOM_LEVEL)); // move to marker
                 }
             } catch (IOException e)
             {
@@ -501,7 +587,10 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
 
     ;
 
-    /* Could implement autocomplete drowndown on address search */
+    /**
+     * Required to implement SearchView.OnQueryTextListener
+     * Could implement an autocomplete dropdown as address is typed
+     */
     @Override
     public boolean onQueryTextChange(String s)
     {
