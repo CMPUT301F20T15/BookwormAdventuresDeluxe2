@@ -130,7 +130,5 @@ public class ViewLocationActivity extends AppCompatActivity implements OnMapRead
         {
             Log.d(TAG, "Error Setting new Marker onMapReady " + e.getMessage());
         }
-
     }
-
 }

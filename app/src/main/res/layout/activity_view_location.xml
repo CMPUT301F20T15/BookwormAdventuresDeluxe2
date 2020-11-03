@@ -37,6 +37,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include" />
 
+    <!--    Todo: Add Scan button functionality-->
     <!--    <Button-->
 <!--        android:id="@+id/scan_isbn_button"-->
 <!--        android:layout_width="match_parent"-->

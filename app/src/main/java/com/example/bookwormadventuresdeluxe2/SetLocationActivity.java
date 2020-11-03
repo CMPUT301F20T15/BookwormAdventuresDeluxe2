@@ -61,6 +61,7 @@ import java.util.Set;
 
 /**
  * Allows user to pick an exchange location by placing a marker on a map
+ * source: https://developer.android.com/training/location/retrieve-current
  * Usage:
  * <p>
  * Inside calling fragment or activity add the following to start this activity for result
@@ -116,7 +117,6 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_location);
         /* Set Header */
@@ -151,7 +151,6 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
             mapFragment.getMapAsync(this);
         }
 
-
         /* Search Address */
         addressSearchView.setOnQueryTextListener(this);
         /*
@@ -160,8 +159,6 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
          */
         addressSearchView.setIconified(false);
         addressSearchView.clearFocus();
-
-
     }
 
     /**
@@ -219,7 +216,6 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
             ActivityCompat.requestPermissions(SetLocationActivity.this,
                     permissionsToRequest.toArray(new String[permissionsToRequest.size()]),
                     LOCATION_REQUEST_CODE);
-
         }
 
     }
@@ -392,30 +388,27 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
                 && ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
         {
-
             enableUserLocation();
         }
 
         /* Move Camera to default location */
         LatLng latLng = new LatLng(defaultLatitude, defaultLongitude);
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, CAMERA_ZOOM_LEVEL));
-
     }
 
     /**
+     * Todo: Find top padding amount for user location button based on device view height
      * Enables  User Location on Map
-     * Ok to SuppressLint as permission checked before call to mehod
+     * Ok to SuppressLint as permission checked before call to method
      */
     @SuppressLint("MissingPermission")
     private void enableUserLocation()
     {
-
         if (map != null)
         {
             map.setMyLocationEnabled(true);
             map.setPadding(0, 500, 0, 0); // Move Get My location button under TextBox
         }
-
     }
 
     /**
@@ -460,7 +453,6 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
      */
     @Override
     public void onMapClick(LatLng latLng)
-
     {
         /* Hide Search View keyboard*/
         addressSearchView.clearFocus();
@@ -505,7 +497,6 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     @Override
     public void onMarkerDragStart(Marker marker)
     {
-
     }
 
     /**
@@ -516,7 +507,6 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     @Override
     public void onMarkerDrag(Marker marker)
     {
-
     }
 
     /**
@@ -538,7 +528,6 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
                 marker.setTitle(streetAddress); // update marker title
                 addressSearchView.setQuery(streetAddress, false); // update address search_view text
                 pickUpLocation = String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude); // Update pickup location
-
             }
         } catch (IOException e)
         {
@@ -584,8 +573,6 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
         }
         return false;
     }
-
-    ;
 
     /**
      * Required to implement SearchView.OnQueryTextListener
