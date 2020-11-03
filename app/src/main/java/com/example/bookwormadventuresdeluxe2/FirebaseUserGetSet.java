@@ -1,5 +1,5 @@
 /**
- * CreateAccountActivity.java
+ * FirebaseUserGetSet.java
  *
  * Class for calling user profile object details from database.
  * Also able to edit FirebaseAuth email and profile contact information
