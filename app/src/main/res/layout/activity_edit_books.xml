@@ -28,7 +28,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/edit_page_delete_picture_button"
-            android:onClick="deletePhoto"
             android:src="@drawable/ic_delete"
             app:backgroundTint="@color/delete"
             app:borderWidth="0dp"
