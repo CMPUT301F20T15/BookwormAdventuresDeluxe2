@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
@@ -60,6 +62,12 @@ public class RequestDetailViewFragment extends DetailView
         {
 
             case Requested:
+                Spinner requesters = this.bookDetailView.findViewById(R.id.chose_request);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, this.selectedBook.getRequesters());
+                requesters.setAdapter(adapter);
+                requesters.setVisibility(View.VISIBLE);
+                bookDetailView.findViewById(R.id.book_request_user).setVisibility(View.GONE);
+
                 this.btn1.setText(getString(R.string.accept));
                 this.btn2.setText(getString(R.string.deny));
 
@@ -158,8 +166,8 @@ public class RequestDetailViewFragment extends DetailView
      */
     private void btnDeny(View view)
     {
-        //TODO: get the requester
-        String requester = "iborrow";
+
+        String requester = ((Spinner) bookDetailView.findViewById(R.id.chose_request)).getSelectedItem().toString();
         ArrayList<String> requesters = this.selectedBook.getRequesters();
         requesters.remove(requester);
 
@@ -179,9 +187,9 @@ public class RequestDetailViewFragment extends DetailView
      */
     private void btnAccept(View view)
     {
-        //TODO: get the requester, notify requester
+
         ArrayList<String> borrower = new ArrayList<String>();
-        borrower.add("iborrow");
+        borrower.add(((Spinner) bookDetailView.findViewById(R.id.chose_request)).getSelectedItem().toString());
 
         this.bookDocument.update(getString(R.string.requesters), borrower);
         this.bookDocument.update(getString(R.string.status), getString(R.string.accepted));
@@ -209,7 +217,7 @@ public class RequestDetailViewFragment extends DetailView
         }
 
         TextView user = bookDetailView.findViewById(R.id.book_request_user);
-        user.setText("TODO: get borrower");
+        user.setText(this.selectedBook.getRequesters().get(0));
     }
 
     /**

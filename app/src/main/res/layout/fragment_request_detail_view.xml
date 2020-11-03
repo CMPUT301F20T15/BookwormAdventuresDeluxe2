@@ -155,5 +155,22 @@
             app:layout_constraintStart_toEndOf="@+id/request_exchange"
             app:layout_constraintTop_toTopOf="@+id/request_exchange" />
 
+        <Spinner
+            android:id="@+id/chose_request"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="4dp"
+            android:spinnerMode="dropdown"
+            android:background="@color/colorPrimaryDark"
+            android:popupBackground="@color/colorPrimaryDark"
+            app:layout_constraintBottom_toBottomOf="@+id/book_details_status"
+            app:layout_constraintStart_toStartOf="@+id/book_request_user"
+            app:layout_constraintTop_toTopOf="@+id/book_details_status" />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/book_details_status"
+            app:layout_constraintStart_toStartOf="@+id/book_request_user"
+            app:layout_constraintTop_toTopOf="@+id/book_details_status" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
