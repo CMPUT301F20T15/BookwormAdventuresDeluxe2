@@ -167,6 +167,9 @@ public class Book implements Serializable
                 statusCircle.getDrawable().setColorFilter(ResourcesCompat.getColor(
                         GlobalApplication.getAppContext().getResources(),
                         R.color.borrowed, null), PorterDuff.Mode.SRC_ATOP);
+            default:
+                /* you broke getAugmentStatus() */
+                throw new InvalidParameterException("Unknown status passed to Book.setCircleStatus()");
         }
     }
 
