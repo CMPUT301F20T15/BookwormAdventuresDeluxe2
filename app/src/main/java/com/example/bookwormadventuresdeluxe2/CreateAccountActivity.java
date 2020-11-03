@@ -336,7 +336,7 @@ public class CreateAccountActivity extends AppCompatActivity
     /**
      * Method for checking valid email format.
      *
-     * @param email
+     * @param email Email string to be checked
      * @return boolean true for valid false for invalid
      */
     public static boolean isEmailValid(String email)
@@ -351,7 +351,7 @@ public class CreateAccountActivity extends AppCompatActivity
     /**
      * Take user to login screen on back click
      *
-     * @param view
+     * @param view View
      */
     private void onBackClick(View view)
     {

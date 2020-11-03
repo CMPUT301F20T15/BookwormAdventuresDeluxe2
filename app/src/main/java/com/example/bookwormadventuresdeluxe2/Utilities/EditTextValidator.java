@@ -39,6 +39,8 @@ public class EditTextValidator
 
     /**
      * Set invalid ISBN error notification
+     *
+     * @param editText editText on which error is sey
      */
     public static void invalidIsbn(EditText editText)
     {
@@ -110,7 +112,7 @@ public class EditTextValidator
      */
     public static boolean passwordsMatch(EditText password1, EditText password2)
     {
-        if (password1.getText().toString().trim().compareTo(password2.getText().toString().trim()) == 0)
+        if (password1.getText().toString().trim().equals(password2.getText().toString().trim()))
         {
             return true;
         }
