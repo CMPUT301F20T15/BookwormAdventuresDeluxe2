@@ -1,5 +1,11 @@
 package com.example.bookwormadventuresdeluxe2;
 
+/**
+ * BookListAdapter is a FirestoreRecycler data which acts as middleware between the books
+ * on Firestore and the UI that displays them by providing view updaters and onClickListeners
+ * for items in the RecyclerView.
+ */
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -31,6 +37,7 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
         public TextView author;
         public TextView isbn;
         public ImageView statusCircle;
+        public ImageView bookPhoto;
         public ConstraintLayout bookItemLayout;
 
         public BookListViewHolder(ConstraintLayout bookItemLayout)
@@ -41,6 +48,7 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
             this.isbn = (TextView) bookItemLayout.getViewById(R.id.book_item_isbn);
             this.statusCircle = (ImageView) bookItemLayout.getViewById(R.id.book_item_status);
             this.bookItemLayout = (ConstraintLayout) bookItemLayout.getViewById(R.id.book_item);
+            this.bookPhoto = (ImageView) bookItemLayout.getViewById(R.id.book_item_image);
         }
     }
 
@@ -88,6 +96,7 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
         holder.isbn.setText(book.getIsbn());
         DetailView detailView;
         Bundle source = new Bundle();
+        book.setPhoto(book, holder.bookPhoto);
 
         switch (this.caller)
         {
