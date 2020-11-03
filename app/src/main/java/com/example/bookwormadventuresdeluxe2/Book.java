@@ -149,16 +149,24 @@ public class Book implements Serializable
         switch (getAugmentStatus(user))
         {
             case Available:
-                statusCircle.getDrawable().setColorFilter(ResourcesCompat.getColor(GlobalApplication.getAppContext().getResources(), R.color.available, null), PorterDuff.Mode.SRC_ATOP);
+                statusCircle.getDrawable().setColorFilter(ResourcesCompat.getColor(
+                        GlobalApplication.getAppContext().getResources(),
+                        R.color.available, null), PorterDuff.Mode.SRC_ATOP);
                 break;
             case Requested:
-                statusCircle.getDrawable().setColorFilter(ResourcesCompat.getColor(GlobalApplication.getAppContext().getResources(), R.color.requested, null), PorterDuff.Mode.SRC_ATOP);
+                statusCircle.getDrawable().setColorFilter(ResourcesCompat.getColor(
+                        GlobalApplication.getAppContext().getResources(),
+                        R.color.requested, null), PorterDuff.Mode.SRC_ATOP);
                 break;
             case Accepted:
-                statusCircle.getDrawable().setColorFilter(ResourcesCompat.getColor(GlobalApplication.getAppContext().getResources(), R.color.accepted, null), PorterDuff.Mode.SRC_ATOP);
+                statusCircle.getDrawable().setColorFilter(ResourcesCompat.getColor(
+                        GlobalApplication.getAppContext().getResources(),
+                        R.color.accepted, null), PorterDuff.Mode.SRC_ATOP);
                 break;
             case Borrowed:
-                statusCircle.getDrawable().setColorFilter(ResourcesCompat.getColor(GlobalApplication.getAppContext().getResources(), R.color.borrowed, null), PorterDuff.Mode.SRC_ATOP);
+                statusCircle.getDrawable().setColorFilter(ResourcesCompat.getColor(
+                        GlobalApplication.getAppContext().getResources(),
+                        R.color.borrowed, null), PorterDuff.Mode.SRC_ATOP);
         }
     }
 

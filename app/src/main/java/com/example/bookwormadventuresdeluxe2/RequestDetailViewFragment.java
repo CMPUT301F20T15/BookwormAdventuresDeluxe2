@@ -110,6 +110,9 @@ public class RequestDetailViewFragment extends DetailView
                 this.btn1.setVisibility(View.VISIBLE);
                 this.btn2.setVisibility(View.VISIBLE);
                 break;
+
+            default:
+                throw new InvalidParameterException("Bad status passed to RequestDetailView");
         }
 
         this.bookDocument = FirebaseFirestore

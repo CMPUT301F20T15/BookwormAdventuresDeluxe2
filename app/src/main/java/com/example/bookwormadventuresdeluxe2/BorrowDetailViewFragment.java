@@ -15,6 +15,8 @@ import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.security.InvalidParameterException;
+
 /**
  * Holds the view for seeing details on a book in the borrowed tab
  * The user will be able to interact with borrow options on the book
@@ -96,6 +98,9 @@ public class BorrowDetailViewFragment extends DetailView
                 this.btn1.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
 
                 this.btn1.setVisibility(View.VISIBLE);
+
+            default:
+                throw new InvalidParameterException("Bad status passed to BorrowDetailView");
         }
 
         this.bookDocument = FirebaseFirestore
