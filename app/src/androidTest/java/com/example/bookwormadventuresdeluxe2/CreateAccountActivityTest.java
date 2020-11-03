@@ -2,7 +2,7 @@
  * CreateAccountActivityTest.java
  *
  * Android tests for CreateAccountActivity, tests multiple
- * input combinations and buttons. Also tests successfully
+ * input combinations and create account button. Also tests successfully
  * creating an account.
  */
 
