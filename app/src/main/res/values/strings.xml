@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Bookworm Adventure Deluxe 2</string>
-    <string name="description">Description</string>
-    <string name="isbn">ISBN</string>
+    <string name="app_name">Bookworm Adventures Deluxe 2</string>
+    <string name="description">Description:</string>
+    <string name="isbn">ISBN:</string>
     <string name="available">Available</string>
     <string name="requested">Requested</string>
     <string name="accepted">Accepted</string>
@@ -32,15 +32,39 @@
     <string name="username">Username</string>
     <string name="title">Title</string>
     <string name="author">Author</string>
-    <string name="take_photo">Take Photo</string>
+    <string name="upload_photo">Upload Photo</string>
+    <string name="select_photo">Select Photo</string>
     <string name="describe_the_book">Describe the Book</string>
+    <string name="detail_join">by</string>
+    <string name="exit_confirmation_message">Are you sure you want to exit the app?</string>
     <!-- Firestore collections -->
     <string name="books_collection">Books</string>
     <string name="users_collection">Users</string>
+    <!-- Firestore keywords -->
+    <string name="firestore_title">title</string>
+    <string name="firestore_description">description</string>
+    <string name="firestore_isbn">isbn</string>
+    <string name="firestore_author">author</string>
+    <string name="firestore_owner">owner</string>
+    <string name="firestore_status">status</string>
+    <string name="firestore_pick_up_address">pickUpAddress</string>
+    <string name="firestore_requesters">requesters</string>
+    <string name="firestore_imageUrl">imageUrl</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="notification_title">Notifications</string>
+
+    <!-- Test input strings -->
+    <string name="wrong_activity">Wrong Activity</string>
+    <string name="space"> </string>
+    <string name="wrong_email">wrongemail</string>
+    <string name="wrong_pass">wrongpassword</string>
+    <string name="short_pass">wrong</string>
+
+    <string name="owned_by">Owned by</string>
+
+    <!-- Map -->
     <string name="map_edit_text_hint">Enter Address, City or Postal Code</string>
     <string name="set_exchange_location">Set Exchange Location</string>
     <string name="view_location_pending_request">Pending Request</string>

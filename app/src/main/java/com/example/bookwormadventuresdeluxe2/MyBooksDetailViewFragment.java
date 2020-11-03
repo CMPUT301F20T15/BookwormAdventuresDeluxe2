@@ -9,8 +9,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
+
 import androidx.fragment.app.Fragment;
 
+import com.example.bookwormadventuresdeluxe2.Utilities.Status;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -19,13 +22,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * on from the RecyclerView in MyBooks. From here, the user can view the details of their
  * book and edit it from a button in the header.
  */
-public class MyBooksDetailViewFragment extends Fragment
+public class MyBooksDetailViewFragment extends DetailView
 {
-    ImageButton backButton;
     ImageButton editButton;
-    View bookDetailView;
-    Book selectedBook;
-    String selectedBookId;
 
     public MyBooksDetailViewFragment()
     {
@@ -39,12 +38,6 @@ public class MyBooksDetailViewFragment extends Fragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
@@ -55,14 +48,8 @@ public class MyBooksDetailViewFragment extends Fragment
         this.editButton.setVisibility(View.VISIBLE);
         this.editButton.setOnClickListener(this::onEditClick);
 
-        this.backButton = bookDetailView.findViewById(R.id.app_header_back_button);
-        this.backButton.setVisibility(View.VISIBLE);
-        this.backButton.setOnClickListener(this::onBackClick);
-
-        if (this.selectedBook != null)
-        {
-            updateView(this.selectedBook);
-        }
+        // setup back button
+        super.onCreateView(inflater, container, savedInstanceState);
 
         return bookDetailView;
     }
@@ -75,20 +62,20 @@ public class MyBooksDetailViewFragment extends Fragment
     public void updateView(Book book)
     {
         // Set the content based on the book that was selected
-        TextView title = bookDetailView.findViewById(R.id.book_details_title);
-        title.setText(book.getTitle());
-
-        TextView authorName = bookDetailView.findViewById(R.id.book_details_author);
-        authorName.setText(book.getAuthor());
-
-        TextView description = bookDetailView.findViewById(R.id.book_details_description);
-        description.setText(book.getDescription());
+        super.updateView(book);
 
         TextView status = bookDetailView.findViewById(R.id.book_details_status);
-        status.setText(book.getStatus().toString());
-
-        TextView isbn = bookDetailView.findViewById(R.id.book_details_isbn);
-        isbn.setText(book.getIsbn());
+        if (book.getStatus() == Status.Borrowed)
+        {
+            status.setText(book.getStatus().toString() + " " + getString(R.string.detail_join));
+            TextView user = bookDetailView.findViewById(R.id.book_details_borrower);
+            book.setBorrower("TODO"); // TODO: remove when borrower is set for real
+            user.setText(book.getBorrower());
+        }
+        else
+        {
+            status.setText(book.getStatus().toString());
+        }
 
         ImageView statusCircle = bookDetailView.findViewById(R.id.book_details_status_circle);
         book.setStatusCircleColor(book.getStatus(), statusCircle);
@@ -143,34 +130,21 @@ public class MyBooksDetailViewFragment extends Fragment
                         .collection(getString(R.string.books_collection))
                         .document(this.selectedBookId);
 
-                bookDocument.update("title", this.selectedBook.getTitle());
-                bookDocument.update("author", this.selectedBook.getAuthor());
-                bookDocument.update("description", this.selectedBook.getDescription());
-                bookDocument.update("isbn", this.selectedBook.getIsbn());
+                bookDocument.update(getResources().getString(R.string.firestore_title), this.selectedBook.getTitle());
+                bookDocument.update(getResources().getString(R.string.firestore_author), this.selectedBook.getAuthor());
+                bookDocument.update(getResources().getString(R.string.firestore_description), this.selectedBook.getDescription());
+                bookDocument.update(getResources().getString(R.string.firestore_isbn), this.selectedBook.getIsbn());
+                bookDocument.update(getResources().getString(R.string.firestore_imageUrl), this.selectedBook.getImageUrl());
             }
             else if (resultCode == AddOrEditBooksActivity.DELETE_BOOK) /* Delete was pressed */
             {
                 /* Simulate back click to exit this fragment since the book no longer exists */
                 this.onBackClick(getView());
             }
-            else
-            {
-                /* We shouldn't be returning any other result codes */
-                throw new IllegalStateException("Unknown return code received from Edit Book Activity.");
-            }
+            /* Throw no exception here because if the back button is pressed we will have
+               no return code.
+             */
         }
     }
-
-    /**
-     * Receives and sets the selected book from the calling fragment, MyBooksFragment
-     *
-     * @param selectedBook The book that was selected from MyBooksFragment
-     */
-    public void onFragmentInteraction(Book selectedBook, String documentId)
-    {
-        this.selectedBook = selectedBook;
-        this.selectedBookId = documentId;
-    }
-
 
 }

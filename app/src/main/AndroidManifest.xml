@@ -5,9 +5,9 @@
 
     <uses-feature android:name="android.hardware.camera" />
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name="com.example.bookwormadventuresdeluxe2.GlobalApplication"
@@ -23,8 +23,23 @@
             android:value="@string/GOOGLE_API_LIBRARY_KEY" />
 
         <activity
+            android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
+            android:launchMode="standard"
+            tools:replace="android:launchMode" />
+
+        <!--  Create Account Activity has theme BlackTextTheme which extends AppTheme.NoActionBar
+              and is used to override default textColour to black
+         -->
+        <activity
             android:name=".CreateAccountActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:parentActivityName=".LoginActivity"
+            android:theme="@style/BlackTextTheme">
+            <!-- The meta-data tag is required if you support API level 15 and lower  -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LoginActivity" />
+        </activity>
+
         <activity
             android:name=".AddOrEditBooksActivity"
             android:theme="@style/AppTheme">
@@ -32,13 +47,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MyBooksActivity" />
         </activity>
+
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
+
         <activity
             android:name=".MyBooksActivity"
             android:launchMode="singleTop" />
+
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -48,6 +66,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".SetLocationActivity"
             android:theme="@style/BlackTextTheme">

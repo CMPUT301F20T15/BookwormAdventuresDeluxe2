@@ -1,5 +1,13 @@
+/**
+ * EditTextValidator.java
+ *
+ * Utility class for EditText error handling. Matches target
+ * EditText and wanted output.
+ */
+
 package com.example.bookwormadventuresdeluxe2.Utilities;
 
+import android.text.TextUtils;
 import android.widget.EditText;
 
 /**
@@ -7,14 +15,15 @@ import android.widget.EditText;
  */
 public class EditTextValidator
 {
-    private static String EMPTY = "Cannot be left blank!";
-    private static String PASSWORDSDONTMATCH = "Passwords do not match!";
-    private static String EMAILTAKEN = "Email is already taken!";
-    private static String USERNAMETAKEN = "Username is already taken!";
-    private static String EMAILNOTFOUND = "Email not found!";
-    private static String WRONGPASSWORD = "Incorrect password!";
-    private static String WEAKPASS = "Password must be 6 characters or longer!";
-    private static String INVALIDEMAIL = "Invalid e-mail address!";
+    public static String EMPTY = "Cannot be left blank!";
+    public static String PASSWORDSDONTMATCH = "Passwords do not match!";
+    public static String EMAILTAKEN = "Email is already taken!";
+    public static String USERNAMETAKEN = "Username is already taken!";
+    public static String EMAILNOTFOUND = "Email not found!";
+    public static String WRONGPASSWORD = "Incorrect password!";
+    public static String WEAKPASS = "Password must be 6 characters or longer!";
+    public static String INVALIDEMAIL = "Invalid e-mail address!";
+    public static String INVALIDISBN = "Invalid ISBN!";
 
     /**
      * Set empty field error notification
@@ -23,13 +32,20 @@ public class EditTextValidator
      */
     public static void isEmpty(EditText editText)
     {
-        editText.requestFocus();
         editText.setError(EMPTY);
+        editText.setText("");
+        editText.requestFocus();
+    }
 
-        if (allSpaces(editText))
-        {
-            editText.setText("");
-        }
+    /**
+     * Set invalid ISBN error notification
+     *
+     * @param editText editText on which error is sey
+     */
+    public static void invalidIsbn(EditText editText)
+    {
+        editText.setError(INVALIDISBN);
+        editText.requestFocus();
     }
 
     /**
@@ -88,34 +104,6 @@ public class EditTextValidator
     }
 
     /**
-     * Checks if input text was all space characters
-     *
-     * @param editText editText to be checked
-     * @return boolean stating if all spaces
-     */
-    private static boolean allSpaces(EditText editText)
-    {
-        int spaceCount = 0;
-
-        for (int i = 0; i < editText.length(); i++)
-        {
-            if (Character.isSpaceChar(editText.getText().toString().charAt(i)))
-            {
-                spaceCount++;
-            }
-        }
-        if (spaceCount == editText.length())
-        {
-            editText.clearComposingText();
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    /**
      * Set passwords don't match error if password1 and password2 don't match
      *
      * @param password1 password on which error is set
@@ -124,7 +112,7 @@ public class EditTextValidator
      */
     public static boolean passwordsMatch(EditText password1, EditText password2)
     {
-        if (password1.getText().toString().compareTo(password2.getText().toString()) == 0)
+        if (password1.getText().toString().trim().equals(password2.getText().toString().trim()))
         {
             return true;
         }
@@ -143,13 +131,15 @@ public class EditTextValidator
      *
      * @param password1 password on which error is set
      * @param password2 editText on which error is set
+     * @return boolean stating is password is long enough
      */
-    public static void weakPass(EditText password1, EditText password2)
+    public static boolean weakPass(EditText password1, EditText password2)
     {
-        if (password1.getText().toString().length() >= 6)
+        if (password1.getText().toString().trim().length() >= 6)
         {
             password1.setError(null);
             password2.setError(null);
+            return false;
         }
         else
         {
@@ -157,7 +147,52 @@ public class EditTextValidator
             password2.setError(WEAKPASS);
             password2.requestFocus();
             password1.requestFocus();
+            return true;
         }
     }
 
+    /**
+     * Checker for CreateAccountActivity empty fields
+     *
+     * @param username username EditText
+     * @param email email EditText
+     * @param phoneNumber phone number EditText
+     * @param password1 password EditText
+     * @param password2 confirm password EditText
+     * @return boolean if empties exist or not
+     */
+    public static boolean createAccountEmpties(EditText username, EditText email,
+                                               EditText phoneNumber, EditText password1,
+                                               EditText password2)
+    {
+        Boolean empties = false;
+
+        /* Set Empty EditText Error codes */
+        if (TextUtils.isEmpty(password2.getText().toString().trim()))
+        {
+            EditTextValidator.isEmpty(password2);
+            empties = true;
+        }
+        if (TextUtils.isEmpty(password1.getText().toString().trim()))
+        {
+            EditTextValidator.isEmpty(password1);
+            empties = true;
+        }
+        if (TextUtils.isEmpty(phoneNumber.getText().toString().trim()))
+        {
+            EditTextValidator.isEmpty(phoneNumber);
+            empties = true;
+        }
+        if (TextUtils.isEmpty(email.getText().toString().trim()))
+        {
+            EditTextValidator.isEmpty(email);
+            empties = true;
+        }
+        if (TextUtils.isEmpty(username.getText().toString().trim()))
+        {
+            EditTextValidator.isEmpty(username);
+            empties = true;
+        }
+        return empties;
+    }
 }

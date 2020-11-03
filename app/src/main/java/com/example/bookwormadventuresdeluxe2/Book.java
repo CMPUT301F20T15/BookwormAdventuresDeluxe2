@@ -1,22 +1,36 @@
 package com.example.bookwormadventuresdeluxe2;
 
+/**
+ * Book holds all of the relevant information pertaining to a book in the library. It has
+ * a set of private fields which define its attributes along with corresponding getters
+ * and setters to retrieve and manipulate the information.
+ */
+
 import android.graphics.PorterDuff;
+import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.core.content.res.ResourcesCompat;
 
+import com.example.bookwormadventuresdeluxe2.Utilities.DownloadImageTask;
 import com.example.bookwormadventuresdeluxe2.Utilities.Status;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Book implements Serializable
 {
     // Basic attributes for now, rest added as needed
+    private String owner;
     private String title;
     private String author;
     private String isbn;
     private String description;
     private Status status;
+    private String pickUpAddress;
+    private ArrayList<String> requesters;
+    private String borrower;
+    private String imageUrl = "";
 
     // BookListAdapter which is now a FirestoreRecyclerAdapter requires empty constructor
     public Book()
@@ -24,29 +38,26 @@ public class Book implements Serializable
 
     }
 
-    public Book(String title, String author, String description, String isbn, Status status)
+    public Book(String owner, String title, String author, String description, String isbn, Status status, String imageUrl)
     {
+        this.owner = owner;
         this.title = title;
         this.author = author;
         this.description = description;
         this.isbn = isbn;
         this.description = description;
         this.status = status;
+        this.imageUrl = imageUrl;
     }
 
-    /**
-     * Returns true if the attributes provided is valid for an instance of a book object
-     *
-     * @param title
-     * @param author
-     * @param description
-     * @param isbn
-     * @return
-     */
-    public static boolean fieldsValid(String title, String author, String description, String isbn)
+    public String getOwner()
     {
-        // TODO: implement this properly later
-        return true;
+        return owner;
+    }
+
+    public void setOwner(String owner)
+    {
+        this.owner = owner;
     }
 
     public String getTitle()
@@ -99,6 +110,56 @@ public class Book implements Serializable
         this.status = status;
     }
 
+    public String getPickUpAddress()
+    {
+        return pickUpAddress;
+    }
+
+    public void setPickUpAddress(String pickUpAddress)
+    {
+        this.pickUpAddress = pickUpAddress;
+    }
+
+    public ArrayList<String> getRequesters()
+    {
+        return requesters;
+    }
+
+    public void setRequesters(ArrayList<String> requesters)
+    {
+        this.requesters = requesters;
+    }
+
+    public void addRequester(String requester)
+    {
+        this.requesters.add(requester);
+    }
+
+    public void deleteRequester(String requester)
+    {
+        this.requesters.remove(requester);
+    }
+
+    public String getBorrower()
+    {
+        return borrower;
+    }
+
+    public void setBorrower(String borrower)
+    {
+        this.borrower = borrower;
+    }
+
+    public String getImageUrl()
+    {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl)
+    {
+        this.imageUrl = imageUrl;
+    }
+
     /**
      * Sets the color of an image view based on the given status
      *
@@ -130,6 +191,23 @@ public class Book implements Serializable
     public Notification createNotification(String message)
     {
         return new Notification(this, message);
+    }
+
+    /**
+     * Sets the photo corresponding to the given imageView with the image url of the given book
+     *
+     * @param book
+     * @param imageView
+     */
+    public void setPhoto(Book book, ImageView imageView)
+    {
+        if (book.getImageUrl().compareTo("") == 0)
+        {
+            imageView.setScaleType(ImageView.ScaleType.CENTER);
+            imageView.setImageDrawable(ResourcesCompat.getDrawable(GlobalApplication.getAppContext().getResources(), R.drawable.ic_camera, null));
+            return;
+        }
+        new DownloadImageTask(imageView).execute(book.getImageUrl());
     }
 }
 

@@ -1,8 +1,16 @@
 package com.example.bookwormadventuresdeluxe2;
 
+/**
+ * MyBooksFragment holds the list of books belonging to the user who is signed in. From here,
+ * the user may click on a book to view its details in MyBooksDetailViewFragment or perform
+ * other actions such as filtering the list, scanning a book to open its details or view
+ * their notifications.
+ */
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +25,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 
 /**
  * A {@link Fragment} subclass for navbar menu item 1.
@@ -28,8 +39,10 @@ public class MyBooksFragment extends Fragment
     private RecyclerView myBooksRecyclerView;
     private BookListAdapter myBooksRecyclerAdapter;
     private RecyclerView.LayoutManager myBooksRecyclerLayoutManager;
+    private FilterMenu filterMenu;
 
     ImageButton notificationButton;
+    ImageButton filterButton;
 
     public MyBooksFragment()
     {
@@ -46,6 +59,15 @@ public class MyBooksFragment extends Fragment
         // Set visibility of desired custom header buttons
         myBooksView.findViewById(R.id.app_header_filter_button).setVisibility(View.VISIBLE);
         myBooksView.findViewById(R.id.app_header_scan_button).setVisibility(View.VISIBLE);
+
+        /* Setup Filter button */
+        this.filterButton = myBooksView.findViewById(R.id.app_header_filter_button);
+        this.filterButton.setVisibility(View.VISIBLE);
+        this.filterButton.setOnClickListener(this::onFilterClick);
+
+        // TODO: Setup scan button
+
+        /* Setup notification button */
         this.notificationButton = myBooksView.findViewById(R.id.app_header_notification_button);
         this.notificationButton.setVisibility(View.VISIBLE);
         this.notificationButton.setOnClickListener(this::onNotificationClick);
@@ -58,10 +80,11 @@ public class MyBooksFragment extends Fragment
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
-        Query query = rootRef.collection(getString(R.string.books_collection)).orderBy("title");
+        UserCredentialAPI userCredentialApi = UserCredentialAPI.getInstance();
+        Query booksOfCurrentUser = rootRef.collection(getString(R.string.books_collection)).whereEqualTo("owner", userCredentialApi.getUsername());
 
         FirestoreRecyclerOptions<Book> options = new FirestoreRecyclerOptions.Builder<Book>()
-                .setQuery(query, Book.class)
+                .setQuery(booksOfCurrentUser, Book.class)
                 .build();
 
         myBooksRecyclerView = (RecyclerView) view.findViewById(R.id.search_recycler_view);
@@ -70,8 +93,11 @@ public class MyBooksFragment extends Fragment
         myBooksRecyclerLayoutManager = new LinearLayoutManager(this.getContext());
         myBooksRecyclerView.setLayoutManager(myBooksRecyclerLayoutManager);
 
-        myBooksRecyclerAdapter = new BookListAdapter(this.getContext(), options);
+        myBooksRecyclerAdapter = new BookListAdapter(this.getContext(), options, R.id.my_books);
         myBooksRecyclerView.setAdapter(myBooksRecyclerAdapter);
+
+        /* Initialize the filterMenu. This will update the queries using the adapter */
+        this.filterMenu = new FilterMenu(myBooksRecyclerAdapter, booksOfCurrentUser);
 
         FloatingActionButton btn = (FloatingActionButton) getView().findViewById(R.id.my_books_add_button);
         btn.setOnClickListener(new View.OnClickListener()
@@ -117,11 +143,15 @@ public class MyBooksFragment extends Fragment
 
             // Get the data from the new book and add it to the database
             Map<String, Object> data = new HashMap<>();
-            data.put("title", newBook.getTitle());
-            data.put("author", newBook.getAuthor());
-            data.put("description", newBook.getDescription());
-            data.put("isbn", newBook.getIsbn());
-            data.put("status", newBook.getStatus());
+            data.put(getResources().getString(R.string.firestore_owner), newBook.getOwner());
+            data.put(getResources().getString(R.string.firestore_title), newBook.getTitle());
+            data.put(getResources().getString(R.string.firestore_author), newBook.getAuthor());
+            data.put(getResources().getString(R.string.firestore_description), newBook.getDescription());
+            data.put(getResources().getString(R.string.firestore_isbn), newBook.getIsbn());
+            data.put(getResources().getString(R.string.firestore_status), newBook.getStatus());
+            data.put(getResources().getString(R.string.firestore_pick_up_address), "");
+            data.put(getResources().getString(R.string.firestore_requesters), new ArrayList<String>());
+            data.put(getResources().getString(R.string.firestore_imageUrl), newBook.getImageUrl());
 
             FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
             rootRef.collection(getString(R.string.books_collection)).add(data);
@@ -133,5 +163,26 @@ public class MyBooksFragment extends Fragment
     {
         NotificationFragment notificationFragment = new NotificationFragment();
         getFragmentManager().beginTransaction().replace(R.id.frame_container, notificationFragment).commit();
+    }
+
+    /**
+     * Launch the filter menu fragment when the filter button is clicked
+     *
+     * @param view
+     */
+    private void onFilterClick(View view)
+    {
+        /* https://stackoverflow.com/questions/43207043/check-if-fragment-is-currently-visible-or-no/45059794 */
+        View fragmentRootView = filterMenu.getView();
+        if (fragmentRootView == null)
+        {
+            /* Fragment was hidden, show it */
+            getFragmentManager().beginTransaction().add(R.id.frame_container, filterMenu).commit();
+        }
+        else
+        {
+            /* Fragment is shown, hide it */
+            getFragmentManager().beginTransaction().remove(filterMenu).commit();
+        }
     }
 }
