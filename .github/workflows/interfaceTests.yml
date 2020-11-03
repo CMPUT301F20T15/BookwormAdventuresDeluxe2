@@ -38,6 +38,6 @@ jobs:
         arch: x86
         profile: pixel_3a
         emulator-build: 6855416
-        api-level: 29
-        emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+        api-level: 24
+        emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
         script: ./gradlew connectedCheck --stacktrace
