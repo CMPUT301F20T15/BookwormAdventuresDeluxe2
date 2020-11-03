@@ -110,7 +110,7 @@ public class ProfileFragment extends Fragment
      */
     public void myProfile()
     {
-        /* Show signout and edit button*/
+        /* Show signout and edit button */
         appHeaderText.setText(R.string.my_profile_title);
         signOutButton.setOnClickListener(this::signOut);
         edit.setOnClickListener(this::editFragment);
