@@ -230,6 +230,8 @@ public class BorrowDetailViewFragment extends DetailView
             fragment.setArguments(args);
             getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
         }
+
+        /* Source fragment was Borrow, return to Requests */
         else if (source.equals(getString(R.string.borrow)))
         {
             RequestsFragment fragment = new RequestsFragment();
