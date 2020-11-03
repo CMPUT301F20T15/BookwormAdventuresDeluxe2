@@ -71,6 +71,7 @@ public class ProfileFragment extends Fragment
         /* Set title */
         appHeaderText = view.findViewById(R.id.app_header_title);
 
+        /* Buttons */
         edit = view.findViewById(R.id.profile_edit);
         signOutButton = view.findViewById(R.id.profile_logout);
 
