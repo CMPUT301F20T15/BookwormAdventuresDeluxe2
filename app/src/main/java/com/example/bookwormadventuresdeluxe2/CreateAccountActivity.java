@@ -12,7 +12,6 @@ package com.example.bookwormadventuresdeluxe2;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -33,15 +32,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class CreateAccountActivity extends AppCompatActivity implements FirebaseUserGetSet.UsernameTakenCallback
+public class CreateAccountActivity extends AppCompatActivity
 {
     private static final String TAG = "CreateAccountActivity";
     private Button createAccountButton;
@@ -56,7 +57,6 @@ public class CreateAccountActivity extends AppCompatActivity implements Firebase
     private FirebaseAuth.AuthStateListener authStateListener;
 
     private FirebaseUser currentUser;
-    private Boolean usernameInUse;
 
     /* FireStore Connection */
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -95,6 +95,38 @@ public class CreateAccountActivity extends AppCompatActivity implements Firebase
         backButton.setVisibility(View.VISIBLE);
         backButton.setOnClickListener(this::onBackClick);
 
+        createAccount();
+    }
+
+    /**
+     * Set Current User and attach Auth state listener on Start of Activity
+     */
+    @Override
+    protected void onStart()
+    {
+        currentUser = firebaseAuth.getCurrentUser();
+        firebaseAuth.addAuthStateListener(authStateListener);
+        super.onStart();
+    }
+
+    /**
+     * Detach Auth State Listener on idle Activity
+     */
+    @Override
+    protected void onPause()
+    {
+        if (firebaseAuth != null)
+        {
+            firebaseAuth.removeAuthStateListener(authStateListener);
+        }
+        super.onPause();
+    }
+
+    /**
+     * CreateAccountButton functionality
+     */
+    public void createAccount()
+    {
         /* Set click listener to create account*/
         createAccountButton.setOnClickListener(new View.OnClickListener()
         {
@@ -102,7 +134,7 @@ public class CreateAccountActivity extends AppCompatActivity implements Firebase
             {
                 /* Check if there are no empty fields*/
                 if (!EditTextValidator.createAccountEmpties(editTextUsername, editTextEmail, editTextPhoneNumber,
-                                                            editTextPassword, confirmPassword))
+                        editTextPassword, confirmPassword))
                 {
                     /* Check is passwords match and long enough, display error if not*/
                     if (EditTextValidator.passwordsMatch(editTextPassword, confirmPassword)
@@ -111,20 +143,10 @@ public class CreateAccountActivity extends AppCompatActivity implements Firebase
                         /* Show progress bar */
                         progressBar.setVisibility(View.VISIBLE);
 
-                        /* Checks is username is available and passes it to createUser for errors*/
-                        checkUsernameAvailability(editTextUsername.getText().toString().trim(),
-                                new FirebaseUserGetSet.UsernameTakenCallback()
-                                {
-                                    @Override
-                                    public void onUsernameTakenCallback(Boolean result)
-                                    {
-                                        usernameInUse = result;
-
-                                        createUser(editTextUsername.getText().toString().trim(),
-                                                editTextEmail.getText().toString().trim(),
-                                                editTextPassword.getText().toString().trim());
-                                    }
-                                });
+                        /* Checks is username and email is valid and passes it to createUser for errors*/
+                        checkUsernameEmailAvailability(editTextUsername.getText().toString().trim(),
+                                editTextEmail.getText().toString().trim(),
+                                editTextPassword.getText().toString().trim());
                     }
                 }
             }
@@ -132,47 +154,98 @@ public class CreateAccountActivity extends AppCompatActivity implements Firebase
     }
 
     /**
-     * Take user to login screen on back click
+     * Checker for valid account creation parameters. Goes into CreateUser
      *
-     * @param view
+     * @param username Input username to be checked
+     * @param email Input email to be checked
+     * @param password Password of account to be created
      */
-    private void onBackClick(View view)
+    public void checkUsernameEmailAvailability(String username, String email, String password)
     {
-        super.onBackPressed();
-    }
+        /* Show progress bar */
+        progressBar.setVisibility(View.VISIBLE);
 
-    /**
-     * Check if username is available
-     * On Success create user
-     * On Failure add error to username editText
-     * Source: https://stackoverflow.com/questions/48570270/firestore-query-checking-if-username-already-exists
-     *
-     * @param username Username requiring availability check
-     * @param result Result of query callback
-     */
-    public void checkUsernameAvailability(String username, FirebaseUserGetSet.UsernameTakenCallback result)
-    {
         /* Query to find username match*/
         Query userNameQuery = collectionReference.whereEqualTo("username", username);
-        userNameQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+        Query emailQuery = collectionReference.whereEqualTo("email", email);
+
+        final boolean[] isUsernameInUse = {false};  // Declared final as it is accessed in inner class
+        final boolean[] isEmailInUse = {false};
+
+        /* Create User if email and username not in use*/
+        emailQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
         {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task)
             {
                 if (task.isSuccessful())
                 {
-                    for (QueryDocumentSnapshot document : task.getResult())
+                    /* Search for documents containing email */
+                    for (DocumentSnapshot document : task.getResult())
                     {
-                        /* Return result if username found */
-                        result.onUsernameTakenCallback(true);
+                        if (document.exists())
+                        {
+                            /* Set variable to true if email exists */
+                            isEmailInUse[0] = true;
+                            break;
+                        }
                     }
+                    /*  Create user if username is available */
+                    userNameQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                    {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task)
+                        {
+                            if (task.isSuccessful())
+                            {
+                                /* Search for documents containing username */
+                                for (DocumentSnapshot document : task.getResult())
+                                {
+                                    if (document.exists())
+                                    {
+                                        /* Set variable to true if username exists */
+                                        isUsernameInUse[0] = true;
+                                        break;
+                                    }
+                                }
+                                /* All valid input, create account */
+                                if (!isEmailInUse[0] && !isUsernameInUse[0] && isEmailValid(email))
+                                {
+                                    createUser(username, email, password);
+                                }
+                                else
+                                {
+                                    /* Set Edit Text errors*/
+                                    if (isEmailInUse[0])
+                                    {
+                                        EditTextValidator.emailTaken(editTextEmail);
+                                    }
+                                    if (!isEmailValid(email))
+                                    {
+                                        EditTextValidator.invalidEmail(editTextEmail);
+                                    }
+                                    if (isUsernameInUse[0])
+                                    {
+                                        EditTextValidator.usernameTaken(editTextUsername);
+                                    }
+                                    /* Hide progressBar*/
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                }
+                            }
+                            else
+                            {
+                                Log.d("CreateAccountActivity", "Error getting documents"
+                                        + "in checkUsernameAvailability: ", task.getException());
+                            }
+                        }
+                    });
                 }
-                if (task.getResult().size() == 0)
+                else
                 {
-                    /* Return result if username not found*/
-                    result.onUsernameTakenCallback(false);
+                    Log.d("CreateAccountActivity", "Error getting documents"
+                            + "in checkUsernameAvailability: ", task.getException());
                 }
-             }
+            }
         });
     }
 
@@ -198,30 +271,21 @@ public class CreateAccountActivity extends AppCompatActivity implements Firebase
                         if (task.isSuccessful())
                         {
                             /* Successful create account*/
-                            if (!usernameInUse)
-                            {
-                                currentUser = firebaseAuth.getCurrentUser();
-                                assert currentUser != null;
+                            currentUser = firebaseAuth.getCurrentUser();
+                            assert currentUser != null;
 
-                                /* Store User credentials in the global API*/
-                                UserCredentialAPI userCredentialAPI = UserCredentialAPI.getInstance();
-                                userCredentialAPI.setUserId(currentUser.getUid());
-                                userCredentialAPI.setUsername(username);
+                            /* Store User credentials in the global API*/
+                            UserCredentialAPI userCredentialAPI = UserCredentialAPI.getInstance();
+                            userCredentialAPI.setUserId(currentUser.getUid());
+                            userCredentialAPI.setUsername(username);
 
-                                createFirebaseAccount(currentUser.getUid());
+                            /* Create firebase database profile */
+                            createFirebaseAccount(currentUser.getUid());
 
-                                /* Take user to My Books Activity */
-                                Intent intent = new Intent(CreateAccountActivity.this,
-                                        MyBooksActivity.class);
-                                startActivity(intent);
-                            }
-                            else if (usernameInUse)
-                            {
-                                /* Delete FirebaseAuth account if username was taken*/
-                                currentUser.delete();
-                                EditTextValidator.usernameTaken(editTextUsername);
-                                progressBar.setVisibility(View.INVISIBLE);
-                            }
+                            /* Take user to My Books Activity */
+                            Intent intent = new Intent(CreateAccountActivity.this,
+                                    MyBooksActivity.class);
+                            startActivity(intent);
                         }
                         else
                         {
@@ -231,27 +295,7 @@ public class CreateAccountActivity extends AppCompatActivity implements Firebase
                                 String errorCode = "";
                                 errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
 
-                                switch (errorCode)
-                                {
-                                    /* Non-email string error */
-                                    case "ERROR_INVALID_EMAIL":
-                                        EditTextValidator.invalidEmail(editTextEmail);
-                                        break;
-
-                                    /* Taken email error */
-                                    case "ERROR_EMAIL_ALREADY_IN_USE":
-                                        EditTextValidator.emailTaken(editTextEmail);
-                                        break;
-
-                                    default:
-                                        /* Unexpected Error code*/
-                                        throw new Exception("Unexpected Firebase Error Code"
-                                                + "inside click listener.");
-                                }
-                                if(usernameInUse)
-                                {
-                                    EditTextValidator.usernameTaken(editTextUsername);
-                                }
+                                editTextUsername.setError(errorCode);
                             } catch (Exception e)
                             {
                                 /* Different type from errorCode, cannot be cast to the same object.
@@ -283,44 +327,34 @@ public class CreateAccountActivity extends AppCompatActivity implements Firebase
         newUser.put("userId", userId);
         newUser.put("email", editTextEmail.getText().toString().trim());
         newUser.put("username", editTextUsername.getText().toString().trim());
-        newUser.put("phoneNumber", editTextPassword.getText().toString());
+        newUser.put("phoneNumber", editTextPhoneNumber.getText().toString());
 
         /* Save new user to Firestore */
         collectionReference.add(newUser);
     }
 
     /**
-     * Set Current User and attach Auth state listener on Start of Activity
-     */
-    @Override
-    protected void onStart()
-    {
-        currentUser = firebaseAuth.getCurrentUser();
-        firebaseAuth.addAuthStateListener(authStateListener);
-        super.onStart();
-    }
-
-    /**
-     * Detach Auth State Listener on idle Activity
-     */
-    @Override
-    protected void onPause()
-    {
-        if (firebaseAuth != null)
-        {
-            firebaseAuth.removeAuthStateListener(authStateListener);
-        }
-        super.onPause();
-    }
-
-    /**
-     * Callback for username check, to time with email taken check
+     * Method for checking valid email format.
      *
-     * @param result existence of username in database
+     * @param email
+     * @return boolean true for valid false for invalid
      */
-    @Override
-    public void onUsernameTakenCallback(Boolean result)
+    public static boolean isEmailValid(String email)
     {
+        /* Source: https://stackoverflow.com/questions/6119722/how-to-check-edittexts-text-is-email-address-or-not*/
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
 
+    /**
+     * Take user to login screen on back click
+     *
+     * @param view
+     */
+    private void onBackClick(View view)
+    {
+        super.onBackPressed();
     }
 }

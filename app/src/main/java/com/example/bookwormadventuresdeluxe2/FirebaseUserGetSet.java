@@ -181,12 +181,4 @@ public class FirebaseUserGetSet
     {
         void onCallback(UserProfileObject userObject);
     }
-
-    /**
-     * Callback for checking if username exists
-     */
-    public interface UsernameTakenCallback
-    {
-        void onUsernameTakenCallback(Boolean result);
-    }
 }
