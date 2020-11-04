@@ -100,9 +100,6 @@ public class MyBooksFragmentTest
 
         /* Delete the book */
         deleteTestBook(solo, resources);
-
-        /* Log out */
-        signOut(solo, resources);
     }
 
     /**
@@ -136,8 +133,6 @@ public class MyBooksFragmentTest
         /* Fill in the isbn text so we are able to close the keyboard and exit */
         solo.enterText((EditText) solo.getView(R.id.isbn_edit_text), resources.getString(R.string.test_book_isbn));
 
-        AddOrEditBooksActivity activity = (AddOrEditBooksActivity) solo.getCurrentActivity();
-
         /* Return to the MyBooksActivity */
         solo.clickOnView(solo.getView(R.id.app_header_back_button));
 
@@ -149,9 +144,29 @@ public class MyBooksFragmentTest
 
         /* Check that we returned to the MyBooks Activity */
         solo.assertCurrentActivity(resources.getString(R.string.wrong_activity), MyBooksActivity.class);
+    }
 
-        /* Log out */
-        signOut(solo, resources);
+    /**
+     * Tests deleting a book
+     */
+    @Test
+    public void deleteBookTest()
+    {
+        /* Create the test book */
+        createTestBook(solo, resources);
+
+        /* Check that all the text is found (this means the book is shown in the booklist) */
+        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_title), 1, SHORT_WAIT));
+        Assert.assertTrue(solo.searchText(resources.getString(R.string.test_book_author)));
+        Assert.assertTrue(solo.searchText(resources.getString(R.string.test_book_isbn)));
+
+        /* Delete the test book */
+        deleteTestBook(solo, resources);
+
+        /* Check that none of the text is found (this means the book is not in the booklist) */
+        Assert.assertFalse(solo.waitForText(resources.getString(R.string.test_book_title), 1, SHORT_WAIT));
+        Assert.assertFalse(solo.searchText(resources.getString(R.string.test_book_author)));
+        Assert.assertFalse(solo.searchText(resources.getString(R.string.test_book_isbn)));
     }
 
     /**
@@ -162,6 +177,7 @@ public class MyBooksFragmentTest
     @After
     public void tearDown() throws Exception
     {
+        signOut(solo, resources);
         solo.finishOpenedActivities();
     }
 }

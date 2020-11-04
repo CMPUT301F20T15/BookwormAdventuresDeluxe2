@@ -56,8 +56,8 @@ public class TestUtils
      */
     public static void createTestBook(Solo solo, Resources resources)
     {
-        /* Assert we are in the MyBooks activity */
-        solo.assertCurrentActivity(resources.getString(R.string.wrong_activity), MyBooksActivity.class);
+        /* Wait until we enter the MyBooksActivity */
+        solo.waitForActivity(MyBooksActivity.class, (int) SHORT_WAIT);
 
         /* Click the add books button */
         solo.clickOnView(solo.getView(R.id.my_books_add_button));
