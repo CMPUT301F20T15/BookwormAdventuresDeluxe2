@@ -66,7 +66,6 @@ public class BorrowDetailViewFragment extends DetailView
         switch (selectedBook.getStatus())
         {
             case Available:
-                break;
             case Requested:
                 break;
 
@@ -226,16 +225,13 @@ public class BorrowDetailViewFragment extends DetailView
         if (source.equals(getString(R.string.search_title)))
         {
             SearchFragment fragment = new SearchFragment();
-            Bundle args = new Bundle();
-            fragment.setArguments(args);
             getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
         }
-
-        /* Source fragment was Borrow, return to Requests */
+        /* Source fragment was Borrow, return to Borrow */
         else if (source.equals(getString(R.string.borrow)))
         {
-            RequestsFragment fragment = new RequestsFragment();
             Bundle args = new Bundle();
+            RequestsFragment fragment = new RequestsFragment();
             fragment.setArguments(args);
             args.putBoolean(getString(R.string.borrow), true);
             getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();

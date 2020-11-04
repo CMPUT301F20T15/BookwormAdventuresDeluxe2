@@ -16,6 +16,8 @@ import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.util.Arrays;
+
 /**
  * A {@link Fragment} subclass for navbar menu item 3
  */
@@ -51,10 +53,13 @@ public class SearchFragment extends Fragment
         FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
         UserCredentialAPI userCredentialApi = UserCredentialAPI.getInstance();
 
-        //TODO: update query to target not equal wanted because crashes at rPending and bPending
         Query availableBooksNotMine = rootRef.collection(getString(R.string.books_collection))
-                                            .whereNotEqualTo("owner", UserCredentialAPI.getInstance().getUsername())
-                                            .whereEqualTo("status", Status.Available);
+                .whereNotEqualTo(getString(R.string.owner),
+                UserCredentialAPI.getInstance().getUsername())
+                .whereIn(getString(R.string.status),
+                Arrays.asList(getString(R.string.available), getString(R.string.requested)));
+
+
 
         FirestoreRecyclerOptions<Book> options = new FirestoreRecyclerOptions.Builder<Book>()
                 .setQuery(availableBooksNotMine, Book.class)
