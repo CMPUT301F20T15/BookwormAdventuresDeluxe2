@@ -179,29 +179,29 @@ public class MyBooksFragment extends Fragment
             {
                 if (result.getContents() != null)
                 {
-                    String barcode = result.getContents();  // this is the barcode from the scan
+                    String barcode = result.getContents();
                     processIsbnScan(barcode);
-//                    DetailView bookDetailFragment = new MyBooksDetailViewFragment();
-
-//                    getActivity().getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.frame_container, bookDetailFragment).commit();
 
                 }
             }
         }
     }
 
+    /**
+     * Queries Firebase for the user's books with the same isbn as the one scanned
+     * https://stackoverflow.com/questions/50650224/wait-until-firestore-data-is-retrieved-to-launch-an-activity/50680352
+     *
+     * @param barcode
+     */
     private void processIsbnScan(String barcode)
     {
-//        FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
         Query query = booksOfCurrentUser.whereEqualTo("isbn", barcode);
-
-        // https://stackoverflow.com/questions/50650224/wait-until-firestore-data-is-retrieved-to-launch-an-activity/50680352
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
         {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task)
             {
+                // The key is the documentID, value is the Book object
                 HashMap<String, Book> results = new HashMap<String, Book>();
                 if (task.isSuccessful())
                 {
@@ -217,18 +217,23 @@ public class MyBooksFragment extends Fragment
                             Toast.makeText(getActivity(), "No books match the scanned ISBN.", Toast.LENGTH_LONG).show();
                             break;
                         case 1:
-                            Toast.makeText(getActivity(), "Noice.", Toast.LENGTH_LONG).show();
                             String documentId = results.keySet().iterator().next();
                             Book bookToView = results.get(documentId);
                             MyBooksDetailViewFragment bookDetailFragment = new MyBooksDetailViewFragment();
-//                            bookDetailFragment.updateView(bookToView);
 
+                            // Open the detailed view if the book exists
                             bookDetailFragment.onFragmentInteraction(bookToView, documentId);
                             getActivity().getSupportFragmentManager().beginTransaction()
                                     .replace(R.id.frame_container, bookDetailFragment).commit();
-//                            Open the detailed view if the book exists
+
                             break;
                         default:
+                            /*
+                             * https://eclass.srv.ualberta.ca/mod/forum/discuss.php?d=1504014
+                             * The link states that the user will only have one copy per book
+                             * So this option does not have to be addressed yet.
+                             * Potential TODO: show multiple books with the matching ISBN
+                             */
                             Toast.makeText(getActivity(), "Multiple books found.", Toast.LENGTH_LONG).show();
                     }
                 }
