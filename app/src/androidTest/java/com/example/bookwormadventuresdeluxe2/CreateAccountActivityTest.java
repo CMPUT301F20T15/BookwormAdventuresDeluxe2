@@ -488,7 +488,7 @@ public class CreateAccountActivityTest
     {
         solo.clickOnText(resources.getString(R.string.navbar_text_label_4));
 
-        solo.waitForText(resources.getString(R.string.test_create_account_username));
+        solo.waitForText(resources.getString(R.string.sign_out));
 
         deleteCreateTestAccount();
 
