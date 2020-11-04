@@ -53,11 +53,11 @@ public class SearchFragment extends Fragment
         FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
         UserCredentialAPI userCredentialApi = UserCredentialAPI.getInstance();
 
-        Query availableBooksNotMine = rootRef.collection(getString(R.string.books_collection))
-                .whereNotEqualTo(getString(R.string.owner),
-                UserCredentialAPI.getInstance().getUsername())
-                .whereIn(getString(R.string.status),
-                Arrays.asList(getString(R.string.available), getString(R.string.requested)));
+        Query availableBooksNotMine = rootRef.collection(getString(R.string.books_collection));
+//                .whereNotEqualTo(getString(R.string.owner),
+//                UserCredentialAPI.getInstance().getUsername())
+//                .whereIn(getString(R.string.status),
+//                Arrays.asList(getString(R.string.available), getString(R.string.requested)));
 
         FirestoreRecyclerOptions<Book> options = new FirestoreRecyclerOptions.Builder<Book>()
                 .setQuery(availableBooksNotMine, Book.class)
