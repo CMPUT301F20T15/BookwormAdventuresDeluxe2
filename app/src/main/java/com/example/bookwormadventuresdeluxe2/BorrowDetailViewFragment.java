@@ -2,7 +2,6 @@ package com.example.bookwormadventuresdeluxe2;
 
 import android.os.Build;
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,15 +64,16 @@ public class BorrowDetailViewFragment extends DetailView
         this.btn2 = this.bookDetailView.findViewById(R.id.borrowDetail_btn2);
         this.exchange = this.bookDetailView.findViewById(R.id.borrow_exchange_location);
 
-        switch (selectedBook.getStatus())
+        switch (selectedBook.getAugmentStatus(UserCredentialAPI.getInstance().getUsername()))
         {
             case Available:
-            case Requested:
                 this.btn1.setText(getString(R.string.request_book));
 
                 this.btn1.setOnClickListener(this::btnRequestBook);
 
                 this.btn1.setVisibility(View.VISIBLE);
+                break;
+            case Requested:
                 break;
 
             case Accepted:
@@ -139,6 +139,7 @@ public class BorrowDetailViewFragment extends DetailView
         this.bookDocument.update(getString(R.string.requesters),
                 FieldValue.arrayUnion(UserCredentialAPI.getInstance().getUsername()));
         this.bookDocument.update(getString(R.string.status), getString(R.string.requested));
+        onBackClick(view);
     }
 
     private void btnSetLocation(View view)
