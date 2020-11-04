@@ -18,7 +18,6 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.security.InvalidParameterException;
-import java.util.HashMap;
 
 /**
  * Holds the view for seeing details on a book in the borrowed tab
