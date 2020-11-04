@@ -64,16 +64,18 @@ public class BorrowDetailViewFragment extends DetailView
         this.btn2 = this.bookDetailView.findViewById(R.id.borrowDetail_btn2);
         this.exchange = this.bookDetailView.findViewById(R.id.borrow_exchange_location);
 
-        switch (selectedBook.getAugmentStatus(UserCredentialAPI.getInstance().getUsername()))
+        switch (selectedBook.getStatus())
         {
             case Available:
-                this.btn1.setText(getString(R.string.request_book));
-
-                this.btn1.setOnClickListener(this::btnRequestBook);
-
-                this.btn1.setVisibility(View.VISIBLE);
-                break;
             case Requested:
+                if ((!selectedBook.getRequesters().contains(UserCredentialAPI.getInstance().getUsername())))
+                {
+                    this.btn1.setText(getString(R.string.request_book));
+
+                    this.btn1.setOnClickListener(this::btnRequestBook);
+
+                    this.btn1.setVisibility(View.VISIBLE);
+                }
                 break;
 
             case Accepted:
