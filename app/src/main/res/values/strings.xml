@@ -74,8 +74,6 @@
     <string name="return_book">Return Book</string>
     <string name="wait_owner">Waiting for Owner</string>
 
-    <string name="owned_by">Owned by</string>
-
     <!-- Test input strings -->
     <string name="wrong_activity">Wrong Activity</string>
     <string name="space">\u0020</string>
