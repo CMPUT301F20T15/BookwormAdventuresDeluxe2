@@ -72,7 +72,7 @@ public class BorrowDetailViewFragment extends DetailView
                 this.btn1.setText(getString(R.string.request_book));
 
                 this.btn1.setOnClickListener(this::btnRequestBook);
-                
+
                 this.btn1.setVisibility(View.VISIBLE);
                 break;
 
@@ -131,6 +131,11 @@ public class BorrowDetailViewFragment extends DetailView
         return bookDetailView;
     }
 
+    /**
+     * Send request to book owner
+     *
+     * @param view The view that was clicked on
+     */
     private void btnRequestBook(View view)
     {
         this.bookDocument.update(getString(R.string.requesters),
