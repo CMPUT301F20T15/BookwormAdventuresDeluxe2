@@ -19,6 +19,7 @@
     <string name="navbar_text_label_3">Requests</string>
     <string name="navbar_text_label_4">Profile</string>
     <string name="fab_content_desc">Add Book</string>
+    <string name="edit_page_delete_picture_button">Delete Picture</string>
     <string name="my_requests">My Requests</string>
     <string name="borrow">Borrow</string>
     <string name="set_location">Set Pickup Location</string>
@@ -44,6 +45,8 @@
     <string name="request_detail_return">Return from</string>
     <string name="exit_confirmation_message">Are you sure you want to exit the app?</string>
     <string name="book_click_source_fragment">source</string>
+    <string name="delete_book">Delete</string>
+
     <!-- Firestore collections -->
     <string name="books_collection">Books</string>
     <string name="users_collection">Users</string>
@@ -80,10 +83,17 @@
 
     <!-- Test input strings -->
     <string name="wrong_activity">Wrong Activity</string>
-    <string name="space"> </string>
+    <string name="space">\u0020</string>
     <string name="wrong_email">wrongemail</string>
     <string name="wrong_pass">wrongpassword</string>
-    <string name="short_pass">wrong</string>
+    <string name="short_pass">short</string>
+
+    <string name="test_create_account_username">createtest</string>
+    <string name="test_create_account_email">createtest@gmail.com</string>
+    <string name="test_book_title">Test Book</string>
+    <string name="test_book_author">Test Author</string>
+    <string name="test_book_isbn">1111111111</string>
+    <string name="test_book_description">Test Description</string>
 
     <!-- Map -->
     <string name="map_edit_text_hint">Enter Address, City or Postal Code</string>

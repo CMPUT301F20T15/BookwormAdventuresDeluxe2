@@ -74,7 +74,7 @@ public class BorrowDetailViewFragment extends DetailView
 
                 this.btn1.setVisibility(View.VISIBLE);
                 break;
-
+                
             case Requested:
                 break;
 
