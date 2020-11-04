@@ -76,6 +76,7 @@
     <string name="scan">Scan</string>
     <string name="return_book">Return Book</string>
     <string name="wait_owner">Waiting for Owner</string>
+    <string name="request_book">Request Book</string>
 
     <!-- Test input strings -->
     <string name="wrong_activity">Wrong Activity</string>

@@ -12,10 +12,13 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
+import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.security.InvalidParameterException;
+import java.util.HashMap;
 
 /**
  * Holds the view for seeing details on a book in the borrowed tab
@@ -66,6 +69,13 @@ public class BorrowDetailViewFragment extends DetailView
         switch (selectedBook.getStatus())
         {
             case Available:
+                this.btn1.setText(getString(R.string.request_book));
+
+                this.btn1.setOnClickListener(this::btnRequestBook);
+                
+                this.btn1.setVisibility(View.VISIBLE);
+                break;
+
             case Requested:
                 break;
 
@@ -119,6 +129,13 @@ public class BorrowDetailViewFragment extends DetailView
                 .document(this.selectedBookId);
 
         return bookDetailView;
+    }
+
+    private void btnRequestBook(View view)
+    {
+        this.bookDocument.update(getString(R.string.requesters),
+                FieldValue.arrayUnion(UserCredentialAPI.getInstance().getUsername()));
+        this.bookDocument.update(getString(R.string.status), getString(R.string.requested));
     }
 
     private void btnSetLocation(View view)
