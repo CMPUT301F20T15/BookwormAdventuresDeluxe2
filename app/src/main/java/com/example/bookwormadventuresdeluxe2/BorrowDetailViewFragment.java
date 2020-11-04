@@ -68,14 +68,12 @@ public class BorrowDetailViewFragment extends DetailView
         switch (selectedBook.getStatus())
         {
             case Available:
+            case Requested:
                 this.btn1.setText(getString(R.string.request_book));
 
                 this.btn1.setOnClickListener(this::btnRequestBook);
 
                 this.btn1.setVisibility(View.VISIBLE);
-                break;
-                
-            case Requested:
                 break;
 
             case Accepted:
