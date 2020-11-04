@@ -10,7 +10,6 @@ package com.example.bookwormadventuresdeluxe2;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
-import com.example.bookwormadventuresdeluxe2.Utilities.Status;
+import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,8 +31,6 @@ import com.google.zxing.integration.android.IntentResult;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 
 /**
  * A {@link Fragment} subclass for navbar menu item 1.
@@ -175,15 +172,12 @@ public class MyBooksFragment extends Fragment
             {
                 if (result.getContents() != null)
                 {
-                    String barcode = result.getContents();
+                    String barcode = result.getContents();  // this is the barcode from the scan
                     FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
                     Query query = rootRef.collection(getString(R.string.books_collection))
                             .whereEqualTo("isbn", barcode);
 
                     DetailView bookDetailFragment = new MyBooksDetailViewFragment();
-                    Book book = new Book("Hudson", "tits", "autor", "", "1234", Status.Accepted);
-//                    bookDetailFragment.onFragmentInteraction(book, "abcdefghij");
-                    // Opens the book in detail view
 
                     getActivity().getSupportFragmentManager().beginTransaction()
                             .replace(R.id.frame_container, bookDetailFragment).commit();

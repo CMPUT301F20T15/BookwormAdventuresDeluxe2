@@ -114,7 +114,7 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
         if (requestCode == IntentIntegrator.REQUEST_CODE)
         {
             // https://stackoverflow.com/questions/6147884/onactivityresult-is-not-being-called-in-fragment
-            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.my_books);
+            Fragment fragment = getSupportFragmentManager().findFragmentById(0x7f0800e6);
             fragment.onActivityResult(requestCode, resultCode, data);
         }
         else
