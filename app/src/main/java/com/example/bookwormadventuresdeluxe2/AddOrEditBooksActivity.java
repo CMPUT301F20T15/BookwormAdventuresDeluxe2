@@ -178,6 +178,8 @@ public class AddOrEditBooksActivity extends AppCompatActivity
             throw new IllegalStateException("deletePhoto should not have been called!");
         }
 
+        // Remove the association to the book object
+        this.bookPhotoDowloadUrl = "";
         // Delete image from firebase
         this.deletePhotoFromFirebase(imageUrl);
     }
