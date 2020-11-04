@@ -21,8 +21,6 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
     RequestsFragment requestsFragment = new RequestsFragment();
     MyProfileFragment profileFragment = new MyProfileFragment();
 
-    public static int ISBN_SCAN = 65537;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {

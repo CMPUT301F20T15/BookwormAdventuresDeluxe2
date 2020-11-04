@@ -147,11 +147,8 @@ public class MyBooksFragment extends Fragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intentData)
     {
-
         super.onActivityResult(requestCode, resultCode, intentData);
-
         getActivity();
-
         if (requestCode == AddOrEditBooksActivity.ADD_BOOK && resultCode == Activity.RESULT_OK)
         {
             Book newBook = (Book) intentData.getSerializableExtra("NewBook");
@@ -181,7 +178,6 @@ public class MyBooksFragment extends Fragment
                 {
                     String barcode = result.getContents();
                     processIsbnScan(barcode);
-
                 }
             }
         }
@@ -225,14 +221,13 @@ public class MyBooksFragment extends Fragment
                             bookDetailFragment.onFragmentInteraction(bookToView, documentId);
                             getActivity().getSupportFragmentManager().beginTransaction()
                                     .replace(R.id.frame_container, bookDetailFragment).commit();
-
                             break;
                         default:
                             /*
                              * https://eclass.srv.ualberta.ca/mod/forum/discuss.php?d=1504014
                              * The link states that the user will only have one copy per book
                              * So this option does not have to be addressed yet.
-                             * Potential TODO: show multiple books with the matching ISBN
+                             * Potential TODO: make a popup that allows the user to pick the book they want to open
                              */
                             Toast.makeText(getActivity(), "Multiple books found.", Toast.LENGTH_LONG).show();
                     }
@@ -251,6 +246,11 @@ public class MyBooksFragment extends Fragment
         getFragmentManager().beginTransaction().replace(R.id.frame_container, notificationFragment).commit();
     }
 
+    /**
+     * Method is called when the user clicks on the scan icon in the MyBooks fragment
+     *
+     * @param view
+     */
     private void onScanClick(View view)
     {
         IntentIntegrator integrator = new IntentIntegrator(getActivity());
