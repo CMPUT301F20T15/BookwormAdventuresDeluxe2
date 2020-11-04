@@ -179,24 +179,7 @@ public class AddOrEditBooksActivity extends AppCompatActivity
         }
 
         // Delete image from firebase
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference currentBookPhoto = storage.getReferenceFromUrl(imageUrl);
-        currentBookPhoto.delete().addOnSuccessListener(new OnSuccessListener<Void>()
-        {
-            @Override
-            public void onSuccess(Void aVoid)
-            {
-                // File deleted successfully
-            }
-        }).addOnFailureListener(new OnFailureListener()
-        {
-            @Override
-            public void onFailure(@NonNull Exception exception)
-            {
-                /* Should delete manually from firebase */
-                Log.v("deletePhoto", "Old photo was not deleted");
-            }
-        });
+        this.deletePhotoFromFirebase(imageUrl);
     }
 
     /**
@@ -411,6 +394,34 @@ public class AddOrEditBooksActivity extends AppCompatActivity
     }
 
     /**
+     * Deletes the linked photo from Firebase
+     *
+     * @param imageUrl
+     */
+    private void deletePhotoFromFirebase(String imageUrl)
+    {
+        // https://stackoverflow.com/questions/45103085/deleting-file-from-firebase-storage-using-url
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference currentBookPhoto = storage.getReferenceFromUrl(imageUrl);
+        currentBookPhoto.delete().addOnSuccessListener(new OnSuccessListener<Void>()
+        {
+            @Override
+            public void onSuccess(Void aVoid)
+            {
+                // File deleted successfully
+            }
+        }).addOnFailureListener(new OnFailureListener()
+        {
+            @Override
+            public void onFailure(@NonNull Exception exception)
+            {
+                /* Should delete manually from firebase */
+                Log.v("uploadPhoto", "Old photo was not deleted");
+            }
+        });
+    }
+
+    /**
      * Uploads the selected image to FireStorage and updates the view with the
      * chosen image on success
      *
@@ -424,24 +435,7 @@ public class AddOrEditBooksActivity extends AppCompatActivity
         /* If the book already has a photo, we want to delete it before adding a new one */
         if (this.bookToEdit != null && this.bookToEdit.getImageUrl().compareTo("") != 0)
         {
-            StorageReference currentBookPhoto = storage.getReferenceFromUrl(this.bookToEdit.getImageUrl());
-            // https://stackoverflow.com/questions/45103085/deleting-file-from-firebase-storage-using-url
-            currentBookPhoto.delete().addOnSuccessListener(new OnSuccessListener<Void>()
-            {
-                @Override
-                public void onSuccess(Void aVoid)
-                {
-                    // File deleted successfully
-                }
-            }).addOnFailureListener(new OnFailureListener()
-            {
-                @Override
-                public void onFailure(@NonNull Exception exception)
-                {
-                    /* Should delete manually from firebase */
-                    Log.v("uploadPhoto", "Old photo was not deleted");
-                }
-            });
+            this.deletePhotoFromFirebase(this.bookToEdit.getImageUrl());
         }
 
         // https://code.tutsplus.com/tutorials/image-upload-to-firebase-in-android-application--cms-29934
