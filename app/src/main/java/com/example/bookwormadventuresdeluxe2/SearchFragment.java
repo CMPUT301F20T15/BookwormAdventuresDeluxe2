@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +29,7 @@ public class SearchFragment extends Fragment
     private RecyclerView.LayoutManager searchBooksRecyclerLayoutManager;
 
     MaterialTextView appHeaderText;
+    SearchView searchView;
 
     public SearchFragment()
     {
@@ -43,6 +45,17 @@ public class SearchFragment extends Fragment
         /* Set title */
         appHeaderText = view.findViewById(R.id.app_header_title);
         appHeaderText.setText(R.string.search_title);
+
+        // https://stackoverflow.com/questions/17670685/custom-searchview-whole-clickable-in-android/47826388
+        searchView = (SearchView) view.findViewById(R.id.search_bar);
+        searchView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                searchView.setIconified(false);
+            }
+        });
         return view;
     }
 
