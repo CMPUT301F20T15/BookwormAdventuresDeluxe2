@@ -1,3 +1,12 @@
+/**
+ * SearchFragment.java
+ *
+ * Fragment for searching and borrowing books from database.
+ *
+ * Outstanding Issues:  Needs to filter out owner's books from result list.
+ *                      Unable to search books.
+ */
+
 package com.example.bookwormadventuresdeluxe2;
 
 import android.os.Bundle;
@@ -10,14 +19,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bookwormadventuresdeluxe2.Utilities.Status;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-
-import java.util.Arrays;
 
 /**
  * A {@link Fragment} subclass for navbar menu item 3
@@ -28,8 +34,8 @@ public class SearchFragment extends Fragment
     private BookListAdapter searchBooksRecyclerAdapter;
     private RecyclerView.LayoutManager searchBooksRecyclerLayoutManager;
 
-    MaterialTextView appHeaderText;
-    SearchView searchView;
+    private MaterialTextView appHeaderText;
+    private SearchView searchView;
 
     public SearchFragment()
     {
@@ -59,6 +65,12 @@ public class SearchFragment extends Fragment
         return view;
     }
 
+    /**
+     * Loads RecyclerView after opening fragment
+     *
+     * @param view View where list is created
+     * @param savedInstanceState Device state
+     */
     // https://stackoverflow.com/questions/6495898/findviewbyid-in-fragment#:~:text=Use%20getView%20%28%29%20or%20the%20View%20parameter%20from,method%29.%20With%20this%20you%20can%20call%20findViewById%20%28%29.
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState)
@@ -86,7 +98,9 @@ public class SearchFragment extends Fragment
         searchBooksRecyclerView.setAdapter(searchBooksRecyclerAdapter);
     }
 
-    // For listening to firebase for updates to the books list
+    /**
+     * For listening to firebase for updates to the books list
+     */
     @Override
     public void onStart()
     {
@@ -94,7 +108,9 @@ public class SearchFragment extends Fragment
         searchBooksRecyclerAdapter.startListening();
     }
 
-    // Stops listening to the firebase on completion
+    /**
+     * Stops listening to the firebase on completion
+     */
     @Override
     public void onStop()
     {

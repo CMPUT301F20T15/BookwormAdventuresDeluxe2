@@ -1,8 +1,11 @@
-package com.example.bookwormadventuresdeluxe2;
-
 /**
- * MyProfile view fragment class for displaying and editing your contact details
+ * ProfileFragment.java
+ *
+ * Fragment for viewing other user's profile and viewing/editing user profile.
+ *
  */
+
+package com.example.bookwormadventuresdeluxe2;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -32,21 +35,20 @@ public class ProfileFragment extends Fragment
 {
     private static final String TAG = "MyProfileFragment";
 
-    Button edit;
-    Button signOutButton;
+    private Button edit;
+    private Button signOutButton;
 
-    MaterialTextView appHeaderText;
+    private MaterialTextView appHeaderText;
 
-    TextView viewUsername;
-    TextView viewEmail;
-    TextView viewPhoneNumber;
+    private TextView viewUsername;
+    private TextView viewEmail;
+    private TextView viewPhoneNumber;
 
-    View view;
+    private View view;
+    private ImageButton backButton;
 
-    FirebaseAuth firebaseAuth;
-    UserProfileObject profile;
-
-    ImageButton backButton;
+    private FirebaseAuth firebaseAuth;
+    private UserProfileObject profile;
 
     /**
      * Required empty public constructor
@@ -135,6 +137,8 @@ public class ProfileFragment extends Fragment
 
     /**
      * Dialog fragment for editing email and phone number info
+     *
+     * @param view View that was clicked on
      */
     public void editFragment(View view)
     {
@@ -231,6 +235,8 @@ public class ProfileFragment extends Fragment
 
     /**
      * Signs out of FirebaseAuth account
+     *
+     * @param view View that was clicked on
      */
     public void signOut(View view)
     {
