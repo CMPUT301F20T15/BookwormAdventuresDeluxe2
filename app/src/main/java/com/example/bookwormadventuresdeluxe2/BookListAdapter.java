@@ -1,5 +1,11 @@
 package com.example.bookwormadventuresdeluxe2;
 
+/**
+ * BookListAdapter is a FirestoreRecycler data which acts as middleware between the books
+ * on Firestore and the UI that displays them by providing view updaters and onClickListeners
+ * for items in the RecyclerView.
+ */
+
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,11 +23,6 @@ import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-/**
- * BookListAdapter is a FirestoreRecycler data which acts as middleware between the books
- * on Firestore and the UI that displays them by providing view updaters and onClickListeners
- * for items in the RecyclerView.
- */
 // https://stackoverflow.com/questions/49277797/how-to-display-data-from-firestore-in-a-recyclerview-with-android
 public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdapter.BookListViewHolder>
 {

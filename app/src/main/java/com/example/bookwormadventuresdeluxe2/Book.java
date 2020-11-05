@@ -1,5 +1,10 @@
 package com.example.bookwormadventuresdeluxe2;
 
+/**
+ * Book holds all of the relevant information pertaining to a book in the library. It has
+ * a set of private fields which define its attributes along with corresponding getters
+ * and setters to retrieve and manipulate the information.
+ */
 
 import android.graphics.PorterDuff;
 import android.util.Log;
@@ -16,11 +21,6 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Book holds all of the relevant information pertaining to a book in the library. It has
- * a set of private fields which define its attributes along with corresponding getters
- * and setters to retrieve and manipulate the information.
- */
 public class Book implements Serializable
 {
     // Basic attributes for now, rest added as needed

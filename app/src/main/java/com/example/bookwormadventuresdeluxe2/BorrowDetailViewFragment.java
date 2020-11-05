@@ -1,5 +1,10 @@
 package com.example.bookwormadventuresdeluxe2;
 
+/**
+ * Holds the view for seeing details on a book in the borrowed tab
+ * The user will be able to interact with borrow options on the book
+ */
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
@@ -20,10 +25,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.security.InvalidParameterException;
 
-/**
- * Holds the view for seeing details on a book in the borrowed tab
- * The user will be able to interact with borrow options on the book
- */
 public class BorrowDetailViewFragment extends DetailView
 {
     private Button btn1;
@@ -88,10 +89,13 @@ public class BorrowDetailViewFragment extends DetailView
                 this.btn1.setText(getString(R.string.set_location));
                 this.btn2.setText(getString(R.string.return_book));
 
-                if(this.selectedBook.getPickUpAddress().equals("")) {
+                if (this.selectedBook.getPickUpAddress().equals(""))
+                {
                     this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
                     this.btn2.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
-                } else {
+                }
+                else
+                {
                     this.btn2.setOnClickListener(this::btnReturnBook);
 //                    this.bookDetailView.findViewById(R.id.borrow_exchange).setVisibility(View.VISIBLE);
                 }
