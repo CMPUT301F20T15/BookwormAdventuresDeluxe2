@@ -30,7 +30,7 @@ public class BorrowDetailViewFragment extends DetailView
     private Button btn2;
     private TextView exchange;
     private DocumentReference bookDocument;
-    
+
     private static int SetLocationActivityResultCode = 7;
 
     public BorrowDetailViewFragment()

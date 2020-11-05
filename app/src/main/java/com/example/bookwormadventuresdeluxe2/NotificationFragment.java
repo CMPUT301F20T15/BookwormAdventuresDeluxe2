@@ -17,7 +17,9 @@ import com.google.android.material.textview.MaterialTextView;
 import java.util.ArrayList;
 
 /**
- *
+ * Holds the view for displaying a list of notifications
+ * Users will not be able to interact with the notifications
+ * The list will clear on close
  */
 public class NotificationFragment extends Fragment
 {
@@ -72,6 +74,10 @@ public class NotificationFragment extends Fragment
         notificationRecyclerView.setAdapter(notificationRecyclerAdapter);
     }
 
+    /**
+     * Returns to MyBooks fragment and clears the notification list
+     * @param v the view clicked on
+     */
     public void onBackClick(View v)
     {
         //TODO: remove notifications
