@@ -30,6 +30,7 @@ public class BorrowDetailViewFragment extends DetailView
     private Button btn2;
     private TextView exchange;
     private DocumentReference bookDocument;
+    
     private static int SetLocationActivityResultCode = 7;
 
     public BorrowDetailViewFragment()
@@ -201,12 +202,17 @@ public class BorrowDetailViewFragment extends DetailView
             {
                 String pickUpLocation = data.getStringExtra("pickUpLocation");
                 this.bookDocument.update(getString(R.string.firestore_pick_up_address), pickUpLocation);
+                this.selectedBook.setPickUpAddress(pickUpLocation);
             }
             if (resultCode == Activity.RESULT_CANCELED)
             {
                 this.bookDocument.update(getString(R.string.firestore_pick_up_address), "");
+                this.selectedBook.setPickUpAddress("");
             }
         }
-        getFragmentManager().beginTransaction().replace(R.id.frame_container, new BorrowDetailViewFragment()).commit();
+
+        BorrowDetailViewFragment fragment = new BorrowDetailViewFragment();
+        fragment.onFragmentInteraction(this.selectedBook, this.selectedBookId);
+        getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
     }
 }

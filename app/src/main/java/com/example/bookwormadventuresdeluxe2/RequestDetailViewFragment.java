@@ -264,11 +264,17 @@ public class RequestDetailViewFragment extends DetailView
             {
                 String pickUpLocation = data.getStringExtra("pickUpLocation");
                 this.bookDocument.update(getString(R.string.firestore_pick_up_address), pickUpLocation);
+                this.selectedBook.setPickUpAddress(pickUpLocation);
             }
             if (resultCode == Activity.RESULT_CANCELED)
             {
                 this.bookDocument.update(getString(R.string.firestore_pick_up_address), "");
+                this.selectedBook.setPickUpAddress("");
             }
         }
+
+        RequestDetailViewFragment fragment = new RequestDetailViewFragment();
+        fragment.onFragmentInteraction(this.selectedBook, this.selectedBookId);
+        getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
     }
 }
