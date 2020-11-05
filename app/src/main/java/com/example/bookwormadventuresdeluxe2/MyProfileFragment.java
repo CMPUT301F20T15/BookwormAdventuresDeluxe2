@@ -1,5 +1,9 @@
 package com.example.bookwormadventuresdeluxe2;
 
+/**
+ * MyProfile view fragment class for displaying and editing your contact details
+ */
+
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,12 +22,6 @@ import com.example.bookwormadventuresdeluxe2.Utilities.EditTextValidator;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 
-
-/**
- * MyProfile view fragment class for displaying and editing your contact details
- *
- * A simple {@link Fragment} subclass.
- */
 public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.UserCallback
 {
     private static final String TAG = "MyProfileFragment";

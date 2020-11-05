@@ -1,8 +1,12 @@
 package com.example.bookwormadventuresdeluxe2;
 
+/**
+ * Holds the view for seeing details on a book in the Requested tab
+ * The user will be able to interact with status dependant request options on the book
+ */
+
 import android.os.Build;
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,17 +18,12 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
-import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
-/**
- * Holds the view for seeing details on a book in the Requested tab
- * The user will be able to interact with status dependant request options on the book
- */
 public class RequestDetailViewFragment extends DetailView
 {
     private Button btn1;

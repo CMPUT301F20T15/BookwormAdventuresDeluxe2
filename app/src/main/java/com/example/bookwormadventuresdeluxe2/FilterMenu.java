@@ -1,5 +1,10 @@
 package com.example.bookwormadventuresdeluxe2;
 
+/**
+ * Fragment class for the filter menu. This fragment is responsible for handling events related
+ * to clicking buttons inside the "filter by" dropdown menu.
+ */
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +21,6 @@ import com.google.firebase.firestore.Query;
 import java.security.InvalidParameterException;
 import java.util.Arrays;
 
-/**
- * Fragment class for the filter menu
- */
 public class FilterMenu extends Fragment implements View.OnClickListener
 {
     private BookListAdapter bookAdapter;

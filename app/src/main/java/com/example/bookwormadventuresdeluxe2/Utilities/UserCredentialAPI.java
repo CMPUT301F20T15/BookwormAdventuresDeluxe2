@@ -1,10 +1,11 @@
 package com.example.bookwormadventuresdeluxe2.Utilities;
 
+/**
+ * Global API to access user credentials
+ */
+
 import android.app.Application;
 
-/**
- * Global Api to access user credentials
- */
 public class UserCredentialAPI extends Application
 {
     private static UserCredentialAPI instance;

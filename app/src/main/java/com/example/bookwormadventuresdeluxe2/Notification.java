@@ -1,5 +1,9 @@
 package com.example.bookwormadventuresdeluxe2;
 
+/**
+ * Class responsible for modelling a notification object.
+ */
+
 public class Notification
 {
     private Book book;

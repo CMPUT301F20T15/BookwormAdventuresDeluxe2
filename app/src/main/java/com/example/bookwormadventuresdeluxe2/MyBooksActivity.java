@@ -1,5 +1,13 @@
 package com.example.bookwormadventuresdeluxe2;
 
+/**
+ * MyBooksActivity is the "main menu" activity required to launch the majority of the other
+ * activities and fragments. Fromt this activity, users and enter the "My Books" fragment, the
+ * "Search" fragment, the "Requests/Borrows" fragment, and the "Profile" fragment via the
+ * navigation fragment. Additionally, users can enter the notifications fragment, scan book
+ * fragment, or the add book fragment.
+ */
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;

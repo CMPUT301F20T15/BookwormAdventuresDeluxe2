@@ -1,5 +1,10 @@
 package com.example.bookwormadventuresdeluxe2;
 
+/**
+ * A {@link Fragment} subclass for navbar menu search item. This fragment is responsible for
+ * allowing the user to search for books.
+ */
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +15,6 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.textview.MaterialTextView;
 
-/**
- * A {@link Fragment} subclass for navbar menu item 3
- */
 public class SearchFragment extends Fragment
 {
 

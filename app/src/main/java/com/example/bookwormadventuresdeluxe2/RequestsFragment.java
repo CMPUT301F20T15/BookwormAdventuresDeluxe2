@@ -1,6 +1,14 @@
 package com.example.bookwormadventuresdeluxe2;
 
-import android.content.Intent;
+/**
+ * Holds a list of books that the current user owns that require require action
+ * to proceed with the borrow/return process, and another list of books that the
+ * user has requested or are currently in the process of borrowing. From here the
+ * user may click on the books to view status specific tasks
+ * <p>
+ * A {@link Fragment} subclass for navbar menu item 2.
+ */
+
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +18,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
@@ -19,22 +26,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import java.io.FileFilter;
 import java.util.Arrays;
 
-/**
- * Holds a list of books that the current user owns that require require action
- * to proceed with the borrow/return process, and another list of books that the
- * user has requested or are currently in the process of borrowing. From here the
- * user may click on the books to view status specific tasks
- *
- * A {@link Fragment} subclass for navbar menu item 2.
- */
 public class RequestsFragment extends Fragment implements View.OnClickListener
 {
     private RecyclerView requestsRecyclerView;

@@ -1,18 +1,17 @@
 package com.example.bookwormadventuresdeluxe2.Utilities;
 
-import android.content.Context;
-
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.GestureDetector;
-import android.view.MotionEvent;
-import android.view.View;
-
 /**
  * RecyclerViewTouchListener employs a gesture detector to detect when the RecyclerView has
  * been touched then uses the coordinates of the touch to determine which item was selected. This
  * is because RecyclerView does not have a native onItemClickListener
  */
+
+import android.content.Context;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 // http://www.androidtutorialshub.com/android-recyclerview-click-listener-tutorial/
 public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListener

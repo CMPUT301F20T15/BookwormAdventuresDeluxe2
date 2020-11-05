@@ -1,24 +1,25 @@
 package com.example.bookwormadventuresdeluxe2;
 
+/**
+ * Fragment responsible for showing the notifications that a user has received and allowing them
+ * to interact with said notifications.
+ */
+
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.Status;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
 
-/**
- *
- */
 public class NotificationFragment extends Fragment
 {
     private RecyclerView notificationRecyclerView;
