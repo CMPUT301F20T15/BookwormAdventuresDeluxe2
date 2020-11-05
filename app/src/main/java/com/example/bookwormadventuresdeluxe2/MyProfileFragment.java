@@ -94,6 +94,8 @@ public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.Us
 
     /**
      * Callback for UserProfileObject
+     *
+     * @param userObject
      */
     @Override
     public void onCallback(UserProfileObject userObject)
@@ -103,6 +105,8 @@ public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.Us
 
     /**
      * Dialog fragment for editing email and phone number info
+     *
+     * @param view The view this is called from
      */
     public void editFragment(View view)
     {
@@ -199,6 +203,8 @@ public class MyProfileFragment extends Fragment implements FirebaseUserGetSet.Us
 
     /**
      * Signs out of FirebaseAuth account
+     *
+     * @param view The view this is called from
      */
     public void signOut(View view)
     {

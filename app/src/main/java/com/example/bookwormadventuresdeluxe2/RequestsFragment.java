@@ -135,7 +135,9 @@ public class RequestsFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    // For listening to firebase for updates to the books list
+    /**
+     * Start listening to firebase for updates to the book list
+     */
     @Override
     public void onStart()
     {
@@ -144,7 +146,9 @@ public class RequestsFragment extends Fragment implements View.OnClickListener
         borrowRecyclerAdapter.startListening();
     }
 
-    // Stops listening to the firebase on completion
+    /**
+     * Stop listening to firebase for updates
+     */
     @Override
     public void onStop()
     {
@@ -191,6 +195,12 @@ public class RequestsFragment extends Fragment implements View.OnClickListener
     }
 
     // User wants to change tab, swap the lists and labels
+
+    /**
+     * Listener for when the user presses the "My Requests" or "Borrow" tab
+     *
+     * @param view
+     */
     @Override
     public void onClick(View view)
     {

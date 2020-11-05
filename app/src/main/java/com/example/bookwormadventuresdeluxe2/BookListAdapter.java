@@ -38,6 +38,11 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
         public ImageView bookPhoto;
         public ConstraintLayout bookItemLayout;
 
+        /**
+         * A viewHolder for the books
+         *
+         * @param bookItemLayout The layout to reference
+         */
         public BookListViewHolder(ConstraintLayout bookItemLayout)
         {
             super(bookItemLayout);
@@ -113,6 +118,5 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
         }
 
         holder.itemView.setOnClickListener(launchDetailView(detailView, book, documentId));
-
     }
 }

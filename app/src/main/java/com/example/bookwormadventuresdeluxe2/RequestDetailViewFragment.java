@@ -36,12 +36,6 @@ public class RequestDetailViewFragment extends DetailView
         // Required empty public constructor
     }
 
-    public static RequestDetailViewFragment newInstance(String param1, String param2)
-    {
-        RequestDetailViewFragment fragment = new RequestDetailViewFragment();
-        return fragment;
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

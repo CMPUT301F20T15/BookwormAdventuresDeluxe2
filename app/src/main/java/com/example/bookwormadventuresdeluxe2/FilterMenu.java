@@ -33,6 +33,13 @@ public class FilterMenu extends Fragment implements View.OnClickListener
     Button borrowedButton;
     Button allButton;
 
+    /**
+     * Public constructor for the menu
+     *
+     * @param bookAdapter The bookAdapter that we will need to update with the specialized query
+     * @param rootQuery   The rootQuery to build our query off of
+     * @param caller      The resource id that called this constructor
+     */
     public FilterMenu(BookListAdapter bookAdapter, Query rootQuery, int caller)
     {
         this.bookAdapter = bookAdapter;
@@ -71,7 +78,7 @@ public class FilterMenu extends Fragment implements View.OnClickListener
     }
 
     /**
-     * Handle click on Profile Edit and SignOut button
+     * Handle clicking on any of the buttons in the FilterMenu
      *
      * @param view View containing layout resources
      */

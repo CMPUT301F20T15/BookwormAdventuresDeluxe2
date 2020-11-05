@@ -99,11 +99,14 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
         exitConfirmation.show(getSupportFragmentManager(), "ConfirmExit");
     }
 
+    /**
+     * Update fragment Container with new fragment
+     * Use fade in and fade out for transition
+     *
+     * @param fragment The fragment to replace this one with
+     */
     public void replaceFragment(Fragment fragment)
     {
-        /* Update fragment Container with new fragment
-         * Use fade in and fade out for transition
-         * */
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.frame_container, fragment).commit();
     }
 

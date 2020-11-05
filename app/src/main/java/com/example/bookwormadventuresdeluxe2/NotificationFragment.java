@@ -30,6 +30,9 @@ public class NotificationFragment extends Fragment
     MaterialTextView appHeaderText;
     ImageButton backButton;
 
+    /**
+     * Constructor for the fragment responsible for displaying notifications
+     */
     public NotificationFragment()
     {
         this.notificationList = new ArrayList<Notification>();
@@ -73,6 +76,11 @@ public class NotificationFragment extends Fragment
         notificationRecyclerView.setAdapter(notificationRecyclerAdapter);
     }
 
+    /**
+     * Listener for when the back button is clicked
+     *
+     * @param v The view this is called from
+     */
     public void onBackClick(View v)
     {
         //TODO: remove notifications

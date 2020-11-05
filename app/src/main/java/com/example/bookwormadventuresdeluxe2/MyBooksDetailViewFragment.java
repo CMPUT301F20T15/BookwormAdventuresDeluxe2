@@ -93,11 +93,17 @@ public class MyBooksDetailViewFragment extends DetailView
         startActivityForResult(intent, AddOrEditBooksActivity.EDIT_BOOK);
     }
 
-    /* Called by AddOrEditBooksActivity when user presses save or delete on edit screen */
+    /**
+     * Called by AddOrEditBooksActivity when user presses save or delete on edit screen
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param intent
+     */
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    public void onActivityResult(int requestCode, int resultCode, Intent intent)
     {
-        super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, intent);
         getActivity();
         if (requestCode == AddOrEditBooksActivity.EDIT_BOOK)
         {
@@ -105,7 +111,7 @@ public class MyBooksDetailViewFragment extends DetailView
             if (resultCode == AddOrEditBooksActivity.EDIT_BOOK)
             {
                 /* Get the book that was edited and its new values */
-                this.selectedBook = (Book) data.getSerializableExtra("EditedBook");
+                this.selectedBook = (Book) intent.getSerializableExtra("EditedBook");
                 updateView(this.selectedBook);
 
                 /* Update the book in firebase */
