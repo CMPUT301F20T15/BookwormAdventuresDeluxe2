@@ -44,11 +44,11 @@ public class RequestsFragment extends Fragment implements View.OnClickListener
     private FilterMenu borrowFilterMenu;
     private FilterMenu requestFilterMenu;
 
-    View view;
-    Button toggle;
-    ImageButton filterButton;
-    TextView current;
-    MaterialTextView appHeaderText;
+    private View view;
+    private Button toggle;
+    private ImageButton filterButton;
+    private TextView current;
+    private MaterialTextView appHeaderText;
     boolean borrow;
 
     public RequestsFragment()

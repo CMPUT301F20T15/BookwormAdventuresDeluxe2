@@ -90,7 +90,7 @@ public class ViewLocationActivity extends AppCompatActivity implements OnMapRead
     }
 
     /**
-     * Add marker at pickUpLocation when map isready
+     * Add a marker at the pick up location when map is ready
      *
      * @param googleMap
      */

@@ -101,7 +101,7 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     private String pickUpLocation;
 
     /* Called when there is a change in the user location */
-    LocationCallback locationCallback = new LocationCallback()
+    private LocationCallback locationCallback = new LocationCallback()
     {
     };
 
@@ -153,7 +153,7 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     }
 
     /**
-     * Return pick up location to parent
+     * Return pick up location to parent through an intent.
      *
      * @param view
      */
@@ -175,7 +175,7 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     }
 
     /**
-     * Take user to parent activity
+     * Take user to parent activity on back button click.
      *
      * @param view
      */
@@ -212,7 +212,8 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     }
 
     /**
-     * Starts location updates when user has GPS on
+     * Start location updates if user has GPS turned on.
+     * Otherwise, request to turn on GPS
      */
     private void checkSettingsAndStartLocationUpdates()
     {
@@ -289,7 +290,7 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     }
 
     /**
-     * Detach location change listener
+     * Detach location update listener
      */
     private void stopLocationUpdates()
     {
@@ -307,7 +308,10 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     }
 
     /**
-     * Gets last location if all permissions have been granted
+     * If all permissions were granted start location updates.
+     * Otherwise show dialog with option to confirm location permission requests denial or
+     * provide permissions.
+     * Set on map ready callback.
      *
      * @param requestCode
      * @param permissions
@@ -363,7 +367,8 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     }
 
     /**
-     * Process when map ready
+     * When map is ready set listener to add or move marker.
+     * Moves map camera to the default location
      *
      * @param googleMap
      */
@@ -406,10 +411,10 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     }
 
     /**
-     * Returns a list of permissions not granted from a list of permissions passed in
+     * Returns a list of permissions not granted from a list of permissions passed in.
      *
-     * @param wantedPermissions the list of permssions required
-     * @return list of permissions requiring approval
+     * @param wantedPermissions the list of permissions required
+     * @return list of permissions not yet approved
      */
     private ArrayList<String> permissionsToRequest(ArrayList<String> wantedPermissions)
     {
@@ -429,7 +434,7 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
 
     /**
      * Can check if permission was previously accepted on SDK > M
-     * On sdk < M user must have accepted before download
+     * On sdk < M user must have accepted before downloading application.
      *
      * @param perm The permission to check if we have
      */
@@ -486,7 +491,7 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     }
 
     /**
-     * Required to implement GoogleMap.OnMarkerDragListener
+     * Required to implement GoogleMap.OnMarkerDragListener.
      *
      * @param marker
      */
@@ -496,7 +501,7 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     }
 
     /**
-     * Required to implement GoogleMap.OnMarkerDragListener
+     * Required to implement GoogleMap.OnMarkerDragListener.
      *
      * @param marker
      */
@@ -506,7 +511,7 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     }
 
     /**
-     * Update marker when it is dropped after move
+     * Update marker when it is dropped after position change.
      *
      * @param marker
      */
@@ -532,7 +537,7 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     }
 
     /**
-     * Search View On Location entered
+     * Add marker on location entered on the search view
      *
      * @param s Required but unused string parameter
      */
