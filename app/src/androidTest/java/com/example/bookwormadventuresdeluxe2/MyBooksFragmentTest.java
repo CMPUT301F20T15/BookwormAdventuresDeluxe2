@@ -38,6 +38,8 @@ public class MyBooksFragmentTest
     private Context appContext;
     private Resources resources;
 
+    private TestUtils.BookManager bookManager;
+
     @Rule
     public ActivityTestRule<LoginActivity> rule =
             new ActivityTestRule<>(LoginActivity.class, true, true);
@@ -57,6 +59,9 @@ public class MyBooksFragmentTest
 
         /* Gets resource files */
         resources = appContext.getResources();
+
+        /* Setup the book manager */
+        bookManager = new TestUtils.BookManager(resources);
 
         /* Sign in with the test account */
         signIn(solo, resources);
@@ -319,6 +324,19 @@ public class MyBooksFragmentTest
 
         /* Wait for the MyBooks activity after deleting the book */
         solo.waitForActivity(MyBooksActivity.class, (int) SHORT_WAIT);
+    }
+
+    /**
+     * Tests filtering by a book of type available
+     */
+    @Test
+    public void filterByAvailableTest()
+    {
+        /* Create the test books */
+        bookManager.addTestBooks();
+        solo.sleep(20000);
+        bookManager.deleteTestBooks();
+        solo.sleep(20000);
     }
 
     /**
