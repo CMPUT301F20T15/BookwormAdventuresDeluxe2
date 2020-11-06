@@ -86,6 +86,9 @@ public class SearchFragmentTest
         Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_title), 1, SHORT_WAIT));
         Assert.assertTrue(solo.searchText(resources.getString(R.string.test_book_author)));
         Assert.assertTrue(solo.searchText(resources.getString(R.string.test_book_isbn)));
+
+        /* Go back to detail view */
+        solo.clickOnView(solo.getView(R.id.app_header_back_button));
     }
 
     /**
@@ -127,6 +130,34 @@ public class SearchFragmentTest
 
         /* Ensure the requests button is visible */
         Assert.assertTrue(solo.searchButton(resources.getString(R.string.request_book)));
+    }
+
+    /**
+     * Ensures that the correct profile is in view when the username of the
+     * book owner is clicked
+     */
+    @Test
+    public void viewOwnerProfileTest()
+    {
+        /* Navigate to the search fragment */
+        solo.clickOnView(solo.getView(R.id.search_menu_item));
+
+        /* Wait until we enter the search fragment */
+        solo.waitForFragmentById(R.layout.fragment_search, (int) SHORT_WAIT);
+
+        /* Click on newly added book */
+        solo.clickOnText(resources.getString(R.string.test_book_title));
+
+        /* Click on the username of the owner */
+        solo.clickOnText(resources.getString(R.string.test_account2_username));
+
+        /* Check that all the text is found for the accounts details */
+        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_account2_username), 1, SHORT_WAIT));
+        Assert.assertTrue(solo.searchText(resources.getString(R.string.test_account2_email)));
+        Assert.assertTrue(solo.searchText(resources.getString(R.string.test_account2_phone)));
+
+        /* Return to the MyBooksActivity */
+        solo.clickOnView(solo.getView(R.id.app_header_back_button));
     }
 
     /**
