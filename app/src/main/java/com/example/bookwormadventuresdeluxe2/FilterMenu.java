@@ -27,11 +27,11 @@ public class FilterMenu extends Fragment implements View.OnClickListener
     private Query rootQuery;
     private int caller;
 
-    Button availableButton;
-    Button requestedButton;
-    Button acceptedButton;
-    Button borrowedButton;
-    Button allButton;
+    private Button availableButton;
+    private Button requestedButton;
+    private Button acceptedButton;
+    private Button borrowedButton;
+    private Button allButton;
 
     /**
      * Public constructor for the menu

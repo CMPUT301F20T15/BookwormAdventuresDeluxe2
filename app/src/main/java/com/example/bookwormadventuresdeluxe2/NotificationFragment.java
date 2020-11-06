@@ -27,8 +27,8 @@ public class NotificationFragment extends Fragment
     private RecyclerView.LayoutManager notificationRecyclerLayoutManager;
     private ArrayList<Notification> notificationList;
 
-    MaterialTextView appHeaderText;
-    ImageButton backButton;
+    private MaterialTextView appHeaderText;
+    private ImageButton backButton;
 
     /**
      * Constructor for the fragment responsible for displaying notifications

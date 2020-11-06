@@ -123,7 +123,7 @@ public class CreateAccountActivity extends AppCompatActivity
     /**
      * CreateAccountButton functionality
      */
-    public void createAccount()
+    private void createAccount()
     {
         /* Set click listener to create account*/
         createAccountButton.setOnClickListener(new View.OnClickListener()
@@ -158,7 +158,7 @@ public class CreateAccountActivity extends AppCompatActivity
      * @param email Input email to be checked
      * @param password Password of account to be created
      */
-    public void checkUsernameEmailAvailability(String username, String email, String password)
+    private void checkUsernameEmailAvailability(String username, String email, String password)
     {
         /* Show progress bar */
         progressBar.setVisibility(View.VISIBLE);
@@ -257,7 +257,7 @@ public class CreateAccountActivity extends AppCompatActivity
      * @param email Email to be created
      * @param password Password to be created
      */
-    public void createUser(String username, String email, String password)
+    private void createUser(String username, String email, String password)
     {
         /* Create Firebase User */
         firebaseAuth.createUserWithEmailAndPassword(email, password)
@@ -319,7 +319,7 @@ public class CreateAccountActivity extends AppCompatActivity
      *
      * @param userId taken from FirebaseAuth instance
      */
-    public void createFirebaseAccount(String userId)
+    private void createFirebaseAccount(String userId)
     {
         /* Create new User object with credentials */
         Map<String, String> newUser = new HashMap<>();
@@ -338,7 +338,7 @@ public class CreateAccountActivity extends AppCompatActivity
      * @param email Email string to be checked
      * @return boolean true for valid false for invalid
      */
-    public static boolean isEmailValid(String email)
+    private boolean isEmailValid(String email)
     {
         /* Source: https://stackoverflow.com/questions/6119722/how-to-check-edittexts-text-is-email-address-or-not*/
         String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";

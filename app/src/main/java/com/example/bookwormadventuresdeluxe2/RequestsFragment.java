@@ -9,6 +9,7 @@ package com.example.bookwormadventuresdeluxe2;
  * A {@link Fragment} subclass for navbar menu item 2.
  */
 
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -44,11 +45,11 @@ public class RequestsFragment extends Fragment implements View.OnClickListener
     private FilterMenu borrowFilterMenu;
     private FilterMenu requestFilterMenu;
 
-    View view;
-    Button toggle;
-    ImageButton filterButton;
-    TextView current;
-    MaterialTextView appHeaderText;
+    private View view;
+    private Button toggle;
+    private ImageButton filterButton;
+    private TextView current;
+    private MaterialTextView appHeaderText;
     boolean borrow;
 
     public RequestsFragment()

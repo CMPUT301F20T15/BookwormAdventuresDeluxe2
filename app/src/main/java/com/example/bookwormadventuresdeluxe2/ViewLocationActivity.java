@@ -2,13 +2,7 @@ package com.example.bookwormadventuresdeluxe2;
 
 /**
  * Allows borrower to view a pickup location
- * <p>
- * Usage:
- * Pass in pickUpLocation as String in the format "latitude,longitude"
- * eg:
- * Intent viewLocationIntent = new Intent(getActivity(), ViewLocationActivity.class);
- * viewLocationIntent.putExtra("location", "53.510787,-113.5140128");
- * startActivity(viewLocationIntent);
+ * The pickup location is provided through an intent when this activity is started.
  */
 
 import android.content.Intent;
@@ -90,7 +84,7 @@ public class ViewLocationActivity extends AppCompatActivity implements OnMapRead
     }
 
     /**
-     * Add marker at pickUpLocation when map isready
+     * Add a marker at the pick up location when map is ready
      *
      * @param googleMap
      */
