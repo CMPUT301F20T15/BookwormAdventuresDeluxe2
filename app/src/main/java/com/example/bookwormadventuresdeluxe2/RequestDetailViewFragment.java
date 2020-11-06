@@ -224,7 +224,7 @@ public class RequestDetailViewFragment extends DetailView
     {
         // Set the content based on the book that was selected
         super.updateView(book);
-        
+
         TextView user = bookDetailView.findViewById(R.id.book_request_user);
         user.setText(this.selectedBook.getRequesters().get(0));
 
@@ -234,11 +234,11 @@ public class RequestDetailViewFragment extends DetailView
             case Requested:
             case Accepted:
                 status.setText(getString(R.string.request_detail_requested));
-                clickUsername(user, book.getRequesters().get(0));
                 break;
             case bPending:
             case Borrowed:
                 status.setText(getString(R.string.request_detail_borrowed));
+
                 break;
             case rPending:
                 status.setText(getString(R.string.request_detail_return));
@@ -246,8 +246,7 @@ public class RequestDetailViewFragment extends DetailView
             default:
                 throw new InvalidParameterException("Invalid book status in RequestDetailView updateView");
         }
-
-
+        clickUsername(user, book.getRequesters().get(0));
     }
 
     /**
