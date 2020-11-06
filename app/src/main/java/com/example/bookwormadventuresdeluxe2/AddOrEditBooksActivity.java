@@ -47,17 +47,17 @@ import java.util.UUID;
 
 public class AddOrEditBooksActivity extends AppCompatActivity
 {
-    TextView takePhoto;
-    ImageView bookPicture;
-    EditText titleView, authorView, descriptionView, isbnView;
-    boolean editingBook = false;
-    boolean deleteBookPictureWhenSaving = false;
-    Button deleteButton;
-    FloatingActionButton deletePictureButton;
-    Book bookToEdit;
-    String bookPhotoDowloadUrl = "";
+    private TextView takePhoto;
+    private ImageView bookPicture;
+    private EditText titleView, authorView, descriptionView, isbnView;
+    private boolean editingBook = false;
+    private boolean deleteBookPictureWhenSaving = false;
+    private Button deleteButton;
+    private FloatingActionButton deletePictureButton;
+    private Book bookToEdit;
+    private String bookPhotoDowloadUrl = "";
 
-    FirebaseAuth firebaseAuth;
+    private FirebaseAuth firebaseAuth;
 
     public static int ADD_BOOK = 0;
     public static int EDIT_BOOK = 1;
