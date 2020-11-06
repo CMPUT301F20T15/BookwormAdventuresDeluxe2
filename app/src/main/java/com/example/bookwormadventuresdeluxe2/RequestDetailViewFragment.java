@@ -238,7 +238,6 @@ public class RequestDetailViewFragment extends DetailView
             case bPending:
             case Borrowed:
                 status.setText(getString(R.string.request_detail_borrowed));
-
                 break;
             case rPending:
                 status.setText(getString(R.string.request_detail_return));
