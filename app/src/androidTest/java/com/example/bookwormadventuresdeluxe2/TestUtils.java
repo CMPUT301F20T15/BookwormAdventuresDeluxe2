@@ -143,9 +143,6 @@ public class TestUtils
             this.solo = solo;
             this.resources = resources;
 
-            /* TODO: For handoff tests we will need to set the requester and borrower to testaccount1
-               and testaccount2 respectively
-             */
             /* Private book objects so we can easily add and remove from firebase */
             availableBook = new Book(resources.getString(R.string.test_account1_username),
                     resources.getString(R.string.test_book_available_title),
@@ -190,6 +187,9 @@ public class TestUtils
             collectionReference.add(this.acceptedBook);
             collectionReference.add(this.requestedBook);
             collectionReference.add(this.borrowedBook);
+
+            /* Sleep a small amount of time to let the UI update */
+            solo.sleep((int) SHORT_WAIT);
         }
 
         /**
