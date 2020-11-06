@@ -16,7 +16,9 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
+import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.security.InvalidParameterException;
@@ -28,6 +30,8 @@ public class BorrowDetailViewFragment extends DetailView
     private TextView exchange;
     private DocumentReference bookDocument;
 
+    private String source = "";
+
     public BorrowDetailViewFragment()
     {
         // Required empty public constructor
@@ -38,8 +42,15 @@ public class BorrowDetailViewFragment extends DetailView
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
+        /* Grabbing source fragment of book item after click*/
+        Bundle bundle = getArguments();
+        if (bundle != null)
+        {
+            source = (String) bundle.getString(getString(R.string.book_click_source_fragment));
+        }
+
         this.bookDetailView = inflater.inflate(R.layout.fragment_borrow_detail_view, null, false);
-        ((TextView) bookDetailView.findViewById(R.id.app_header_title)).setText(R.string.borrow);
+        ((TextView) bookDetailView.findViewById(R.id.app_header_title)).setText(source);
 
         // setup back button
         super.onCreateView(inflater, container, savedInstanceState);
@@ -52,6 +63,14 @@ public class BorrowDetailViewFragment extends DetailView
         {
             case Available:
             case Requested:
+                if ((!selectedBook.getRequesters().contains(UserCredentialAPI.getInstance().getUsername())))
+                {
+                    this.btn1.setText(getString(R.string.request_book));
+
+                    this.btn1.setOnClickListener(this::btnRequestBook);
+
+                    this.btn1.setVisibility(View.VISIBLE);
+                }
                 break;
 
             case Accepted:
@@ -107,6 +126,19 @@ public class BorrowDetailViewFragment extends DetailView
         return bookDetailView;
     }
 
+    /**
+     * Send request to book owner
+     *
+     * @param view The view that was clicked on
+     */
+    private void btnRequestBook(View view)
+    {
+        this.bookDocument.update(getString(R.string.requesters),
+                FieldValue.arrayUnion(UserCredentialAPI.getInstance().getUsername()));
+        this.bookDocument.update(getString(R.string.status), getString(R.string.requested));
+        onBackClick(view);
+    }
+
     private void btnSetLocation(View view)
     {
         //TODO: actually do the stuff
@@ -160,7 +192,44 @@ public class BorrowDetailViewFragment extends DetailView
         status.setText(getString(R.string.owned_by));
 
         TextView user = bookDetailView.findViewById(R.id.book_request_user);
-        user.setText("TODO: get owner");
+        user.setText(book.getOwner());
+
+        clickUsername(user, book.getOwner());
+    }
+
+    /**
+     * Opens user profile on TextView click
+     *
+     * @param textView TextView in view
+     * @param username Book owner's username
+     */
+    public void clickUsername(TextView textView, String username)
+    {
+        textView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                /* Pulling UserProfileObject from database */
+                FirebaseUserGetSet.getUser(username, new FirebaseUserGetSet.UserCallback()
+                {
+                    @Override
+                    public void onCallback(UserProfileObject userObject)
+                    {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(getString(R.string.profile_object), userObject);
+                        ProfileFragment profileFragment = new ProfileFragment();
+                        profileFragment.setArguments(bundle);
+                        getActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                                .replace(R.id.frame_container, profileFragment)
+                                .addToBackStack(null)
+                                .commit();
+                    }
+                });
+            }
+        });
     }
 
     /**
@@ -170,10 +239,20 @@ public class BorrowDetailViewFragment extends DetailView
      */
     public void onBackClick(View v)
     {
-        RequestsFragment fragment = new RequestsFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        args.putBoolean(getString(R.string.borrow), true);
-        getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+        /* Source fragment was Search, return to search books*/
+        if (source.equals(getString(R.string.search_title)))
+        {
+            SearchFragment fragment = new SearchFragment();
+            getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+        }
+        /* Source fragment was Borrow, return to Borrow */
+        else if (source.equals(getString(R.string.borrow)))
+        {
+            RequestsFragment fragment = new RequestsFragment();
+            Bundle args = new Bundle();
+            fragment.setArguments(args);
+            args.putBoolean(getString(R.string.borrow), true);
+            getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+        }
     }
 }

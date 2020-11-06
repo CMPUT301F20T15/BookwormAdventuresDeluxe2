@@ -211,6 +211,7 @@ public class Book implements Serializable
      * Returns the book's status that a given user should see
      *
      * @param user The string of the user looking at the book
+     * @return status the status the user should see
      */
     public Status getAugmentStatus(String user)
     {
