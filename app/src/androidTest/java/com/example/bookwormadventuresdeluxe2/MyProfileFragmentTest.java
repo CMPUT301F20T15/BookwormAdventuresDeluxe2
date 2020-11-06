@@ -61,7 +61,7 @@ public class MyProfileFragmentTest
     {
         /* Sign in with the test account */
         signIn(solo, resources);
-        
+
         solo.clickOnText(resources.getString(R.string.navbar_text_label_4));
 
         Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_account1_username)));
