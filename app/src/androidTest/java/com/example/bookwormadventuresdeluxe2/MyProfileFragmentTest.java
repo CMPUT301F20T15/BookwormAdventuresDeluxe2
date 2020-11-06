@@ -56,6 +56,10 @@ public class MyProfileFragmentTest
         Activity activity = rule.getActivity();
     }
 
+    /**
+     * Tests viewing 'my profile' after login
+     *
+     */
     @Test
     public void checkMyProfile()
     {
