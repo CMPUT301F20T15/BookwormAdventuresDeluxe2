@@ -70,7 +70,7 @@ public class MyProfileFragmentTest
 
         solo.clickOnButton(resources.getString(R.string.sign_out));
 
-        solo.waitForActivity(MyBooksActivity.class, (int) SHORT_WAIT);
+        solo.waitForActivity(LoginActivity.class, (int) SHORT_WAIT);
     }
 
     /**
