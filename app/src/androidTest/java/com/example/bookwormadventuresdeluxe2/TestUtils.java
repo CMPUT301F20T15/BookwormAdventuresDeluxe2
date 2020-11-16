@@ -167,6 +167,7 @@ public class TestUtils
                     "");
             /* Set the second test account as the requested */
             requestedBook.addRequester(resources.getString(R.string.test_account2_username));
+
             borrowedBook = new Book(resources.getString(R.string.test_account1_username),
                     resources.getString(R.string.test_book_borrowed_title),
                     resources.getString(R.string.test_book_borrowed_author),
@@ -174,6 +175,8 @@ public class TestUtils
                     resources.getString(R.string.test_book_isbn),
                     Status.Borrowed,
                     "");
+            /* Set the first test account as the borrower */
+            borrowedBook.addRequester(resources.getString(R.string.test_account1_username));
         }
 
         /**
