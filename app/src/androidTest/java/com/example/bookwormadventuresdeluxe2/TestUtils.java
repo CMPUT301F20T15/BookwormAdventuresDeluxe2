@@ -158,6 +158,8 @@ public class TestUtils
                     resources.getString(R.string.test_book_isbn),
                     Status.Accepted,
                     "");
+            /* Set the first test account as the borrower */
+            acceptedBook.addRequester(resources.getString(R.string.test_account1_username));
             requestedBook = new Book(resources.getString(R.string.test_account1_username),
                     resources.getString(R.string.test_book_requested_title),
                     resources.getString(R.string.test_book_requested_author),
