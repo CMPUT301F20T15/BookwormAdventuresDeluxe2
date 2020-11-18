@@ -245,6 +245,8 @@ public class RequestDetailViewFragment extends DetailView
             default:
                 throw new InvalidParameterException("Invalid book status in RequestDetailView updateView");
         }
+        
+        /* Enables clicking of requester profile*/
         clickUsername(user, book.getRequesters().get(0));
     }
 
