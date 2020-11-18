@@ -23,11 +23,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static com.example.bookwormadventuresdeluxe2.FilterMenuUtils.verifyAcceptedFilter;
-import static com.example.bookwormadventuresdeluxe2.FilterMenuUtils.verifyAllFilter;
-import static com.example.bookwormadventuresdeluxe2.FilterMenuUtils.verifyAvailableFilter;
-import static com.example.bookwormadventuresdeluxe2.FilterMenuUtils.verifyBorrowedFilter;
-import static com.example.bookwormadventuresdeluxe2.FilterMenuUtils.verifyRequestedFilter;
 import static com.example.bookwormadventuresdeluxe2.TestUtils.NO_WAIT;
 import static com.example.bookwormadventuresdeluxe2.TestUtils.SHORT_WAIT;
 import static com.example.bookwormadventuresdeluxe2.TestUtils.createTestBook;
@@ -43,8 +38,6 @@ public class MyBooksFragmentTest
 
     private Context appContext;
     private Resources resources;
-
-    private TestUtils.BookManager bookManager;
 
     @Rule
     public ActivityTestRule<LoginActivity> rule =
@@ -65,9 +58,6 @@ public class MyBooksFragmentTest
 
         /* Gets resource files */
         resources = appContext.getResources();
-
-        /* Setup the book manager */
-        bookManager = new TestUtils.BookManager(solo, resources);
 
         /* Sign in with the test account */
         signIn(solo, resources);
@@ -330,103 +320,6 @@ public class MyBooksFragmentTest
 
         /* Wait for the MyBooks activity after deleting the book */
         solo.waitForActivity(MyBooksActivity.class, (int) SHORT_WAIT);
-    }
-
-    /**
-     * Tests filtering for books with the available status
-     */
-    @Test
-    public void filterByAvailableTest()
-    {
-        /* Create the test books */
-        bookManager.addTestBooks();
-
-        /* Verify the behavior of the available filter button */
-        verifyAvailableFilter(this.solo, this.resources);
-
-        /* Click back button to return to my books recycler view fragment */
-        solo.clickOnView(solo.getView(R.id.app_header_back_button));
-        solo.waitForFragmentById(R.layout.fragment_my_books, (int) SHORT_WAIT);
-
-        /* Delete the test books */
-        bookManager.deleteTestBooks();
-    }
-
-    /**
-     * Tests filtering for books with the accepted status
-     */
-    @Test
-    public void filterByAcceptedTest()
-    {
-        /* Create the test books */
-        bookManager.addTestBooks();
-
-        /* Verify the behavior of the accepted filter button */
-        verifyAcceptedFilter(this.solo, this.resources);
-
-        /* Click back button to return to my books recycler view fragment */
-        solo.clickOnView(solo.getView(R.id.app_header_back_button));
-        solo.waitForFragmentById(R.layout.fragment_my_books, (int) SHORT_WAIT);
-
-
-        /* Delete the test books */
-        bookManager.deleteTestBooks();
-    }
-
-    /**
-     * Tests filtering for books with the requested status
-     */
-    @Test
-    public void filterByRequestedTest()
-    {
-        /* Create the test books */
-        bookManager.addTestBooks();
-
-        /* Verify the behavior of the requested filter button */
-        verifyRequestedFilter(this.solo, this.resources);
-
-        /* Click back button to return to my books recycler view fragment */
-        solo.clickOnView(solo.getView(R.id.app_header_back_button));
-        solo.waitForFragmentById(R.layout.fragment_my_books, (int) SHORT_WAIT);
-
-        /* Delete the test books */
-        bookManager.deleteTestBooks();
-    }
-
-    /**
-     * Tests filtering for books with the borrowed status
-     */
-    @Test
-    public void filterByBorrowedTest()
-    {
-        /* Create the test books */
-        bookManager.addTestBooks();
-
-        /* Verify the behavior of the borrowed filter button */
-        verifyBorrowedFilter(this.solo, this.resources);
-
-        /* Click back button to return to my books recycler view fragment */
-        solo.clickOnView(solo.getView(R.id.app_header_back_button));
-        solo.waitForFragmentById(R.layout.fragment_my_books, (int) SHORT_WAIT);
-
-        /* Delete the test books */
-        bookManager.deleteTestBooks();
-    }
-
-    /**
-     * Tests filtering by all
-     */
-    @Test
-    public void filterByAllTest()
-    {
-        /* Create the test books */
-        bookManager.addTestBooks();
-
-        /* Verify the behavior of the all filter button */
-        verifyAllFilter(this.solo, this.resources);
-
-        /* Delete the test books */
-        bookManager.deleteTestBooks();
     }
 
 
