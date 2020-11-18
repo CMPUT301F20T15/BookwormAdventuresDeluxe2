@@ -74,6 +74,7 @@ public class RequestDetailViewFragment extends DetailView
                 requesters.setVisibility(View.VISIBLE);
                 bookDetailView.findViewById(R.id.book_request_user).setVisibility(View.GONE);
 
+                /* Enables viewing profile of selected requester*/
                 Button viewProfileBtn = bookDetailView.findViewById(R.id.view_profile_button);
                 viewProfileBtn.setVisibility(View.VISIBLE);
                 sliderProfileButton(viewProfileBtn, requesters);
