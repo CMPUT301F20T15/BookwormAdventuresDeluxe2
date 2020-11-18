@@ -23,6 +23,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static com.example.bookwormadventuresdeluxe2.FilterMenuUtils.verifyAcceptedFilter;
+import static com.example.bookwormadventuresdeluxe2.FilterMenuUtils.verifyAllFilter;
+import static com.example.bookwormadventuresdeluxe2.FilterMenuUtils.verifyAvailableFilter;
+import static com.example.bookwormadventuresdeluxe2.FilterMenuUtils.verifyBorrowedFilter;
+import static com.example.bookwormadventuresdeluxe2.FilterMenuUtils.verifyRequestedFilter;
 import static com.example.bookwormadventuresdeluxe2.TestUtils.NO_WAIT;
 import static com.example.bookwormadventuresdeluxe2.TestUtils.SHORT_WAIT;
 import static com.example.bookwormadventuresdeluxe2.TestUtils.createTestBook;
@@ -336,27 +341,8 @@ public class MyBooksFragmentTest
         /* Create the test books */
         bookManager.addTestBooks();
 
-        /* Open the filter menu */
-        solo.clickOnView(solo.getView(R.id.app_header_filter_button));
-        solo.waitForFragmentById(R.layout.fragment_filter_menu, (int) SHORT_WAIT);
-
-        /* Press the available button */
-        solo.clickOnView(solo.getView(R.id.available_button));
-
-        /* Check that the available title is shown but none of the others are */
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_available_title), 1, SHORT_WAIT));
-        Assert.assertFalse(solo.waitForText(resources.getString(R.string.test_book_accepted_title), 1, NO_WAIT));
-        Assert.assertFalse(solo.waitForText(resources.getString(R.string.test_book_requested_title), 1, NO_WAIT));
-        Assert.assertFalse(solo.waitForText(resources.getString(R.string.test_book_borrowed_title), 1, NO_WAIT));
-
-        /* Click on the book title */
-        solo.clickOnText(resources.getString(R.string.test_book_available_title));
-
-        /* Check that all the correct information is shown */
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_available_title), 1, SHORT_WAIT));
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_available_author), 1, NO_WAIT));
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_available_description), 1, NO_WAIT));
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_isbn), 1, NO_WAIT));
+        /* Verify the behavior of the available filter button */
+        verifyAvailableFilter(this.solo, this.resources);
 
         /* Click back button to return to my books recycler view fragment */
         solo.clickOnView(solo.getView(R.id.app_header_back_button));
@@ -375,27 +361,8 @@ public class MyBooksFragmentTest
         /* Create the test books */
         bookManager.addTestBooks();
 
-        /* Open the filter menu */
-        solo.clickOnView(solo.getView(R.id.app_header_filter_button));
-        solo.waitForFragmentById(R.layout.fragment_filter_menu, (int) SHORT_WAIT);
-
-        /* Press the accepted button */
-        solo.clickOnView(solo.getView(R.id.accepted_button));
-
-        /* Check that the accepted title is shown but none of the others are */
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_accepted_title), 1, SHORT_WAIT));
-        Assert.assertFalse(solo.waitForText(resources.getString(R.string.test_book_available_title), 1, NO_WAIT));
-        Assert.assertFalse(solo.waitForText(resources.getString(R.string.test_book_requested_title), 1, NO_WAIT));
-        Assert.assertFalse(solo.waitForText(resources.getString(R.string.test_book_borrowed_title), 1, NO_WAIT));
-
-        /* Click on the book title */
-        solo.clickOnText(resources.getString(R.string.test_book_accepted_title));
-
-        /* Check that all the correct information is shown */
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_accepted_title), 1, SHORT_WAIT));
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_accepted_author), 1, NO_WAIT));
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_accepted_description), 1, NO_WAIT));
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_isbn), 1, NO_WAIT));
+        /* Verify the behavior of the accepted filter button */
+        verifyAcceptedFilter(this.solo, this.resources);
 
         /* Click back button to return to my books recycler view fragment */
         solo.clickOnView(solo.getView(R.id.app_header_back_button));
@@ -415,27 +382,8 @@ public class MyBooksFragmentTest
         /* Create the test books */
         bookManager.addTestBooks();
 
-        /* Open the filter menu */
-        solo.clickOnView(solo.getView(R.id.app_header_filter_button));
-        solo.waitForFragmentById(R.layout.fragment_filter_menu, (int) SHORT_WAIT);
-
-        /* Press the requested button */
-        solo.clickOnView(solo.getView(R.id.requested_button));
-
-        /* Check that the requested title is shown but none of the others are */
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_requested_title), 1, SHORT_WAIT));
-        Assert.assertFalse(solo.waitForText(resources.getString(R.string.test_book_available_title), 1, NO_WAIT));
-        Assert.assertFalse(solo.waitForText(resources.getString(R.string.test_book_accepted_title), 1, NO_WAIT));
-        Assert.assertFalse(solo.waitForText(resources.getString(R.string.test_book_borrowed_title), 1, NO_WAIT));
-
-        /* Click on the book title */
-        solo.clickOnText(resources.getString(R.string.test_book_requested_title));
-
-        /* Check that all the correct information is shown */
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_requested_title), 1, SHORT_WAIT));
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_requested_author), 1, NO_WAIT));
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_requested_description), 1, NO_WAIT));
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_isbn), 1, NO_WAIT));
+        /* Verify the behavior of the requested filter button */
+        verifyRequestedFilter(this.solo, this.resources);
 
         /* Click back button to return to my books recycler view fragment */
         solo.clickOnView(solo.getView(R.id.app_header_back_button));
@@ -454,32 +402,12 @@ public class MyBooksFragmentTest
         /* Create the test books */
         bookManager.addTestBooks();
 
-        /* Open the filter menu */
-        solo.clickOnView(solo.getView(R.id.app_header_filter_button));
-        solo.waitForFragmentById(R.layout.fragment_filter_menu, (int) SHORT_WAIT);
-
-        /* Press the borrowed button */
-        solo.clickOnView(solo.getView(R.id.borrowed_button));
-
-        /* Check that the borrowed title is shown but none of the others are */
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_borrowed_title), 1, SHORT_WAIT));
-        Assert.assertFalse(solo.waitForText(resources.getString(R.string.test_book_available_title), 1, NO_WAIT));
-        Assert.assertFalse(solo.waitForText(resources.getString(R.string.test_book_accepted_title), 1, NO_WAIT));
-        Assert.assertFalse(solo.waitForText(resources.getString(R.string.test_book_requested_title), 1, NO_WAIT));
-
-        /* Click on the book title */
-        solo.clickOnText(resources.getString(R.string.test_book_borrowed_title));
-
-        /* Check that all the correct information is shown */
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_borrowed_title), 1, SHORT_WAIT));
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_borrowed_author), 1, NO_WAIT));
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_borrowed_description), 1, NO_WAIT));
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_isbn), 1, NO_WAIT));
+        /* Verify the behavior of the borrowed filter button */
+        verifyBorrowedFilter(this.solo, this.resources);
 
         /* Click back button to return to my books recycler view fragment */
         solo.clickOnView(solo.getView(R.id.app_header_back_button));
         solo.waitForFragmentById(R.layout.fragment_my_books, (int) SHORT_WAIT);
-
 
         /* Delete the test books */
         bookManager.deleteTestBooks();
@@ -494,31 +422,8 @@ public class MyBooksFragmentTest
         /* Create the test books */
         bookManager.addTestBooks();
 
-        /* Open the filter menu */
-        solo.clickOnView(solo.getView(R.id.app_header_filter_button));
-        solo.waitForFragmentById(R.layout.fragment_filter_menu, (int) SHORT_WAIT);
-
-        /* Press the available button */
-        solo.clickOnView(solo.getView(R.id.available_button));
-
-        /* Check that only the available title is shown */
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_available_title), 1, SHORT_WAIT));
-        Assert.assertFalse(solo.waitForText(resources.getString(R.string.test_book_accepted_title), 1, NO_WAIT));
-        Assert.assertFalse(solo.waitForText(resources.getString(R.string.test_book_requested_title), 1, NO_WAIT));
-        Assert.assertFalse(solo.waitForText(resources.getString(R.string.test_book_borrowed_title), 1, NO_WAIT));
-
-        /* Open the filter menu */
-        solo.clickOnView(solo.getView(R.id.app_header_filter_button));
-        solo.waitForFragmentById(R.layout.fragment_filter_menu, (int) SHORT_WAIT);
-
-        /* Press the all button */
-        solo.clickOnView(solo.getView(R.id.all_button));
-
-        /* Check that all the books are shown */
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_available_title), 1, SHORT_WAIT));
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_accepted_title), 1, NO_WAIT));
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_requested_title), 1, NO_WAIT));
-        Assert.assertTrue(solo.waitForText(resources.getString(R.string.test_book_borrowed_title), 1, NO_WAIT));
+        /* Verify the behavior of the all filter button */
+        verifyAllFilter(this.solo, this.resources);
 
         /* Delete the test books */
         bookManager.deleteTestBooks();
