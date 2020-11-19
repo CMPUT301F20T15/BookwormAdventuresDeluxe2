@@ -8,7 +8,6 @@ package com.example.bookwormadventuresdeluxe2;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,7 +94,9 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
                 bookDetailFragment.onFragmentInteraction(book, documentId);
 
                 ((MyBooksActivity) context).getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_container, bookDetailFragment).commit();
+                        .add(R.id.frame_container, bookDetailFragment)
+                        .hide(ActiveFragmentTracker.activeFragment)
+                        .commit();
             }
         };
         return listener;

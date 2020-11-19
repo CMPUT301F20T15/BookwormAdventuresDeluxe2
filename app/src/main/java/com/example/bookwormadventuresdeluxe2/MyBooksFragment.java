@@ -220,7 +220,9 @@ public class MyBooksFragment extends Fragment
                             // Open the detailed view if the book exists
                             bookDetailFragment.onFragmentInteraction(bookToView, documentId);
                             getActivity().getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.frame_container, bookDetailFragment).commit();
+                                    .add(R.id.frame_container, bookDetailFragment)
+                                    .hide(ActiveFragmentTracker.activeFragment)
+                                    .commit();
                             break;
                         default:
                             /*

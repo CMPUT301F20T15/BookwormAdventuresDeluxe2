@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.firebase.firestore.DocumentReference;
@@ -72,11 +74,11 @@ public class MyBooksDetailViewFragment extends DetailView
      */
     public void onBackClick(View v)
     {
-        MyBooksFragment myBooksFragment = new MyBooksFragment();
+        Fragment myBooksFragment = ActiveFragmentTracker.activeFragment;
         Bundle args = new Bundle();
         args.putSerializable("editedBook", this.selectedBook);
         myBooksFragment.setArguments(args);
-        getFragmentManager().beginTransaction().replace(R.id.frame_container, myBooksFragment).commit();
+        getFragmentManager().beginTransaction().remove(this).show(myBooksFragment).commit();
     }
 
     /**
