@@ -247,8 +247,9 @@ public class MyBooksFragment extends Fragment
      */
     private void onNotificationClick(View view)
     {
-        NotificationFragment notificationFragment = new NotificationFragment();
-        getFragmentManager().beginTransaction().replace(R.id.frame_container, notificationFragment).commit();
+        Fragment notificationFragment = getFragmentManager().findFragmentByTag("notificationFragment");
+        getFragmentManager().beginTransaction().hide(ActiveFragmentTracker.activeFragment).show(notificationFragment).commit();
+        ActiveFragmentTracker.activeFragment = notificationFragment;
     }
 
     /**

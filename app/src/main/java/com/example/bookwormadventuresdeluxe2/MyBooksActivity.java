@@ -27,7 +27,7 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
     private SearchFragment searchFragment = new SearchFragment();
     private RequestsFragment requestsFragment = new RequestsFragment();
     private ProfileFragment profileFragment = new ProfileFragment();
-    private Fragment activeFragment = myBooksFragment;
+    private NotificationFragment notificationFragment = new NotificationFragment();
     private final FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
@@ -36,11 +36,18 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
 
+        addFragments();
+
         BottomNavigationView navbar = findViewById(R.id.bottom_navbar);
         navbar.setOnNavigationItemSelectedListener(this);
         navbar.setSelectedItemId(R.id.my_books_menu_item); // Set My Books as default
+    }
 
-        /* Add all the fragments but hide them */
+    /**
+     * Add all fragments using the fragment manager, but hide all except for the myBooksFragment
+     */
+    private void addFragments()
+    {
         fragmentManager.beginTransaction().add(R.id.frame_container, searchFragment, "searchFragment").hide(searchFragment).commit();
         fragmentManager.beginTransaction().add(R.id.frame_container, requestsFragment, "requestsFragment").hide(requestsFragment).commit();
         /* Get the profile from firebase then add the profileFragment */
@@ -55,7 +62,9 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
                 fragmentManager.beginTransaction().add(R.id.frame_container, profileFragment, "profileFragment").hide(profileFragment).commit();
             }
         });
+        fragmentManager.beginTransaction().add(R.id.frame_container, notificationFragment, "notificationFragment").hide(notificationFragment).commit();
         fragmentManager.beginTransaction().add(R.id.frame_container, myBooksFragment, "myBooksFragment").commit();
+        ActiveFragmentTracker.activeFragment = myBooksFragment;
     }
 
     @Override
@@ -113,12 +122,12 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
         /* Hide the current active fragment and show the new one */
         fragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                .hide(this.activeFragment)
+                .hide(ActiveFragmentTracker.activeFragment)
                 .show(fragment)
                 .commit();
 
         /* Set the new active fragment */
-        this.activeFragment = fragment;
+        ActiveFragmentTracker.activeFragment = fragment;
     }
 
     /**
