@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -22,12 +23,12 @@ import com.google.zxing.integration.android.IntentIntegrator;
 
 public class MyBooksActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener
 {
-
-    private BottomNavigationView navbar;
     private MyBooksFragment myBooksFragment = new MyBooksFragment();
     private SearchFragment searchFragment = new SearchFragment();
     private RequestsFragment requestsFragment = new RequestsFragment();
     private ProfileFragment profileFragment = new ProfileFragment();
+    private Fragment activeFragment = myBooksFragment;
+    private final FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -35,13 +36,28 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
 
-        navbar = findViewById(R.id.bottom_navbar);
+        BottomNavigationView navbar = findViewById(R.id.bottom_navbar);
         navbar.setOnNavigationItemSelectedListener(this);
         navbar.setSelectedItemId(R.id.my_books_menu_item); // Set My Books as default
 
+        /* Add all the fragments but hide them */
+        fragmentManager.beginTransaction().add(R.id.frame_container, searchFragment, "searchFragment").hide(searchFragment).commit();
+        fragmentManager.beginTransaction().add(R.id.frame_container, requestsFragment, "requestsFragment").hide(requestsFragment).commit();
+        /* Get the profile from firebase then add the profileFragment */
+        FirebaseUserGetSet.getUser(UserCredentialAPI.getInstance().getUsername(), new FirebaseUserGetSet.UserCallback()
+        {
+            @Override
+            public void onCallback(UserProfileObject userObject)
+            {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(getString(R.string.profile_object), userObject);
+                profileFragment.setArguments(bundle);
+                fragmentManager.beginTransaction().add(R.id.frame_container, profileFragment, "profileFragment").hide(profileFragment).commit();
+            }
+        });
+        fragmentManager.beginTransaction().add(R.id.frame_container, myBooksFragment, "myBooksFragment").commit();
     }
 
-    // Todo : Fix Profile Avatar visibility issue
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item)
     {
@@ -65,22 +81,8 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
                 break;
             case R.id.profile_menu_item:
                 /* Respond to  Profile click*/
-
-                /* Pulling UserProfileObject from database */
-                FirebaseUserGetSet.getUser(UserCredentialAPI.getInstance().getUsername(), new FirebaseUserGetSet.UserCallback()
-                {
-                    @Override
-                    public void onCallback(UserProfileObject userObject)
-                    {
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable(getString(R.string.profile_object), userObject);
-                        profileFragment.setArguments(bundle);
-
-                        /* Opening MyProfileFragment */
-                        replaceFragment(profileFragment);
-                        setTitle("Profile");
-                    }
-                });
+                replaceFragment(profileFragment);
+                setTitle("Profile");
                 break;
             default:
                 /* We would not expect any other id */
@@ -100,20 +102,23 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
     }
 
     /**
-     * Update fragment Container with new fragment
-     * Use fade in and fade out for transition
-     * addToBackStack( optional name or null ) remembers transition and reverses operation when popped off stack
-     * source: https://developer.android.com/training/basics/fragments/animate
+     * Update fragment Container with new fragment.
+     * Use fade in and fade out for transition.
+     * This simply hides the active fragment and shows the new fragment
      *
      * @param fragment The fragment to replace this one with
      */
     public void replaceFragment(Fragment fragment)
     {
-        getSupportFragmentManager().beginTransaction()
+        /* Hide the current active fragment and show the new one */
+        fragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                .replace(R.id.frame_container, fragment)
-                .addToBackStack(null)
+                .hide(this.activeFragment)
+                .show(fragment)
                 .commit();
+
+        /* Set the new active fragment */
+        this.activeFragment = fragment;
     }
 
     /**
