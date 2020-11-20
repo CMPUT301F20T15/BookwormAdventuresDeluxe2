@@ -94,7 +94,7 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
                 bookDetailFragment.onFragmentInteraction(book, documentId);
 
                 ((MyBooksActivity) context).getSupportFragmentManager().beginTransaction()
-                        .add(R.id.frame_container, bookDetailFragment, "bookDetailFragment")
+                        .add(R.id.frame_container, bookDetailFragment, context.getResources().getString(R.string.book_detail_fragment))
                         .hide(ActiveFragmentTracker.activeFragment)
                         .commit();
             }

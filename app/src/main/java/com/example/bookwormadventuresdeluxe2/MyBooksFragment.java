@@ -220,7 +220,7 @@ public class MyBooksFragment extends Fragment
                             // Open the detailed view if the book exists
                             bookDetailFragment.onFragmentInteraction(bookToView, documentId);
                             getActivity().getSupportFragmentManager().beginTransaction()
-                                    .add(R.id.frame_container, bookDetailFragment, "bookDetailFragment")
+                                    .add(R.id.frame_container, bookDetailFragment, getString(R.string.book_detail_fragment))
                                     .hide(ActiveFragmentTracker.activeFragment)
                                     .commit();
                             break;
@@ -249,7 +249,7 @@ public class MyBooksFragment extends Fragment
      */
     private void onNotificationClick(View view)
     {
-        Fragment notificationFragment = getFragmentManager().findFragmentByTag("notificationFragment");
+        Fragment notificationFragment = getFragmentManager().findFragmentByTag(getString(R.string.notification_fragment));
         getFragmentManager().beginTransaction().hide(ActiveFragmentTracker.activeFragment).show(notificationFragment).commit();
         ActiveFragmentTracker.activeFragment = notificationFragment;
     }

@@ -3,12 +3,13 @@ package com.example.bookwormadventuresdeluxe2;
 /**
  * Holds the view for seeing details on a book in the borrowed tab
  * The user will be able to interact with borrow options on the book
- *
+ * <p>
  * Outstanding Issues: Still requires ISBN scan for handoff
  */
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -35,7 +36,8 @@ public class BorrowDetailViewFragment extends DetailView
     private Button btn2;
     private TextView exchange;
     private DocumentReference bookDocument;
-    BorrowDetailViewFragment borrowDetailViewFragment;
+    private BorrowDetailViewFragment borrowDetailViewFragment;
+    private Resources resources;
 
     private static int SetLocationActivityResultCode = 7;
 
@@ -51,6 +53,8 @@ public class BorrowDetailViewFragment extends DetailView
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
+        resources = getResources();
+
         /* Grabbing source fragment of book item after click*/
         Bundle bundle = getArguments();
         if (bundle != null)
@@ -66,7 +70,7 @@ public class BorrowDetailViewFragment extends DetailView
         ((TextView) bookDetailView.findViewById(R.id.app_header_title)).setText(source);
 
         /* Get the fragment from the fragment manager */
-        borrowDetailViewFragment = (BorrowDetailViewFragment) getFragmentManager().findFragmentByTag("bookDetailFragment");
+        borrowDetailViewFragment = (BorrowDetailViewFragment) getFragmentManager().findFragmentByTag(getString(R.string.book_detail_fragment));
 
         // setup back button
         super.onCreateView(inflater, container, savedInstanceState);
@@ -94,8 +98,8 @@ public class BorrowDetailViewFragment extends DetailView
 
                 if (this.selectedBook.getPickUpAddress().equals(""))
                 {
-                    this.btn1.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
-                    this.btn1.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
+                    this.btn1.setBackgroundTintList(resources.getColorStateList(R.color.tempPhotoBackground));
+                    this.btn1.setTextColor(resources.getColorStateList(R.color.colorPrimary));
                 }
                 else
                 {
@@ -138,8 +142,8 @@ public class BorrowDetailViewFragment extends DetailView
 
             case rPending:
                 this.btn1.setText(getString(R.string.wait_owner));
-                this.btn1.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
-                this.btn1.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
+                this.btn1.setBackgroundTintList(resources.getColorStateList(R.color.tempPhotoBackground));
+                this.btn1.setTextColor(resources.getColorStateList(R.color.colorPrimary));
 
                 this.btn1.setVisibility(View.VISIBLE);
                 break;
@@ -254,8 +258,8 @@ public class BorrowDetailViewFragment extends DetailView
                         getActivity().getSupportFragmentManager()
                                 .beginTransaction()
                                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                                .add(R.id.frame_container, profileFragment, "otherUserProfileFragment")
-                                .hide(getFragmentManager().findFragmentByTag("bookDetailFragment"))
+                                .add(R.id.frame_container, profileFragment, getString(R.string.other_profile_fragment))
+                                .hide(borrowDetailViewFragment)
                                 .commit();
                     }
                 });
@@ -273,13 +277,13 @@ public class BorrowDetailViewFragment extends DetailView
         /* Source fragment was Search, return to search books*/
         if (source.equals(getString(R.string.search_title)))
         {
-            Fragment searchFragment = getFragmentManager().findFragmentByTag("searchFragment");
+            Fragment searchFragment = getFragmentManager().findFragmentByTag(getString(R.string.search_fragment));
             getFragmentManager().beginTransaction().remove(this).show(searchFragment).commit();
         }
         /* Source fragment was Borrow, return to Borrow */
         else
         {
-            Fragment requestsFragment = getFragmentManager().findFragmentByTag("requestsFragment");
+            Fragment requestsFragment = getFragmentManager().findFragmentByTag(getString(R.string.requests_fragment));
             Bundle args = new Bundle();
             requestsFragment.setArguments(args);
             args.putBoolean(getString(R.string.borrow), true);
@@ -293,8 +297,8 @@ public class BorrowDetailViewFragment extends DetailView
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setReadyToReturn()
     {
-        this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.colorPrimaryDark));
-        this.btn2.setTextColor(getResources().getColorStateList(R.color.colorBackground));
+        this.btn2.setBackgroundTintList(resources.getColorStateList(R.color.colorPrimaryDark));
+        this.btn2.setTextColor(resources.getColorStateList(R.color.colorBackground));
         this.btn2.setOnClickListener(this::btnReturnBook);
     }
 
@@ -304,8 +308,8 @@ public class BorrowDetailViewFragment extends DetailView
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setNotReadyToReturn()
     {
-        this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
-        this.btn2.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
+        this.btn2.setBackgroundTintList(resources.getColorStateList(R.color.tempPhotoBackground));
+        this.btn2.setTextColor(resources.getColorStateList(R.color.colorPrimary));
         this.btn2.setOnClickListener(null);
     }
 

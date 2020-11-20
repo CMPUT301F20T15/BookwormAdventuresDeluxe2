@@ -9,6 +9,7 @@ package com.example.bookwormadventuresdeluxe2;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,7 +37,8 @@ public class RequestDetailViewFragment extends DetailView
     private Button btn2;
     private TextView exchange;
     private DocumentReference bookDocument;
-    RequestDetailViewFragment requestDetailViewFragment;
+    private RequestDetailViewFragment requestDetailViewFragment;
+    private Resources resources;
 
     private static int SetLocationActivityResultCode = 7;
 
@@ -50,11 +52,13 @@ public class RequestDetailViewFragment extends DetailView
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
+        resources = getResources();
+
         this.bookDetailView = inflater.inflate(R.layout.fragment_request_detail_view, null, false);
         ((TextView) bookDetailView.findViewById(R.id.app_header_title)).setText(R.string.requests_title);
 
         /* Get the fragment from the fragment manager */
-        requestDetailViewFragment = (RequestDetailViewFragment) getFragmentManager().findFragmentByTag("bookDetailFragment");
+        requestDetailViewFragment = (RequestDetailViewFragment) getFragmentManager().findFragmentByTag(getString(R.string.book_detail_fragment));
 
         // Setup back button
         super.onCreateView(inflater, container, savedInstanceState);
@@ -110,8 +114,8 @@ public class RequestDetailViewFragment extends DetailView
 
             case bPending:
                 this.btn1.setText(getString(R.string.wait_borrower));
-                this.btn1.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
-                this.btn1.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
+                this.btn1.setBackgroundTintList(resources.getColorStateList(R.color.tempPhotoBackground));
+                this.btn1.setTextColor(resources.getColorStateList(R.color.colorPrimary));
 
                 this.btn1.setVisibility(View.VISIBLE);
                 break;
@@ -278,7 +282,7 @@ public class RequestDetailViewFragment extends DetailView
                         getActivity().getSupportFragmentManager()
                                 .beginTransaction()
                                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                                .add(R.id.frame_container, profileFragment, "otherUserProfileFragment")
+                                .add(R.id.frame_container, profileFragment, getString(R.string.other_profile_fragment))
                                 .hide(requestDetailViewFragment)
                                 .commit();
                     }
@@ -313,7 +317,7 @@ public class RequestDetailViewFragment extends DetailView
                         getActivity().getSupportFragmentManager()
                                 .beginTransaction()
                                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                                .add(R.id.frame_container, profileFragment, "otherUserProfileFragment")
+                                .add(R.id.frame_container, profileFragment, getString(R.string.other_profile_fragment))
                                 .hide(requestDetailViewFragment)
                                 .commit();
                     }
@@ -329,7 +333,7 @@ public class RequestDetailViewFragment extends DetailView
      */
     public void onBackClick(View v)
     {
-        Fragment requestsFragment = getFragmentManager().findFragmentByTag("requestsFragment");
+        Fragment requestsFragment = getFragmentManager().findFragmentByTag(getString(R.string.requests_fragment));
         Bundle args = new Bundle();
         requestsFragment.setArguments(args);
         getFragmentManager().beginTransaction().remove(this).show(requestsFragment).commit();
@@ -341,8 +345,8 @@ public class RequestDetailViewFragment extends DetailView
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setReadyToLend()
     {
-        this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.colorPrimaryDark));
-        this.btn2.setTextColor(getResources().getColorStateList(R.color.colorBackground));
+        this.btn2.setBackgroundTintList(resources.getColorStateList(R.color.colorPrimaryDark));
+        this.btn2.setTextColor(resources.getColorStateList(R.color.colorBackground));
         this.btn2.setOnClickListener(this::btnLendBook);
     }
 
@@ -352,8 +356,8 @@ public class RequestDetailViewFragment extends DetailView
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setNotReadyToLend()
     {
-        this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
-        this.btn2.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
+        this.btn2.setBackgroundTintList(resources.getColorStateList(R.color.tempPhotoBackground));
+        this.btn2.setTextColor(resources.getColorStateList(R.color.colorPrimary));
         this.btn2.setOnClickListener(null);
     }
 

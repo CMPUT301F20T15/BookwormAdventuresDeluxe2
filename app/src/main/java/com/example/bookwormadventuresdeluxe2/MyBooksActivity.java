@@ -48,8 +48,8 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
      */
     private void addFragments()
     {
-        fragmentManager.beginTransaction().add(R.id.frame_container, searchFragment, "searchFragment").hide(searchFragment).commit();
-        fragmentManager.beginTransaction().add(R.id.frame_container, requestsFragment, "requestsFragment").hide(requestsFragment).commit();
+        fragmentManager.beginTransaction().add(R.id.frame_container, searchFragment, getString(R.string.search_fragment)).hide(searchFragment).commit();
+        fragmentManager.beginTransaction().add(R.id.frame_container, requestsFragment, getString(R.string.requests_fragment)).hide(requestsFragment).commit();
         /* Get the profile from firebase then add the profileFragment */
         FirebaseUserGetSet.getUser(UserCredentialAPI.getInstance().getUsername(), new FirebaseUserGetSet.UserCallback()
         {
@@ -59,11 +59,11 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(getString(R.string.profile_object), userObject);
                 profileFragment.setArguments(bundle);
-                fragmentManager.beginTransaction().add(R.id.frame_container, profileFragment, "profileFragment").hide(profileFragment).commit();
+                fragmentManager.beginTransaction().add(R.id.frame_container, profileFragment, getString(R.string.profile_fragment)).hide(profileFragment).commit();
             }
         });
-        fragmentManager.beginTransaction().add(R.id.frame_container, notificationFragment, "notificationFragment").hide(notificationFragment).commit();
-        fragmentManager.beginTransaction().add(R.id.frame_container, myBooksFragment, "myBooksFragment").commit();
+        fragmentManager.beginTransaction().add(R.id.frame_container, notificationFragment, getString(R.string.notification_fragment)).hide(notificationFragment).commit();
+        fragmentManager.beginTransaction().add(R.id.frame_container, myBooksFragment, getString(R.string.my_books_fragment)).commit();
         ActiveFragmentTracker.activeFragment = myBooksFragment;
     }
 
@@ -71,14 +71,14 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
     public boolean onNavigationItemSelected(@NonNull MenuItem item)
     {
         /* If another user's profileFragment is open, close it */
-        Fragment otherUserProfileFragment = fragmentManager.findFragmentByTag("otherUserProfileFragment");
+        Fragment otherUserProfileFragment = fragmentManager.findFragmentByTag(getString(R.string.other_profile_fragment));
         if (otherUserProfileFragment != null)
         {
             fragmentManager.beginTransaction().remove(otherUserProfileFragment).commit();
         }
 
         /* If a myBooksDetailFragment is open, close it */
-        Fragment bookDetailFragment = fragmentManager.findFragmentByTag("bookDetailFragment");
+        Fragment bookDetailFragment = fragmentManager.findFragmentByTag(getString(R.string.book_detail_fragment));
         if (bookDetailFragment != null)
         {
             fragmentManager.beginTransaction().remove(bookDetailFragment).commit();
