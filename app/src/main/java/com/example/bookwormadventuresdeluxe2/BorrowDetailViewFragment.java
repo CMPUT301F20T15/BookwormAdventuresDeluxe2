@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
@@ -267,17 +268,17 @@ public class BorrowDetailViewFragment extends DetailView
         /* Source fragment was Search, return to search books*/
         if (source.equals(getString(R.string.search_title)))
         {
-            SearchFragment fragment = new SearchFragment();
-            getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+            Fragment searchFragment = getFragmentManager().findFragmentByTag("searchFragment");
+            getFragmentManager().beginTransaction().remove(this).show(searchFragment).commit();
         }
         /* Source fragment was Borrow, return to Borrow */
         else
         {
-            RequestsFragment fragment = new RequestsFragment();
+            Fragment requestsFragment = getFragmentManager().findFragmentByTag("requestsFragment");
             Bundle args = new Bundle();
-            fragment.setArguments(args);
+            requestsFragment.setArguments(args);
             args.putBoolean(getString(R.string.borrow), true);
-            getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+            getFragmentManager().beginTransaction().remove(this).show(requestsFragment).commit();
         }
     }
 

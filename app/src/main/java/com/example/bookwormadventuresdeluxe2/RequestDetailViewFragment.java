@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
 import com.google.firebase.firestore.DocumentReference;
@@ -239,7 +240,7 @@ public class RequestDetailViewFragment extends DetailView
             default:
                 throw new InvalidParameterException("Invalid book status in RequestDetailView updateView");
         }
-        
+
         /* Enables clicking of requester profile*/
         clickUsername(user, book.getRequesters().get(0));
     }
@@ -321,10 +322,10 @@ public class RequestDetailViewFragment extends DetailView
      */
     public void onBackClick(View v)
     {
-        RequestsFragment fragment = new RequestsFragment();
+        Fragment requestsFragment = getFragmentManager().findFragmentByTag("requestsFragment");
         Bundle args = new Bundle();
-        fragment.setArguments(args);
-        getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+        requestsFragment.setArguments(args);
+        getFragmentManager().beginTransaction().remove(this).show(requestsFragment).commit();
     }
 
     @Override
