@@ -158,6 +158,7 @@ public class FirebaseUserGetSet
                                     default:
                                         /* Unexpected Error code*/
                                         inputEmail.setError(task.getException().getMessage());
+                                        inputEmail.requestFocus();
                                 }
                             }
                             catch (Exception e)
@@ -168,6 +169,7 @@ public class FirebaseUserGetSet
                                  * Log message to debug
                                  */
                                 inputEmail.setError(task.getException().getMessage());
+                                inputEmail.requestFocus();
                                 Log.d(TAG, e.getMessage());
                             }
 

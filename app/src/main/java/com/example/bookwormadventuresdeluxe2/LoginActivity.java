@@ -299,11 +299,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                             editTextEmail.setError(task.getException().getMessage());
                                             editTextEmail.requestFocus();
                                     }
-
-                                    /* Hide progress bar*/
-                                    progressBar.setVisibility(View.INVISIBLE);
-                                }
-                                catch (Exception e)
+                                } catch (Exception e)
                                 {
                                     /* Different type from errorCode, cannot be cast to the same object.
                                      * Sets EditText error to new type.
@@ -313,8 +309,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     editTextEmail.setError(task.getException().getMessage());
                                     editTextEmail.requestFocus();
                                     Log.d(TAG, e.getMessage());
-                                    progressBar.setVisibility(View.INVISIBLE);
                                 }
+
+                                /* Hide progress bar*/
+                                progressBar.setVisibility(View.INVISIBLE);
                             }
                         }
                     });
