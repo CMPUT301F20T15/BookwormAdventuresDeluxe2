@@ -84,6 +84,13 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
             fragmentManager.beginTransaction().remove(bookDetailFragment).commit();
         }
 
+        /* If a FilterMenu is open, close it */
+        Fragment filterMenu = fragmentManager.findFragmentByTag("filterMenu");
+        if (filterMenu != null)
+        {
+            fragmentManager.beginTransaction().remove(filterMenu).commit();
+        }
+
         /* Override to open a new Fragment*/
         switch (item.getItemId())
         {
