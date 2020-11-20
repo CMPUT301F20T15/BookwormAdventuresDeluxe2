@@ -6,6 +6,7 @@ package com.example.bookwormadventuresdeluxe2;
  */
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.Status;
+import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
@@ -37,10 +39,11 @@ public class NotificationFragment extends Fragment
     {
         this.notificationList = new ArrayList<Notification>();
         // TODO: replace this example with actual notifications from FireBase
-        notificationList.add(new Notification(new Book("Hudson", "1984", "George Orwell", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do" +
-                "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis", "9780141036144", Status.Available, ""), "message1"));
-        notificationList.add(new Notification(new Book("Hudson", "1984", "George Orwell", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do" +
-                "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis", "9780141036144", Status.Borrowed, ""), "message2"));
+
+//        notificationList.add(new Notification(new Book("Hudson", "1984", "George Orwell", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do" +
+//                "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis", "9780141036144", Status.Available, ""), "message1"));
+//        notificationList.add(new Notification(new Book("Hudson", "1984", "George Orwell", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do" +
+//                "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis", "9780141036144", Status.Borrowed, ""), "message2"));
     }
 
     @Override
@@ -61,19 +64,32 @@ public class NotificationFragment extends Fragment
         this.backButton.setOnClickListener(this::onBackClick);
 
         return notificationView;
+
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
-        notificationRecyclerView = (RecyclerView) view.findViewById(R.id.notification_recycler_view);
-        notificationRecyclerView.setHasFixedSize(true);
+        FirebaseUserGetSet.getUser(UserCredentialAPI.getInstance().getUsername(), new FirebaseUserGetSet.UserCallback()
+        {
+            @Override
+            public void onCallback(UserProfileObject userObject)
+            {
+                notificationList = userObject.getNotifications();
 
-        notificationRecyclerLayoutManager = new LinearLayoutManager(this.getContext());
-        notificationRecyclerView.setLayoutManager(notificationRecyclerLayoutManager);
+                notificationRecyclerView = (RecyclerView) view.findViewById(R.id.notification_recycler_view);
+                notificationRecyclerView.setHasFixedSize(true);
 
-        notificationRecyclerAdapter = new NotificationListAdapter(notificationList, this.getContext());
-        notificationRecyclerView.setAdapter(notificationRecyclerAdapter);
+                notificationRecyclerLayoutManager = new LinearLayoutManager(view.getContext());
+                notificationRecyclerView.setLayoutManager(notificationRecyclerLayoutManager);
+                Log.d("Jawad", String.valueOf(notificationList.size()));
+
+                notificationRecyclerAdapter = new NotificationListAdapter(notificationList, view.getContext());
+                notificationRecyclerView.setAdapter(notificationRecyclerAdapter);
+            }
+        });
+
+
     }
 
     /**

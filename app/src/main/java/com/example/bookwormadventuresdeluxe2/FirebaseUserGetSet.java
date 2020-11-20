@@ -22,7 +22,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import static android.content.ContentValues.TAG;
@@ -54,15 +57,26 @@ public class FirebaseUserGetSet
                         {
                             for (QueryDocumentSnapshot document : task.getResult())
                             {
+
+                                ArrayList<Notification> notifications = ( ArrayList<Notification>) document.get("notifications");
+                                List< Map<String, String> > notificationsMap = (List<Map<String, String>>) document.get("notifications");
+//                            
+                                for (Map<String, String> notification: notificationsMap){
+                                    notifications.add(new Notification(new Book(notification.get("book"))))
+                                }
+                                if (notifications == null){
+                                    notifications = new ArrayList<Notification>();
+                                }
+
                                 /* Extracting userObject from document */
                                 UserProfileObject userObject = new UserProfileObject(
                                                     document.getData().get(context.getString(R.string.firestore_username)).toString(),
                                                     document.getData().get(context.getString(R.string.firestore_email)).toString(),
                                                     document.getData().get(context.getString(R.string.firestore_phoneNumber)).toString(),
                                                     document.getData().get(context.getString(R.string.firestore_userId)).toString(),
-                                                    document.getId()
+                                                    document.getId(),
+                                                    notifications
                                                     );
-
                                 /* Returns object after query is complete, avoids null returns while waiting*/
                                 myCallback.onCallback(userObject);
                             }

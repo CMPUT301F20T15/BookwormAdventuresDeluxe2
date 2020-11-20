@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
+import com.example.bookwormadventuresdeluxe2.Utilities.Status;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
@@ -160,9 +161,24 @@ public class BorrowDetailViewFragment extends DetailView
         this.bookDocument.update(getString(R.string.requesters),
                 FieldValue.arrayUnion(UserCredentialAPI.getInstance().getUsername()));
         this.bookDocument.update(getString(R.string.status), getString(R.string.requested));
+
+        // Send Notification
+        sendRequestNotification("New borrow request from: "
+                + UserCredentialAPI.getInstance().getUsername());
         onBackClick(view);
     }
 
+    private void sendRequestNotification(String message){
+        /* Get Owner Information  */
+        FirebaseUserGetSet.getUser(selectedBook.getOwner(), userObject ->
+        {
+            // Create Notification
+            Notification notification = new Notification(selectedBook, message);
+            FirebaseFirestore.getInstance().collection("Users")
+                    .document(userObject.getDocumentId())
+                    .update("notifications", FieldValue.arrayUnion(notification));
+        });
+    }
     private void btnSetLocation(View view)
     {
         Intent setLocationActivityIntent = new Intent(getActivity(), SetLocationActivity.class);
