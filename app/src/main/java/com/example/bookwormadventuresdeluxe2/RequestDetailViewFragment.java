@@ -3,7 +3,7 @@ package com.example.bookwormadventuresdeluxe2;
 /**
  * Holds the view for seeing details on a book in the Requested tab
  * The user will be able to interact with status dependant request options on the book
- *
+ * <p>
  * Outstanding Issues: Still requires ISBN scan for handoff. Cannot view requester's profile
  */
 
@@ -68,7 +68,7 @@ public class RequestDetailViewFragment extends DetailView
                 bookDetailView.findViewById(R.id.book_request_user).setVisibility(View.GONE);
 
                 /* Enables viewing profile of selected requester*/
-                Button viewProfileBtn = bookDetailView.findViewById(R.id.view_profile_button);
+                TextView viewProfileBtn = bookDetailView.findViewById(R.id.view_profile_button);
                 viewProfileBtn.setVisibility(View.VISIBLE);
                 sliderProfileButton(viewProfileBtn, requesters);
 
@@ -88,10 +88,13 @@ public class RequestDetailViewFragment extends DetailView
 
                 this.btn1.setOnClickListener(this::btnSetLocation);
 
-                if(this.selectedBook.getPickUpAddress().equals("")) {
+                if (this.selectedBook.getPickUpAddress().equals(""))
+                {
                     this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
                     this.btn2.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
-                } else {
+                }
+                else
+                {
                     this.btn2.setOnClickListener(this::btnLendBook);
 //                    this.bookDetailView.findViewById(R.id.borrow_exchange).setVisibility(View.VISIBLE);
                 }
@@ -239,7 +242,7 @@ public class RequestDetailViewFragment extends DetailView
             default:
                 throw new InvalidParameterException("Invalid book status in RequestDetailView updateView");
         }
-        
+
         /* Enables clicking of requester profile*/
         clickUsername(user, book.getRequesters().get(0));
     }
@@ -248,9 +251,9 @@ public class RequestDetailViewFragment extends DetailView
      * Opens selected user profile on Button click
      *
      * @param viewProfileButton TextView in view
-     * @param spinner Spinner for selecting requester
+     * @param spinner           Spinner for selecting requester
      */
-    private void sliderProfileButton(Button viewProfileButton, Spinner spinner)
+    private void sliderProfileButton(TextView viewProfileButton, Spinner spinner)
     {
         viewProfileButton.setOnClickListener(new View.OnClickListener()
         {
