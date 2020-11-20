@@ -197,7 +197,8 @@ public class ProfileFragment extends Fragment
                 progressBar.setVisibility(View.VISIBLE);
                 FirebaseUserGetSet.changeAuthInfo(inputEmail,
                         inputPhone,
-                        profile.getDocumentId(), new FirebaseUserGetSet.EditCallback()
+                        profile.getDocumentId(),
+                        new FirebaseUserGetSet.EditCallback()
                         {
                             @Override
                             public void onCallback(Boolean result)
