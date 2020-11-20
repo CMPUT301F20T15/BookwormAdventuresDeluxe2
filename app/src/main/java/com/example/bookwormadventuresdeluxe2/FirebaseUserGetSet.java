@@ -44,7 +44,7 @@ public class FirebaseUserGetSet
      */
     public static void getUser(String username, UserCallback myCallback)
     {
-        usersRef.whereEqualTo("username", username).get()
+        usersRef.whereEqualTo(context.getString(R.string.firestore_username), username).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
                 {
                     @Override
@@ -111,8 +111,9 @@ public class FirebaseUserGetSet
      * @param inputEmail New email to be written
      * @param inputPhone New phone number to be written
      * @param documentID Document id of target user
+     * @param editCallback Callback for waiting for result
      */
-    public static void changeAuthInfo(EditText inputEmail, EditText inputPhone, String documentID)
+    public static void changeAuthInfo(EditText inputEmail, EditText inputPhone, String documentID, EditCallback editCallback)
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -129,6 +130,9 @@ public class FirebaseUserGetSet
                                     inputEmail.getText().toString().trim());
                             editPhone(documentID,
                                     inputPhone.getText().toString().trim());
+
+                            /* Successful edit */
+                            editCallback.onCallback(true);
                             Log.d(TAG, "User info updated.");
                         }
                         else
@@ -166,6 +170,10 @@ public class FirebaseUserGetSet
                                 inputEmail.setError(task.getException().getMessage());
                                 Log.d(TAG, e.getMessage());
                             }
+
+                            /* Failed edit */
+                            editCallback.onCallback(false);
+                            Log.d(TAG, "User info update failed.");
                         }
                     }
                 });
@@ -175,10 +183,21 @@ public class FirebaseUserGetSet
      * Callback for UserProfileObject
      */
     public interface UserCallback
-            /*
-             * Source: https://stackoverflow.com/questions/49514859/how-to-get-data-object-from-another-event-android-studio
-             * */
+    /*
+     * Source: https://stackoverflow.com/questions/49514859/how-to-get-data-object-from-another-event-android-studio
+     * */
     {
         void onCallback(UserProfileObject userObject);
+    }
+
+    /**
+     * Callback for editing profile result
+     */
+    public interface EditCallback
+    /*
+     * Source: https://stackoverflow.com/questions/49514859/how-to-get-data-object-from-another-event-android-studio
+     * */
+    {
+        void onCallback(Boolean result);
     }
 }

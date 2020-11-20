@@ -297,6 +297,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         default:
                                             /* Unexpected Error code*/
                                             editTextEmail.setError(task.getException().getMessage());
+                                            editTextEmail.requestFocus();
                                     }
 
                                     /* Hide progress bar*/
@@ -310,6 +311,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                      * Log message to debug
                                      */
                                     editTextEmail.setError(task.getException().getMessage());
+                                    editTextEmail.requestFocus();
                                     Log.d(TAG, e.getMessage());
                                     progressBar.setVisibility(View.INVISIBLE);
                                 }
