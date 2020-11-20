@@ -119,15 +119,20 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
      */
     public void replaceFragment(Fragment fragment)
     {
-        /* Hide the current active fragment and show the new one */
-        fragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                .hide(ActiveFragmentTracker.activeFragment)
-                .show(fragment)
-                .commit();
+        if (ActiveFragmentTracker.activeFragment != fragment)
+        {
+            /* Hide the current active fragment and show the new one */
+            fragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                    .hide(ActiveFragmentTracker.activeFragment)
+                    .show(fragment)
+                    .commit();
 
-        /* Set the new active fragment */
-        ActiveFragmentTracker.activeFragment = fragment;
+            /* Set the new active fragment */
+            ActiveFragmentTracker.activeFragment = fragment;
+        }
+
+        /* Do nothing if we are clicking the same fragment twice */
     }
 
     /**
