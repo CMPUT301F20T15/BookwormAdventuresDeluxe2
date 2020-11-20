@@ -131,12 +131,12 @@ public class FirebaseUserGetSet
                             editPhone(documentID,
                                     inputPhone.getText().toString().trim());
 
-                            /* Successful edit */
                             editCallback.onCallback(true);
                             Log.d(TAG, "User info updated.");
                         }
                         else
                         {
+                            /* Failed edit */
                             try
                             {
                                 /* Tries to match errorCode to EditText error */
@@ -172,7 +172,6 @@ public class FirebaseUserGetSet
                                 Log.d(TAG, e.getMessage());
                             }
 
-                            /* Failed edit */
                             editCallback.onCallback(false);
                             Log.d(TAG, "User info update failed.");
                         }
