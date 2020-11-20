@@ -186,7 +186,7 @@ public class RequestsFragment extends Fragment implements View.OnClickListener
         if (fragmentRootView == null)
         {
             /* Fragment was hidden, show it */
-            getFragmentManager().beginTransaction().add(R.id.frame_container, filterMenu).commit();
+            getFragmentManager().beginTransaction().add(R.id.frame_container, filterMenu, "filterMenu").commit();
         }
         else
         {
