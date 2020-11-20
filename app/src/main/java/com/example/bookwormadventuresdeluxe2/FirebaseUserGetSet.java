@@ -160,8 +160,7 @@ public class FirebaseUserGetSet
                                         inputEmail.setError(task.getException().getMessage());
                                         inputEmail.requestFocus();
                                 }
-                            }
-                            catch (Exception e)
+                            } catch (Exception e)
                             {
                                 /* Different type from errorCode, cannot be cast to the same object.
                                  * Sets EditText error to new type.
