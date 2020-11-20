@@ -9,7 +9,6 @@ package com.example.bookwormadventuresdeluxe2;
  * A {@link Fragment} subclass for navbar menu item 2.
  */
 
-import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;

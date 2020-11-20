@@ -36,6 +36,7 @@ public class RequestDetailViewFragment extends DetailView
     private Button btn2;
     private TextView exchange;
     private DocumentReference bookDocument;
+    RequestDetailViewFragment requestDetailViewFragment;
 
     private static int SetLocationActivityResultCode = 7;
 
@@ -52,6 +53,9 @@ public class RequestDetailViewFragment extends DetailView
         this.bookDetailView = inflater.inflate(R.layout.fragment_request_detail_view, null, false);
         ((TextView) bookDetailView.findViewById(R.id.app_header_title)).setText(R.string.requests_title);
 
+        /* Get the fragment from the fragment manager */
+        requestDetailViewFragment = (RequestDetailViewFragment) getFragmentManager().findFragmentByTag("bookDetailFragment");
+
         // Setup back button
         super.onCreateView(inflater, container, savedInstanceState);
 
@@ -59,7 +63,8 @@ public class RequestDetailViewFragment extends DetailView
         this.btn2 = this.bookDetailView.findViewById(R.id.requestDetail_btn2);
         this.exchange = this.bookDetailView.findViewById(R.id.request_exchange_location);
 
-        switch (selectedBook.getStatus())
+        /* Update the UI based on the book's current status */
+        switch (this.selectedBook.getStatus())
         {
             case Requested:
                 Spinner requesters = this.bookDetailView.findViewById(R.id.chose_request);
@@ -89,11 +94,14 @@ public class RequestDetailViewFragment extends DetailView
 
                 this.btn1.setOnClickListener(this::btnSetLocation);
 
-                if(this.selectedBook.getPickUpAddress().equals("")) {
+                if (this.selectedBook.getPickUpAddress().equals(""))
+                {
                     this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
                     this.btn2.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
-                } else {
-                    this.btn2.setOnClickListener(this::btnLendBook);
+                }
+                else
+                {
+                    setReadyToLend();
 //                    this.bookDetailView.findViewById(R.id.borrow_exchange).setVisibility(View.VISIBLE);
                 }
 
@@ -272,7 +280,7 @@ public class RequestDetailViewFragment extends DetailView
                                 .beginTransaction()
                                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                                 .add(R.id.frame_container, profileFragment, "otherUserProfileFragment")
-                                .hide(ActiveFragmentTracker.activeFragment)
+                                .hide(requestDetailViewFragment)
                                 .commit();
                     }
                 });
@@ -307,7 +315,7 @@ public class RequestDetailViewFragment extends DetailView
                                 .beginTransaction()
                                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                                 .add(R.id.frame_container, profileFragment, "otherUserProfileFragment")
-                                .hide(getFragmentManager().findFragmentByTag("bookDetailFragment"))
+                                .hide(requestDetailViewFragment)
                                 .commit();
                     }
                 });
@@ -328,6 +336,17 @@ public class RequestDetailViewFragment extends DetailView
         getFragmentManager().beginTransaction().remove(this).show(requestsFragment).commit();
     }
 
+    /**
+     * Function to call when a location is set and the lend button can be set to pressable
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void setReadyToLend()
+    {
+        this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.colorPrimaryDark));
+        this.btn2.setTextColor(getResources().getColorStateList(R.color.colorBackground));
+        this.btn2.setOnClickListener(this::btnLendBook);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
@@ -338,6 +357,8 @@ public class RequestDetailViewFragment extends DetailView
                 String pickUpLocation = data.getStringExtra("pickUpLocation");
                 this.bookDocument.update(getString(R.string.firestore_pick_up_address), pickUpLocation);
                 this.selectedBook.setPickUpAddress(pickUpLocation);
+
+                setReadyToLend();
             }
             if (resultCode == Activity.RESULT_CANCELED)
             {
@@ -346,8 +367,9 @@ public class RequestDetailViewFragment extends DetailView
             }
         }
 
-        RequestDetailViewFragment fragment = new RequestDetailViewFragment();
-        fragment.onFragmentInteraction(this.selectedBook, this.selectedBookId);
-        getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+        requestDetailViewFragment.onFragmentInteraction(this.selectedBook, this.selectedBookId);
+        getFragmentManager().beginTransaction()
+                .show(requestDetailViewFragment)
+                .commit();
     }
 }

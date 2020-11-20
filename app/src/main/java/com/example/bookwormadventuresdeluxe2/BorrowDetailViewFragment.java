@@ -35,6 +35,7 @@ public class BorrowDetailViewFragment extends DetailView
     private Button btn2;
     private TextView exchange;
     private DocumentReference bookDocument;
+    BorrowDetailViewFragment borrowDetailViewFragment;
 
     private static int SetLocationActivityResultCode = 7;
 
@@ -55,12 +56,17 @@ public class BorrowDetailViewFragment extends DetailView
         if (bundle != null)
         {
             source = bundle.getString(getString(R.string.book_click_source_fragment));
-        } else {
+        }
+        else
+        {
             source = getString(R.string.borrow);
         }
 
         this.bookDetailView = inflater.inflate(R.layout.fragment_borrow_detail_view, null, false);
         ((TextView) bookDetailView.findViewById(R.id.app_header_title)).setText(source);
+
+        /* Get the fragment from the fragment manager */
+        borrowDetailViewFragment = (BorrowDetailViewFragment) getFragmentManager().findFragmentByTag("bookDetailFragment");
 
         // setup back button
         super.onCreateView(inflater, container, savedInstanceState);
@@ -300,8 +306,9 @@ public class BorrowDetailViewFragment extends DetailView
             }
         }
 
-        BorrowDetailViewFragment fragment = new BorrowDetailViewFragment();
-        fragment.onFragmentInteraction(this.selectedBook, this.selectedBookId);
-        getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+        borrowDetailViewFragment.onFragmentInteraction(this.selectedBook, this.selectedBookId);
+        getFragmentManager().beginTransaction()
+                .show(borrowDetailViewFragment)
+                .commit();
     }
 }
