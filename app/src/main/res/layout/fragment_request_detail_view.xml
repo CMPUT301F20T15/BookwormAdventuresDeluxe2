@@ -77,19 +77,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/requestDetail_btn1" />
 
-
-        <TextView
-            android:id="@+id/book_request_user"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginBottom="12dp"
-            android:textColor="@color/colorPrimary"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/book_details_isbn_title"
-            app:layout_constraintStart_toEndOf="@+id/book_details_status" />
-
         <Button
             android:id="@+id/requestDetail_btn1"
             android:layout_width="160dp"
@@ -152,12 +139,27 @@
             app:layout_constraintStart_toEndOf="@+id/request_exchange"
             app:layout_constraintTop_toTopOf="@+id/request_exchange" />
 
+        <TextView
+            android:id="@+id/book_request_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="32dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/book_details_isbn_title"
+            app:layout_constraintStart_toEndOf="@+id/book_details_status"
+            app:layout_constraintTop_toBottomOf="@+id/requestDetail_btn1" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/dropdown_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="50dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/book_details_status"
             app:layout_constraintStart_toEndOf="@+id/book_details_status"
             app:layout_constraintStart_toStartOf="@+id/book_request_user"
@@ -195,20 +197,5 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/spinner_container" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/view_profile_button"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_below="@+id/spinner_container"-->
-        <!--            android:layout_alignLeft="@+id/spinner_container"-->
-        <!--            android:layout_alignRight="@+id/spinner_container"-->
-        <!--            android:text="@string/view_profile"-->
-        <!--            android:textColor="@color/colorPrimaryDark"-->
-        <!--            android:textSize="18sp"-->
-        <!--            android:visibility="gone"-->
-        <!--            app:layout_constraintBottom_toTopOf="@+id/book_details_isbn"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toBottomOf="@+id/spinner_container" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

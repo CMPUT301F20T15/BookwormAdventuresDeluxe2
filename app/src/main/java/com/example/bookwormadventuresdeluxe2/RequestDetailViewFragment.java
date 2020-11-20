@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
 import com.google.firebase.firestore.DocumentReference;
@@ -35,6 +36,7 @@ public class RequestDetailViewFragment extends DetailView
     private Button btn2;
     private TextView exchange;
     private DocumentReference bookDocument;
+    private ConstraintLayout dropdownContainer;
 
     private static int SetLocationActivityResultCode = 7;
 
@@ -57,10 +59,12 @@ public class RequestDetailViewFragment extends DetailView
         this.btn1 = this.bookDetailView.findViewById(R.id.requestDetail_btn1);
         this.btn2 = this.bookDetailView.findViewById(R.id.requestDetail_btn2);
         this.exchange = this.bookDetailView.findViewById(R.id.request_exchange_location);
+        this.dropdownContainer = this.bookDetailView.findViewById(R.id.dropdown_container);
 
         switch (selectedBook.getStatus())
         {
             case Requested:
+                this.dropdownContainer.setVisibility(View.VISIBLE);
                 Spinner requesters = this.bookDetailView.findViewById(R.id.chose_request);
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, this.selectedBook.getRequesters());
                 requesters.setAdapter(adapter);
@@ -83,6 +87,7 @@ public class RequestDetailViewFragment extends DetailView
                 break;
 
             case Accepted:
+                this.dropdownContainer.setVisibility(View.GONE);
                 this.btn1.setText(getString(R.string.set_location_label));
                 this.btn2.setText(getString(R.string.lend_book));
 
