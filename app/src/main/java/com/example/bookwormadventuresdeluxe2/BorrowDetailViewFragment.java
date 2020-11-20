@@ -250,7 +250,7 @@ public class BorrowDetailViewFragment extends DetailView
                                 .beginTransaction()
                                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                                 .add(R.id.frame_container, profileFragment, "otherUserProfileFragment")
-                                .hide(getFragmentManager().findFragmentByTag("bookDetailFragment"))
+                                .hide(ActiveFragmentTracker.activeFragment)
                                 .commit();
                     }
                 });

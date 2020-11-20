@@ -271,8 +271,8 @@ public class RequestDetailViewFragment extends DetailView
                         getActivity().getSupportFragmentManager()
                                 .beginTransaction()
                                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                                .replace(R.id.frame_container, profileFragment)
-                                .addToBackStack(null)
+                                .add(R.id.frame_container, profileFragment, "otherUserProfileFragment")
+                                .hide(ActiveFragmentTracker.activeFragment)
                                 .commit();
                     }
                 });
@@ -306,8 +306,8 @@ public class RequestDetailViewFragment extends DetailView
                         getActivity().getSupportFragmentManager()
                                 .beginTransaction()
                                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                                .replace(R.id.frame_container, profileFragment)
-                                .addToBackStack(null)
+                                .add(R.id.frame_container, profileFragment, "otherUserProfileFragment")
+                                .hide(getFragmentManager().findFragmentByTag("bookDetailFragment"))
                                 .commit();
                     }
                 });
