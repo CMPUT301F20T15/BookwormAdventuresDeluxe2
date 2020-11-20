@@ -96,8 +96,7 @@ public class RequestDetailViewFragment extends DetailView
 
                 if (this.selectedBook.getPickUpAddress().equals(""))
                 {
-                    this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
-                    this.btn2.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
+                    setNotReadyToLend();
                 }
                 else
                 {
@@ -337,7 +336,7 @@ public class RequestDetailViewFragment extends DetailView
     }
 
     /**
-     * Function to call when a location is set and the lend button can be set to pressable
+     * Function to call when a location is set and the lend button should be set to pressable
      */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setReadyToLend()
@@ -347,6 +346,18 @@ public class RequestDetailViewFragment extends DetailView
         this.btn2.setOnClickListener(this::btnLendBook);
     }
 
+    /**
+     * Function to call when a location is cancelled and the lend button should be set to not pressable
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void setNotReadyToLend()
+    {
+        this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
+        this.btn2.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
+        this.btn2.setOnClickListener(null);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
@@ -357,13 +368,13 @@ public class RequestDetailViewFragment extends DetailView
                 String pickUpLocation = data.getStringExtra("pickUpLocation");
                 this.bookDocument.update(getString(R.string.firestore_pick_up_address), pickUpLocation);
                 this.selectedBook.setPickUpAddress(pickUpLocation);
-
                 setReadyToLend();
             }
             if (resultCode == Activity.RESULT_CANCELED)
             {
                 this.bookDocument.update(getString(R.string.firestore_pick_up_address), "");
                 this.selectedBook.setPickUpAddress("");
+                setNotReadyToLend();
             }
         }
 

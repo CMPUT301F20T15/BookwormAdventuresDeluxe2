@@ -122,12 +122,11 @@ public class BorrowDetailViewFragment extends DetailView
 
                 if (this.selectedBook.getPickUpAddress().equals(""))
                 {
-                    this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
-                    this.btn2.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
+                    setNotReadyToReturn();
                 }
                 else
                 {
-                    this.btn2.setOnClickListener(this::btnReturnBook);
+                    setReadyToReturn();
 //                    this.bookDetailView.findViewById(R.id.borrow_exchange).setVisibility(View.VISIBLE);
                 }
 
@@ -288,6 +287,29 @@ public class BorrowDetailViewFragment extends DetailView
         }
     }
 
+    /**
+     * Function to call when a location is set and the return button should be set to pressable
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void setReadyToReturn()
+    {
+        this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.colorPrimaryDark));
+        this.btn2.setTextColor(getResources().getColorStateList(R.color.colorBackground));
+        this.btn2.setOnClickListener(this::btnReturnBook);
+    }
+
+    /**
+     * Function to call when a location is cancelled and the return button should be set to not pressable
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void setNotReadyToReturn()
+    {
+        this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
+        this.btn2.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
+        this.btn2.setOnClickListener(null);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
@@ -298,11 +320,13 @@ public class BorrowDetailViewFragment extends DetailView
                 String pickUpLocation = data.getStringExtra("pickUpLocation");
                 this.bookDocument.update(getString(R.string.firestore_pick_up_address), pickUpLocation);
                 this.selectedBook.setPickUpAddress(pickUpLocation);
+                setReadyToReturn();
             }
             if (resultCode == Activity.RESULT_CANCELED)
             {
                 this.bookDocument.update(getString(R.string.firestore_pick_up_address), "");
                 this.selectedBook.setPickUpAddress("");
+                setNotReadyToReturn();
             }
         }
 
