@@ -70,6 +70,13 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item)
     {
+        /* If another user's profileFragment is open, close it */
+        Fragment otherUserProfileFragment = fragmentManager.findFragmentByTag("otherUserProfileFragment");
+        if (otherUserProfileFragment != null)
+        {
+            fragmentManager.beginTransaction().remove(otherUserProfileFragment).commit();
+        }
+
         /* If a myBooksDetailFragment is open, close it */
         Fragment bookDetailFragment = fragmentManager.findFragmentByTag("bookDetailFragment");
         if (bookDetailFragment != null)

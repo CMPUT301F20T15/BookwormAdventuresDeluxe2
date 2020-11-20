@@ -257,6 +257,9 @@ public class ProfileFragment extends Fragment
      */
     public void onBackClick(View v)
     {
-        getActivity().getSupportFragmentManager().popBackStack();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .remove(this)
+                .show(getFragmentManager().findFragmentByTag("bookDetailFragment"))
+                .commit();
     }
 }
