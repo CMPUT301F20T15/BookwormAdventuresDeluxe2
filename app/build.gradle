@@ -40,6 +40,9 @@ dependencies {
 
     // Firebase Cloud Messaging
     implementation 'com.google.firebase:firebase-messaging:21.0.0'
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
 
     // Tests
     testImplementation 'junit:junit:4.13.1'

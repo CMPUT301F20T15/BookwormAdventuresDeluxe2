@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.bookwormadventuresdeluxe2.NotificationUtility.NotificationHandler;
 import com.example.bookwormadventuresdeluxe2.Utilities.EditTextValidator;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -92,6 +93,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         userCredentialAPI.setUserId(snapshot.getString(getString(R.string.firestore_userId)));
                                         userCredentialAPI.setUsername(snapshot.getString(getString(R.string.firestore_username)));
                                         userCredentialAPI.setNotificationCount((Long) snapshot.get("notificationCount"));
+                                        /* Add token if not present */
+                                        if (snapshot.get("token") == null)
+                                        {
+                                            NotificationHandler.addAppToken(snapshot.getString(getString(R.string.firestore_userId)));
+                                        }
                                         Intent myBooksIntent = new Intent(LoginActivity.this, MyBooksActivity.class);
                                         startActivity(myBooksIntent);
 
@@ -255,6 +261,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                                     userCredentialAPI.setUserId(snapshot.getString(getString(R.string.firestore_userId)));
                                                     userCredentialAPI.setUsername(snapshot.getString(getString(R.string.firestore_username)));
                                                     userCredentialAPI.setNotificationCount((Long) snapshot.get("notificationCount"));
+                                                    /* Add token if not present */
+                                                    if (snapshot.get("token") == null)
+                                                    {
+                                                        NotificationHandler.addAppToken(snapshot.getString(getString(R.string.firestore_userId)));
+                                                    }
                                                     Intent myBooksIntent = new Intent(LoginActivity.this, MyBooksActivity.class);
                                                     startActivity(myBooksIntent);
 
