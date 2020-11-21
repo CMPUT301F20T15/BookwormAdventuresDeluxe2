@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -45,6 +46,7 @@ public class MyBooksFragment extends Fragment
     private RecyclerView myBooksRecyclerView;
     private BookListAdapter myBooksRecyclerAdapter;
     private RecyclerView.LayoutManager myBooksRecyclerLayoutManager;
+    private TextView notificationIconBadge;
     private FilterMenu filterMenu;
 
     private ImageButton notificationButton;
@@ -68,6 +70,21 @@ public class MyBooksFragment extends Fragment
         // Set visibility of desired custom header buttons
         myBooksView.findViewById(R.id.app_header_filter_button).setVisibility(View.VISIBLE);
         myBooksView.findViewById(R.id.app_header_scan_button).setVisibility(View.VISIBLE);
+
+        /* Set visibility of notification icon badge if notifications present*/
+        notificationIconBadge = myBooksView.findViewById(R.id.notification_icon_badge);
+        Long notificationCount = UserCredentialAPI.getInstance().getNotificationCount();
+
+        if (notificationCount != null && notificationCount > 0)
+        {
+            notificationIconBadge.setVisibility(View.VISIBLE);
+            notificationIconBadge.setText(String.valueOf(notificationCount));
+        }
+        else
+        {
+            notificationIconBadge.setText("0");
+            notificationIconBadge.setVisibility(View.GONE);
+        }
 
         /* Setup Filter button */
         this.filterButton = myBooksView.findViewById(R.id.app_header_filter_button);
@@ -143,6 +160,7 @@ public class MyBooksFragment extends Fragment
             myBooksRecyclerAdapter.stopListening();
         }
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intentData)

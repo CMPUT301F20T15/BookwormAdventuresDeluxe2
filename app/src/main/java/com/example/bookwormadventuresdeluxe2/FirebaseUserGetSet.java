@@ -12,15 +12,18 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.EditTextValidator;
+import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +45,7 @@ public class FirebaseUserGetSet
     /**
      * Performs query to extract UserProfileObject from database
      *
-     * @param username Username of object to be called
+     * @param username   Username of object to be called
      * @param myCallback Interface for returning object after query success
      */
     public static void getUser(String username, UserCallback myCallback)
@@ -57,26 +60,14 @@ public class FirebaseUserGetSet
                         {
                             for (QueryDocumentSnapshot document : task.getResult())
                             {
-
-                                ArrayList<Notification> notifications = ( ArrayList<Notification>) document.get("notifications");
-                                List< Map<String, String> > notificationsMap = (List<Map<String, String>>) document.get("notifications");
-//                            
-                                for (Map<String, String> notification: notificationsMap){
-                                    notifications.add(new Notification(new Book(notification.get("book"))))
-                                }
-                                if (notifications == null){
-                                    notifications = new ArrayList<Notification>();
-                                }
-
                                 /* Extracting userObject from document */
                                 UserProfileObject userObject = new UserProfileObject(
-                                                    document.getData().get(context.getString(R.string.firestore_username)).toString(),
-                                                    document.getData().get(context.getString(R.string.firestore_email)).toString(),
-                                                    document.getData().get(context.getString(R.string.firestore_phoneNumber)).toString(),
-                                                    document.getData().get(context.getString(R.string.firestore_userId)).toString(),
-                                                    document.getId(),
-                                                    notifications
-                                                    );
+                                        document.getData().get(context.getString(R.string.firestore_username)).toString(),
+                                        document.getData().get(context.getString(R.string.firestore_email)).toString(),
+                                        document.getData().get(context.getString(R.string.firestore_phoneNumber)).toString(),
+                                        document.getData().get(context.getString(R.string.firestore_userId)).toString(),
+                                        document.getId()
+                                );
                                 /* Returns object after query is complete, avoids null returns while waiting*/
                                 myCallback.onCallback(userObject);
                             }
@@ -92,7 +83,7 @@ public class FirebaseUserGetSet
     /**
      * Edits Firebase email of target user with new email
      *
-     * @param docId Firebase document ID to user to be targeted
+     * @param docId    Firebase document ID to user to be targeted
      * @param newEmail New email written
      */
     public static void editEmail(String docId, String newEmail)
@@ -107,7 +98,7 @@ public class FirebaseUserGetSet
     /**
      * Edits Firebase phoneNumber of target user with a new phone number
      *
-     * @param docId Firebase document ID of user to be targeted
+     * @param docId    Firebase document ID of user to be targeted
      * @param newPhone New phone number written
      */
     public static void editPhone(String docId, String newPhone)
@@ -169,8 +160,7 @@ public class FirebaseUserGetSet
                                         /* Unexpected Error code*/
                                         inputEmail.setError(task.getException().getMessage());
                                 }
-                            }
-                            catch (Exception e)
+                            } catch (Exception e)
                             {
                                 /* Different type from errorCode, cannot be cast to the same object.
                                  * Sets EditText error to new type.
@@ -183,6 +173,63 @@ public class FirebaseUserGetSet
                         }
                     }
                 });
+    }
+
+    /**
+     * Increment User notification count
+     */
+    public static void incrementNotificationCount(String userId)
+    {
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(userId)
+                .update("notificationCount", FieldValue.increment(1));
+    }
+
+    /**
+     * Reset User notification Count and Delete Notifications
+     */
+    public static void resetNotifications(String userId)
+    {
+        /* Update UserCredentialAPI*/
+        UserCredentialAPI.getInstance().setNotificationCount(null);
+        /* set notification count to null */
+        firebase.collection("Users")
+                .document(userId)
+                .update("notificationCount", null);
+
+
+        /**
+         *  delete all documents in collection one at a time as firestore doesn't support
+         *  deleting entire collection in android
+         *  */
+        firebase
+                .collection("Users/" +
+                        userId + "/notifications")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task)
+                    {
+                        Log.d("notification", "entter");
+                        if (task.isSuccessful())
+                        {
+                            for (QueryDocumentSnapshot document : task.getResult())
+                            {
+                                Log.d("notification", "inside");
+                                String docID = document.getId();
+                                firebase
+                                        .document("Users/" + userId + "/notifications/" + docID)
+                                        .delete();
+                            }
+                        }
+                        else
+                        {
+                            Log.d(TAG, "Error getting documents" + task.getException());
+                        }
+                    }
+                });
+
     }
 
     /**

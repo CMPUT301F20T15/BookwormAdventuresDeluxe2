@@ -3,7 +3,7 @@ package com.example.bookwormadventuresdeluxe2;
 /**
  * Holds the view for seeing details on a book in the Requested tab
  * The user will be able to interact with status dependant request options on the book
- *
+ * <p>
  * Outstanding Issues: Still requires ISBN scan for handoff. Cannot view requester's profile
  */
 
@@ -23,11 +23,14 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
+import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RequestDetailViewFragment extends DetailView
 {
@@ -88,10 +91,13 @@ public class RequestDetailViewFragment extends DetailView
 
                 this.btn1.setOnClickListener(this::btnSetLocation);
 
-                if(this.selectedBook.getPickUpAddress().equals("")) {
+                if (this.selectedBook.getPickUpAddress().equals(""))
+                {
                     this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
                     this.btn2.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
-                } else {
+                }
+                else
+                {
                     this.btn2.setOnClickListener(this::btnLendBook);
 //                    this.bookDetailView.findViewById(R.id.borrow_exchange).setVisibility(View.VISIBLE);
                 }
@@ -206,7 +212,32 @@ public class RequestDetailViewFragment extends DetailView
 
         this.bookDocument.update(getString(R.string.requesters), borrower);
         this.bookDocument.update(getString(R.string.status), getString(R.string.accepted));
+
+        /* Send Notification to borrower */
+        String borrowerUsername = borrower.get(0);
+        sendRequestAcceptedNotification("Borrow request accepted by: "
+                + borrowerUsername, borrowerUsername);
         onBackClick(view);
+    }
+
+    private void sendRequestAcceptedNotification(String message, String borrowerUsername)
+    {
+        /* Get Borrower Information  */
+        FirebaseUserGetSet.getUser(borrowerUsername, userObject ->
+        {
+            /* Create Notification */
+            HashMap<String, String> notification = new HashMap<>();
+            notification.put("bookID", selectedBookId);
+            notification.put("message", message);
+            notification.put("timestamp", String.valueOf(Timestamp.now().getSeconds())); // to sort by latest
+            /* Add to collection */
+            FirebaseFirestore.getInstance().collection("Users")
+                    .document(userObject.getDocumentId())
+                    .collection("notifications")
+                    .add(notification);
+            /* Increment notification count */
+            FirebaseUserGetSet.incrementNotificationCount(userObject.getDocumentId());
+        });
     }
 
     /**
@@ -239,7 +270,7 @@ public class RequestDetailViewFragment extends DetailView
             default:
                 throw new InvalidParameterException("Invalid book status in RequestDetailView updateView");
         }
-        
+
         /* Enables clicking of requester profile*/
         clickUsername(user, book.getRequesters().get(0));
     }

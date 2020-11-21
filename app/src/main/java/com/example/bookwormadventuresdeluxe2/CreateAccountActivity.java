@@ -328,8 +328,8 @@ public class CreateAccountActivity extends AppCompatActivity
         newUser.put(getString(R.string.firestore_username), editTextUsername.getText().toString().trim());
         newUser.put(getString(R.string.firestore_phoneNumber), editTextPhoneNumber.getText().toString());
 
-        /* Save new user to Firestore */
-        collectionReference.add(newUser);
+        /* Save new user to Firestore. Set documentId as userId */
+        collectionReference.document(userId).set(newUser);
     }
 
     /**

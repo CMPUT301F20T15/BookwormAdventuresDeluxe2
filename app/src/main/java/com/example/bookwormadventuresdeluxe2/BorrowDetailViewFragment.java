@@ -3,7 +3,7 @@ package com.example.bookwormadventuresdeluxe2;
 /**
  * Holds the view for seeing details on a book in the borrowed tab
  * The user will be able to interact with borrow options on the book
- *
+ * <p>
  * Outstanding Issues: Still requires ISBN scan for handoff
  */
 
@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +24,13 @@ import androidx.annotation.RequiresApi;
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
 import com.example.bookwormadventuresdeluxe2.Utilities.Status;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.security.InvalidParameterException;
+import java.util.HashMap;
 
 public class BorrowDetailViewFragment extends DetailView
 {
@@ -55,7 +58,9 @@ public class BorrowDetailViewFragment extends DetailView
         if (bundle != null)
         {
             source = bundle.getString(getString(R.string.book_click_source_fragment));
-        } else {
+        }
+        else
+        {
             source = getString(R.string.borrow);
         }
 
@@ -163,22 +168,31 @@ public class BorrowDetailViewFragment extends DetailView
         this.bookDocument.update(getString(R.string.status), getString(R.string.requested));
 
         // Send Notification
-        sendRequestNotification("New borrow request from: "
+        sendBorrowRequestNotification("New borrow request from: "
                 + UserCredentialAPI.getInstance().getUsername());
         onBackClick(view);
     }
 
-    private void sendRequestNotification(String message){
+    private void sendBorrowRequestNotification(String message)
+    {
         /* Get Owner Information  */
         FirebaseUserGetSet.getUser(selectedBook.getOwner(), userObject ->
         {
-            // Create Notification
-            Notification notification = new Notification(selectedBook, message);
+            /* Create Notification */
+            HashMap<String, String> notification = new HashMap<>();
+            notification.put("bookID", selectedBookId);
+            notification.put("message", message);
+            notification.put("timestamp", String.valueOf(Timestamp.now().getSeconds()));
+            /* Add to collection */
             FirebaseFirestore.getInstance().collection("Users")
                     .document(userObject.getDocumentId())
-                    .update("notifications", FieldValue.arrayUnion(notification));
+                    .collection("notifications")
+                    .add(notification);
+            /* Increment notification count */
+            FirebaseUserGetSet.incrementNotificationCount(userObject.getDocumentId());
         });
     }
+
     private void btnSetLocation(View view)
     {
         Intent setLocationActivityIntent = new Intent(getActivity(), SetLocationActivity.class);

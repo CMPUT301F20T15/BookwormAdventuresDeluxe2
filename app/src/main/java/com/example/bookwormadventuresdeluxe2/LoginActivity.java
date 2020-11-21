@@ -80,27 +80,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     /* Get Current User information from firestore */
                     collectionReference
                             .whereEqualTo(getString(R.string.firestore_userId), currentUserId)
-                            .addSnapshotListener(new EventListener<QuerySnapshot>()
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
                             {
                                 @Override
-                                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error)
+                                public void onComplete(@NonNull Task<QuerySnapshot> task)
                                 {
-                                    if (error != null)
-                                    {
-                                        return;
-                                    }
-
-                                    /* Store User Credentials */
-                                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots)
+                                    for (QueryDocumentSnapshot snapshot : task.getResult())
                                     {
                                         UserCredentialAPI userCredentialAPI = UserCredentialAPI.getInstance();
                                         userCredentialAPI.setUserId(snapshot.getString(getString(R.string.firestore_userId)));
                                         userCredentialAPI.setUsername(snapshot.getString(getString(R.string.firestore_username)));
+                                        userCredentialAPI.setNotificationCount((Long) snapshot.get("notificationCount"));
                                         Intent myBooksIntent = new Intent(LoginActivity.this, MyBooksActivity.class);
                                         startActivity(myBooksIntent);
 
                                         /* Removes activity from stack so user not brought back here with back  */
                                         finish();
+                                        break; // safety measure
                                     }
                                 }
                             });
@@ -207,8 +204,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     throw new Exception("Unexpected resource Id inside click listener."
                             + "Expected: R.id.login_button Or R.id.create_account_button");
             }
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             /* Log message to debug*/
             Log.d(TAG, e.getMessage());
@@ -247,28 +243,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 /* Get User information from firestore and take to MyBooksActivity */
                                 collectionReference
                                         .whereEqualTo(getString(R.string.firestore_userId), currentUserId)
-                                        .addSnapshotListener(new EventListener<QuerySnapshot>()
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
                                         {
                                             @Override
-                                            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error)
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task)
                                             {
-                                                if (error != null)
+                                                for (QueryDocumentSnapshot snapshot : task.getResult())
                                                 {
-                                                    return;
-                                                }
-                                                if (!queryDocumentSnapshots.isEmpty())
-                                                {
-                                                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots)
-                                                    {
-                                                        /* Add to UserCredentialAPI to be accessible throughout app */
-                                                        UserCredentialAPI userCredentialAPI = UserCredentialAPI.getInstance();
-                                                        userCredentialAPI.setUsername(snapshot.getString(getString(R.string.firestore_username)));
-                                                        userCredentialAPI.setUserId(snapshot.getString(getString(R.string.firestore_userId)));
-                                                    }
-                                                    progressBar.setVisibility(View.INVISIBLE);
+                                                    UserCredentialAPI userCredentialAPI = UserCredentialAPI.getInstance();
+                                                    userCredentialAPI.setUserId(snapshot.getString(getString(R.string.firestore_userId)));
+                                                    userCredentialAPI.setUsername(snapshot.getString(getString(R.string.firestore_username)));
+                                                    userCredentialAPI.setNotificationCount((Long) snapshot.get("notificationCount"));
+                                                    Intent myBooksIntent = new Intent(LoginActivity.this, MyBooksActivity.class);
+                                                    startActivity(myBooksIntent);
 
-                                                    /* Go to ListActivity */
-                                                    startActivity(new Intent(LoginActivity.this, MyBooksActivity.class));
+                                                    /* Removes activity from stack so user not brought back here with back  */
+                                                    finish();
+                                                    break; // safety measure
                                                 }
                                             }
                                         });
@@ -301,8 +293,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                                     /* Hide progress bar*/
                                     progressBar.setVisibility(View.INVISIBLE);
-                                }
-                                catch (Exception e)
+                                } catch (Exception e)
                                 {
                                     /* Different type from errorCode, cannot be cast to the same object.
                                      * Sets EditText error to new type.
