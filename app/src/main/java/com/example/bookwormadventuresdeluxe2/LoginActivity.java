@@ -289,10 +289,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         default:
                                             /* Unexpected Error code*/
                                             editTextEmail.setError(task.getException().getMessage());
+                                            editTextEmail.requestFocus();
                                     }
-
-                                    /* Hide progress bar*/
-                                    progressBar.setVisibility(View.INVISIBLE);
                                 } catch (Exception e)
                                 {
                                     /* Different type from errorCode, cannot be cast to the same object.
@@ -301,9 +299,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                      * Log message to debug
                                      */
                                     editTextEmail.setError(task.getException().getMessage());
+                                    editTextEmail.requestFocus();
                                     Log.d(TAG, e.getMessage());
-                                    progressBar.setVisibility(View.INVISIBLE);
                                 }
+
+                                /* Hide progress bar*/
+                                progressBar.setVisibility(View.INVISIBLE);
                             }
                         }
                     });

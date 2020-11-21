@@ -50,7 +50,7 @@ public class FirebaseUserGetSet
      */
     public static void getUser(String username, UserCallback myCallback)
     {
-        usersRef.whereEqualTo("username", username).get()
+        usersRef.whereEqualTo(context.getString(R.string.firestore_username), username).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
                 {
                     @Override
@@ -116,8 +116,9 @@ public class FirebaseUserGetSet
      * @param inputEmail New email to be written
      * @param inputPhone New phone number to be written
      * @param documentID Document id of target user
+     * @param editCallback Callback for waiting for result
      */
-    public static void changeAuthInfo(EditText inputEmail, EditText inputPhone, String documentID)
+    public static void changeAuthInfo(EditText inputEmail, EditText inputPhone, String documentID, EditCallback editCallback)
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -134,10 +135,13 @@ public class FirebaseUserGetSet
                                     inputEmail.getText().toString().trim());
                             editPhone(documentID,
                                     inputPhone.getText().toString().trim());
+
+                            editCallback.onCallback(true);
                             Log.d(TAG, "User info updated.");
                         }
                         else
                         {
+                            /* Failed edit */
                             try
                             {
                                 /* Tries to match errorCode to EditText error */
@@ -159,6 +163,7 @@ public class FirebaseUserGetSet
                                     default:
                                         /* Unexpected Error code*/
                                         inputEmail.setError(task.getException().getMessage());
+                                        inputEmail.requestFocus();
                                 }
                             } catch (Exception e)
                             {
@@ -168,8 +173,12 @@ public class FirebaseUserGetSet
                                  * Log message to debug
                                  */
                                 inputEmail.setError(task.getException().getMessage());
+                                inputEmail.requestFocus();
                                 Log.d(TAG, e.getMessage());
                             }
+
+                            editCallback.onCallback(false);
+                            Log.d(TAG, "User info update failed.");
                         }
                     }
                 });
@@ -236,10 +245,21 @@ public class FirebaseUserGetSet
      * Callback for UserProfileObject
      */
     public interface UserCallback
-            /*
-             * Source: https://stackoverflow.com/questions/49514859/how-to-get-data-object-from-another-event-android-studio
-             * */
+    /*
+     * Source: https://stackoverflow.com/questions/49514859/how-to-get-data-object-from-another-event-android-studio
+     * */
     {
         void onCallback(UserProfileObject userObject);
+    }
+
+    /**
+     * Callback for editing profile result
+     */
+    public interface EditCallback
+    /*
+     * Source: https://stackoverflow.com/questions/49514859/how-to-get-data-object-from-another-event-android-studio
+     * */
+    {
+        void onCallback(Boolean result);
     }
 }
