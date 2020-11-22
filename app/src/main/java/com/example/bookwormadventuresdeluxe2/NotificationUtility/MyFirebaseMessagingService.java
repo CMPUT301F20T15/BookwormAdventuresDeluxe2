@@ -22,8 +22,20 @@ import java.util.Random;
 
 import static com.example.bookwormadventuresdeluxe2.GlobalApplication.CHANNEL_ID;
 
+/**
+ * Monitors FCM token updates
+ * Builds notification from received message
+ * sources: https://firebase.google.com/docs/cloud-messaging/android/client
+ * https://www.youtube.com/watch?v=D9EqQyDSFrI&t=6s&ab_channel=CodingCafe
+ */
+
 public class MyFirebaseMessagingService extends FirebaseMessagingService
 {
+    /**
+     * Listen for FCM app registration toke change and update firestore
+     *
+     * @param token The new token
+     */
     @Override
     public void onNewToken(@NonNull String token)
     {
@@ -35,6 +47,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
         }
     }
 
+    /**
+     * Listen for notification messages
+     *
+     * @param remoteMessage The notification message received
+     */
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage)
@@ -44,6 +61,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
         showNotification(remoteMessage.getData().get("Title"), remoteMessage.getData().get("Message"));
     }
 
+    /**
+     * Build and show notification
+     *
+     * @param title The title of the notification
+     * @param body  The title of the body
+     */
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void showNotification(String title, String body)
     {
@@ -63,10 +86,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
     }
 
     /**
-     * Persist token to third-party servers.
-     * <p>
-     * Modify this method to associate the user's FCM registration token with any
-     * server-side account maintained by your application.
+     * Update Firestore with new token for user
      *
      * @param token The new token.
      */
