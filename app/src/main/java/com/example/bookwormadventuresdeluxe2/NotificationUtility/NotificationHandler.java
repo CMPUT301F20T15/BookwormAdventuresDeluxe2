@@ -4,14 +4,17 @@ package com.example.bookwormadventuresdeluxe2.NotificationUtility;
  * Used to send push notifications to users and update FCM registration token for users
  */
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.example.bookwormadventuresdeluxe2.FirebaseUserGetSet;
+import com.example.bookwormadventuresdeluxe2.GlobalApplication;
 import com.example.bookwormadventuresdeluxe2.LoginActivity;
 import com.example.bookwormadventuresdeluxe2.Notification;
+import com.example.bookwormadventuresdeluxe2.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -30,6 +33,8 @@ import retrofit2.Response;
 public class NotificationHandler
 {
     public static final String TAG = "NotificationHandler";
+    private static Context context = GlobalApplication.getAppContext();
+
 
     /**
      * Get User FCM token, create raw notification with data passed in
@@ -54,9 +59,9 @@ public class NotificationHandler
             }
 
             /* Add to user notification collection */
-            FirebaseFirestore.getInstance().collection("Users")
+            FirebaseFirestore.getInstance().collection(context.getString(R.string.users_collection))
                     .document(user.getDocumentId())
-                    .collection("notifications")
+                    .collection(context.getString(R.string.notifications_collection))
                     .add(inAppNotification);
             /* Increment user notification count */
             FirebaseUserGetSet.incrementNotificationCount(user.getDocumentId());
@@ -121,7 +126,7 @@ public class NotificationHandler
                         if (oldToken != FCMtoken)
                         {
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
-                            db.collection("Users").document(userId).update("token", FCMtoken);
+                            db.collection(context.getString(R.string.users_collection)).document(userId).update(context.getString(R.string.firestore_user_token_field), FCMtoken);
                         }
                     }
                 });

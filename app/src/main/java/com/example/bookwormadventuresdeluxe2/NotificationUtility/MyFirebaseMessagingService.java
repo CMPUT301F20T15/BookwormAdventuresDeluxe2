@@ -3,6 +3,7 @@ package com.example.bookwormadventuresdeluxe2.NotificationUtility;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
@@ -21,6 +22,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Random;
 
 import static com.example.bookwormadventuresdeluxe2.GlobalApplication.CHANNEL_ID;
+import static com.example.bookwormadventuresdeluxe2.GlobalApplication.getAppContext;
 
 /**
  * Monitors FCM token updates
@@ -92,8 +94,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
      */
     private void sendRegistrationToServer(String token, String userId)
     {
+        Context context = getAppContext();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.document("Users/" + userId)
-                .update("token", token);
+        db.document(context.getString(R.string.users_collection) + "/" + userId)
+                .update(context.getString(R.string.firestore_user_token_field), token);
     }
 }

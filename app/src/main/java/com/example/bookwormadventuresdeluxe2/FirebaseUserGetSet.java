@@ -114,9 +114,9 @@ public class FirebaseUserGetSet
     /**
      * Edits FirebaseAuth email and Firebase database email/phone number of user
      *
-     * @param inputEmail New email to be written
-     * @param inputPhone New phone number to be written
-     * @param documentID Document id of target user
+     * @param inputEmail   New email to be written
+     * @param inputPhone   New phone number to be written
+     * @param documentID   Document id of target user
      * @param editCallback Callback for waiting for result
      */
     public static void changeAuthInfo(EditText inputEmail, EditText inputPhone, String documentID, EditCallback editCallback)
@@ -187,34 +187,37 @@ public class FirebaseUserGetSet
 
     /**
      * Increment User notification count
+     *
+     * @param userId The user ID of the user
      */
     public static void incrementNotificationCount(String userId)
     {
-        FirebaseFirestore.getInstance().collection("Users")
+        FirebaseFirestore.getInstance().collection(context.getString(R.string.users_collection))
                 .document(userId)
-                .update("notificationCount", FieldValue.increment(1));
+                .update(context.getString(R.string.firestore_user_notification_count_field), FieldValue.increment(1));
     }
 
     /**
      * Reset User notification Count and Delete Notifications
+     *
+     * @param userId The user ID of the user
      */
     public static void resetNotifications(String userId)
     {
         /* Update UserCredentialAPI*/
         UserCredentialAPI.getInstance().setNotificationCount(null);
-        /* set notification count to null */
-        firebase.collection("Users")
+        /* set notification count field to null */
+        firebase.collection(context.getString(R.string.users_collection))
                 .document(userId)
-                .update("notificationCount", null);
-
+                .update(context.getString(R.string.firestore_user_notification_count_field), null);
 
         /**
          *  delete all documents in collection one at a time as firestore doesn't support
          *  deleting entire collection in android
          *  */
         firebase
-                .collection("Users/" +
-                        userId + "/notifications")
+                .collection(context.getString(R.string.users_collection) + "/"
+                        + userId + "/" + context.getString(R.string.notifications_collection))
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
                 {
@@ -227,7 +230,9 @@ public class FirebaseUserGetSet
                             {
                                 String docID = document.getId();
                                 firebase
-                                        .document("Users/" + userId + "/notifications/" + docID)
+                                        .document(context.getString(R.string.users_collection)
+                                                + "/" + userId + "/" + context.getString(R.string.notifications_collection)
+                                                + "/" + docID)
                                         .delete();
                             }
                         }
@@ -237,16 +242,15 @@ public class FirebaseUserGetSet
                         }
                     }
                 });
-
     }
 
     /**
      * Callback for UserProfileObject
      */
     public interface UserCallback
-    /*
-     * Source: https://stackoverflow.com/questions/49514859/how-to-get-data-object-from-another-event-android-studio
-     * */
+            /*
+             * Source: https://stackoverflow.com/questions/49514859/how-to-get-data-object-from-another-event-android-studio
+             * */
     {
         void onCallback(UserProfileObject userObject);
     }
@@ -255,9 +259,9 @@ public class FirebaseUserGetSet
      * Callback for editing profile result
      */
     public interface EditCallback
-    /*
-     * Source: https://stackoverflow.com/questions/49514859/how-to-get-data-object-from-another-event-android-studio
-     * */
+            /*
+             * Source: https://stackoverflow.com/questions/49514859/how-to-get-data-object-from-another-event-android-studio
+             * */
     {
         void onCallback(Boolean result);
     }

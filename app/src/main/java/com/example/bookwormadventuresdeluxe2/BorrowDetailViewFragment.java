@@ -158,7 +158,7 @@ public class BorrowDetailViewFragment extends DetailView
     }
 
     /**
-     * Send request to book owner
+     * Send notification and request to book owner
      *
      * @param view The view that was clicked on
      */
@@ -173,19 +173,27 @@ public class BorrowDetailViewFragment extends DetailView
         onBackClick(view);
     }
 
+    /**
+     * Create hash map with notification info pass to Notification Handler process notification
+     */
     private void sendBorrowRequestNotification()
     {
         /* Create notification for firestore collection */
         String message = "New borrow request from: "
                 + UserCredentialAPI.getInstance().getUsername();
         HashMap<String, String> inAppNotification = new HashMap<>();
-        inAppNotification.put("bookID", selectedBookId);
-        inAppNotification.put("message", message);
-        inAppNotification.put("timestamp", String.valueOf(Timestamp.now().getSeconds()));
+        inAppNotification.put(getString(R.string.firestore_user_notification_bookId_field), selectedBookId);
+        inAppNotification.put(getString(R.string.firestore_user_notification_message_field), message);
+        inAppNotification.put(getString(R.string.firestore_user_notification_timestamp_field), String.valueOf(Timestamp.now().getSeconds()));
         /* Call notification handler to process notification */
         NotificationHandler.sendNotification("Borrow Request", message, selectedBook.getOwner(), inAppNotification);
     }
 
+    /**
+     * Start set location Activity to allow user to pick a location
+     *
+     * @param view
+     */
     private void btnSetLocation(View view)
     {
         Intent setLocationActivityIntent = new Intent(getActivity(), SetLocationActivity.class);

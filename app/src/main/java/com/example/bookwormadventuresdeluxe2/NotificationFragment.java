@@ -85,9 +85,9 @@ public class NotificationFragment extends Fragment
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String userID = UserCredentialAPI.getInstance().getUserId();
         db
-                .collection("Users/" +
-                        userID + "/notifications")
-                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .collection(getString(R.string.users_collection) + "/"
+                        + userID + "/" + getString(R.string.notifications_collection))
+                .orderBy(getString(R.string.firestore_user_notification_timestamp_field), Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
                 {
@@ -99,15 +99,15 @@ public class NotificationFragment extends Fragment
                             /* Get user notifications*/
                             for (DocumentSnapshot document : task.getResult())
                             {
-                                String bookID = document.get("bookID").toString();
-                                String message = document.get("message").toString();
+                                String bookID = document.getString(getString(R.string.firestore_user_notification_bookId_field));
+                                String message = document.getString(getString(R.string.firestore_user_notification_message_field));
                                 final Book[] book = new Book[1];
 
                                 /* Initialize as empty book */
                                 book[0] = new Book();
 
                                 /* Find Book information */
-                                db.collection("Books")
+                                db.collection(getString(R.string.books_collection))
                                         .document(bookID)
                                         .get()
                                         .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
