@@ -279,7 +279,7 @@ public class CreateAccountActivity extends AppCompatActivity
                             userCredentialAPI.setUsername(username);
 
                             /* Store user app token in database*/
-                            NotificationHandler.addAppToken(currentUser.getUid());
+                            NotificationHandler.updateFCMToken(null, currentUser.getUid());
 
                             /* Create firebase database profile */
                             createFirebaseAccount(currentUser.getUid());

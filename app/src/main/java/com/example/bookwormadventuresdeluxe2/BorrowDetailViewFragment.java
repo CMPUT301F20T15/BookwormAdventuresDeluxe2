@@ -21,6 +21,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.example.bookwormadventuresdeluxe2.NotificationUtility.NotificationHandler;
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
 import com.example.bookwormadventuresdeluxe2.Utilities.Status;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
@@ -167,30 +168,22 @@ public class BorrowDetailViewFragment extends DetailView
                 FieldValue.arrayUnion(UserCredentialAPI.getInstance().getUsername()));
         this.bookDocument.update(getString(R.string.status), getString(R.string.requested));
 
-        // Send Notification
-        sendBorrowRequestNotification("New borrow request from: "
-                + UserCredentialAPI.getInstance().getUsername());
+        // Send In-app and Push notification to owner
+        sendBorrowRequestNotification();
         onBackClick(view);
     }
 
-    private void sendBorrowRequestNotification(String message)
+    private void sendBorrowRequestNotification()
     {
-        /* Get Owner Information  */
-        FirebaseUserGetSet.getUser(selectedBook.getOwner(), userObject ->
-        {
-            /* Create Notification */
-            HashMap<String, String> notification = new HashMap<>();
-            notification.put("bookID", selectedBookId);
-            notification.put("message", message);
-            notification.put("timestamp", String.valueOf(Timestamp.now().getSeconds()));
-            /* Add to collection */
-            FirebaseFirestore.getInstance().collection("Users")
-                    .document(userObject.getDocumentId())
-                    .collection("notifications")
-                    .add(notification);
-            /* Increment notification count */
-            FirebaseUserGetSet.incrementNotificationCount(userObject.getDocumentId());
-        });
+        /* Create notification for firestore collection */
+        String message = "New borrow request from: "
+                + UserCredentialAPI.getInstance().getUsername();
+        HashMap<String, String> inAppNotification = new HashMap<>();
+        inAppNotification.put("bookID", selectedBookId);
+        inAppNotification.put("message", message);
+        inAppNotification.put("timestamp", String.valueOf(Timestamp.now().getSeconds()));
+        /* Call notification handler to process notification */
+        NotificationHandler.sendNotification("Borrow Request", message, selectedBook.getOwner(), inAppNotification);
     }
 
     private void btnSetLocation(View view)

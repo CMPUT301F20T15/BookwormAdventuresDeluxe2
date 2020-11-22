@@ -22,6 +22,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.example.bookwormadventuresdeluxe2.NotificationUtility.NotificationHandler;
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.firebase.Timestamp;
@@ -213,30 +214,26 @@ public class RequestDetailViewFragment extends DetailView
         this.bookDocument.update(getString(R.string.requesters), borrower);
         this.bookDocument.update(getString(R.string.status), getString(R.string.accepted));
 
-        /* Send Notification to borrower */
         String borrowerUsername = borrower.get(0);
-        sendRequestAcceptedNotification("Borrow request accepted by: "
-                + borrowerUsername, borrowerUsername);
+        // Send In-app and Push notification to Borrower
+        sendRequestAcceptedNotification(borrowerUsername);
         onBackClick(view);
     }
 
-    private void sendRequestAcceptedNotification(String message, String borrowerUsername)
+    private void sendRequestAcceptedNotification(String borrowerUsername)
     {
         /* Get Borrower Information  */
         FirebaseUserGetSet.getUser(borrowerUsername, userObject ->
         {
-            /* Create Notification */
-            HashMap<String, String> notification = new HashMap<>();
-            notification.put("bookID", selectedBookId);
-            notification.put("message", message);
-            notification.put("timestamp", String.valueOf(Timestamp.now().getSeconds())); // to sort by latest
-            /* Add to collection */
-            FirebaseFirestore.getInstance().collection("Users")
-                    .document(userObject.getDocumentId())
-                    .collection("notifications")
-                    .add(notification);
-            /* Increment notification count */
-            FirebaseUserGetSet.incrementNotificationCount(userObject.getDocumentId());
+            /* Create notification for firestore collection */
+            String message = "Borrow request accepted by: "
+                    + selectedBook.getOwner();
+            HashMap<String, String> inAppNotification = new HashMap<>();
+            inAppNotification.put("bookID", selectedBookId);
+            inAppNotification.put("message", message);
+            inAppNotification.put("timestamp", String.valueOf(Timestamp.now().getSeconds())); // to sort by latest
+            /* Call notification handler to process notification */
+            NotificationHandler.sendNotification("Request Accepted", message, borrowerUsername, inAppNotification);
         });
     }
 
@@ -279,7 +276,7 @@ public class RequestDetailViewFragment extends DetailView
      * Opens selected user profile on Button click
      *
      * @param viewProfileButton TextView in view
-     * @param spinner Spinner for selecting requester
+     * @param spinner           Spinner for selecting requester
      */
     private void sliderProfileButton(Button viewProfileButton, Spinner spinner)
     {

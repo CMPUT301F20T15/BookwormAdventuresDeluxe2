@@ -66,7 +66,8 @@ public class FirebaseUserGetSet
                                         document.getData().get(context.getString(R.string.firestore_email)).toString(),
                                         document.getData().get(context.getString(R.string.firestore_phoneNumber)).toString(),
                                         document.getData().get(context.getString(R.string.firestore_userId)).toString(),
-                                        document.getId()
+                                        document.getId(),
+                                        document.getString("token")
                                 );
                                 /* Returns object after query is complete, avoids null returns while waiting*/
                                 myCallback.onCallback(userObject);
@@ -220,12 +221,10 @@ public class FirebaseUserGetSet
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task)
                     {
-                        Log.d("notification", "entter");
                         if (task.isSuccessful())
                         {
                             for (QueryDocumentSnapshot document : task.getResult())
                             {
-                                Log.d("notification", "inside");
                                 String docID = document.getId();
                                 firebase
                                         .document("Users/" + userId + "/notifications/" + docID)

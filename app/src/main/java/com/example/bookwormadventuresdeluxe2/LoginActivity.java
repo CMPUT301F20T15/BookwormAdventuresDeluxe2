@@ -38,6 +38,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener
 {
@@ -93,11 +94,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         userCredentialAPI.setUserId(snapshot.getString(getString(R.string.firestore_userId)));
                                         userCredentialAPI.setUsername(snapshot.getString(getString(R.string.firestore_username)));
                                         userCredentialAPI.setNotificationCount((Long) snapshot.get("notificationCount"));
-                                        /* Add token if not present */
-                                        if (snapshot.get("token") == null)
-                                        {
-                                            NotificationHandler.addAppToken(snapshot.getString(getString(R.string.firestore_userId)));
-                                        }
+                                        /* Update FCM token if invalid */
+                                        NotificationHandler.updateFCMToken(snapshot.getString("token"), snapshot.getId());
+
                                         Intent myBooksIntent = new Intent(LoginActivity.this, MyBooksActivity.class);
                                         startActivity(myBooksIntent);
 
@@ -261,11 +260,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                                     userCredentialAPI.setUserId(snapshot.getString(getString(R.string.firestore_userId)));
                                                     userCredentialAPI.setUsername(snapshot.getString(getString(R.string.firestore_username)));
                                                     userCredentialAPI.setNotificationCount((Long) snapshot.get("notificationCount"));
-                                                    /* Add token if not present */
-                                                    if (snapshot.get("token") == null)
-                                                    {
-                                                        NotificationHandler.addAppToken(snapshot.getString(getString(R.string.firestore_userId)));
-                                                    }
+                                                    /* Update FCM token if invalid */
+                                                    NotificationHandler.updateFCMToken(snapshot.getString("token"), snapshot.getId());
                                                     Intent myBooksIntent = new Intent(LoginActivity.this, MyBooksActivity.class);
                                                     startActivity(myBooksIntent);
 
