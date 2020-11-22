@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -187,9 +188,9 @@ public class BorrowDetailViewFragment extends DetailView
         if (this.goodScan)
         {
             this.bookDocument.update(getString(R.string.status), getString(R.string.rPending));
+            // notify owner
+            onBackClick(view);
         }
-        // notify owner
-        onBackClick(view);
     }
 
     /**
@@ -315,13 +316,15 @@ public class BorrowDetailViewFragment extends DetailView
         {
             this.goodScan = false;
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-            if (result != null)
+            if (result != null && result.getContents() != null &&
+                    this.selectedBook.getIsbn().equals(result.getContents()))
             {
-                if (result.getContents() != null && this.selectedBook.getIsbn().equals(result.getContents()))
-                {
-                    // scan successful
-                    this.goodScan = true;
-                }
+                // scan successful
+                this.goodScan = true;
+            }
+            else
+            {
+                Toast.makeText(getActivity(), "Scan was unsuccessful", Toast.LENGTH_LONG).show();
             }
         }
 
