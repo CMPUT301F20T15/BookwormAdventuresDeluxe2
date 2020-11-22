@@ -3,7 +3,7 @@ package com.example.bookwormadventuresdeluxe2;
 /**
  * Holds the view for seeing details on a book in the Requested tab
  * The user will be able to interact with status dependant request options on the book
- *
+ * <p>
  * Outstanding Issues: Still requires ISBN scan for handoff. Cannot view requester's profile
  */
 
@@ -25,6 +25,8 @@ import androidx.annotation.RequiresApi;
 import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class RequestDetailViewFragment extends DetailView
     private Button btn2;
     private TextView exchange;
     private DocumentReference bookDocument;
+    private boolean goodScan;
 
     private static int SetLocationActivityResultCode = 7;
 
@@ -88,10 +91,13 @@ public class RequestDetailViewFragment extends DetailView
 
                 this.btn1.setOnClickListener(this::btnSetLocation);
 
-                if(this.selectedBook.getPickUpAddress().equals("")) {
+                if (this.selectedBook.getPickUpAddress().equals(""))
+                {
                     this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
                     this.btn2.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
-                } else {
+                }
+                else
+                {
                     this.btn2.setOnClickListener(this::btnLendBook);
 //                    this.bookDetailView.findViewById(R.id.borrow_exchange).setVisibility(View.VISIBLE);
                 }
@@ -147,10 +153,14 @@ public class RequestDetailViewFragment extends DetailView
     private void btnAcceptReturn(View view)
     {
         //TODO: Launch Scan ISBN
-        this.bookDocument.update(getString(R.string.status), getString(R.string.available));
-        this.bookDocument.update(getString(R.string.requesters), new ArrayList<String>());
-        this.bookDocument.update(getString(R.string.firestore_pick_up_address), "");
-        onBackClick(view);
+        onScanCall();
+        if (this.goodScan)
+        {
+            this.bookDocument.update(getString(R.string.status), getString(R.string.available));
+            this.bookDocument.update(getString(R.string.requesters), new ArrayList<String>());
+            this.bookDocument.update(getString(R.string.firestore_pick_up_address), "");
+            onBackClick(view);
+        }
     }
 
     /**
@@ -161,8 +171,12 @@ public class RequestDetailViewFragment extends DetailView
     private void btnLendBook(View view)
     {
         //TODO: launch scan
-        this.bookDocument.update(getString(R.string.status), getString(R.string.bPending));
-        onBackClick(view);
+        onScanCall();
+        if (this.goodScan)
+        {
+            this.bookDocument.update(getString(R.string.status), getString(R.string.bPending));
+            onBackClick(view);
+        }
     }
 
     private void btnSetLocation(View view)
@@ -239,7 +253,7 @@ public class RequestDetailViewFragment extends DetailView
             default:
                 throw new InvalidParameterException("Invalid book status in RequestDetailView updateView");
         }
-        
+
         /* Enables clicking of requester profile*/
         clickUsername(user, book.getRequesters().get(0));
     }
@@ -248,7 +262,7 @@ public class RequestDetailViewFragment extends DetailView
      * Opens selected user profile on Button click
      *
      * @param viewProfileButton TextView in view
-     * @param spinner Spinner for selecting requester
+     * @param spinner           Spinner for selecting requester
      */
     private void sliderProfileButton(Button viewProfileButton, Spinner spinner)
     {
@@ -342,6 +356,19 @@ public class RequestDetailViewFragment extends DetailView
             {
                 this.bookDocument.update(getString(R.string.firestore_pick_up_address), "");
                 this.selectedBook.setPickUpAddress("");
+            }
+        }
+        else if (requestCode == IntentIntegrator.REQUEST_CODE)
+        {
+            this.goodScan = false;
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            if (result != null)
+            {
+                if (result.getContents() != null && this.selectedBook.getIsbn().equals(result.getContents()))
+                {
+                    // scan successful
+                    this.goodScan = true;
+                }
             }
         }
 

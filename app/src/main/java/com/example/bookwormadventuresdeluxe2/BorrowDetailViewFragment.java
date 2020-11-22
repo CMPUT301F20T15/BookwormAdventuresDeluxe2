@@ -3,7 +3,7 @@ package com.example.bookwormadventuresdeluxe2;
 /**
  * Holds the view for seeing details on a book in the borrowed tab
  * The user will be able to interact with borrow options on the book
- *
+ * <p>
  * Outstanding Issues: Still requires ISBN scan for handoff
  */
 
@@ -25,6 +25,8 @@ import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.security.InvalidParameterException;
 
@@ -34,6 +36,7 @@ public class BorrowDetailViewFragment extends DetailView
     private Button btn2;
     private TextView exchange;
     private DocumentReference bookDocument;
+    private boolean goodScan;
 
     private static int SetLocationActivityResultCode = 7;
 
@@ -54,7 +57,9 @@ public class BorrowDetailViewFragment extends DetailView
         if (bundle != null)
         {
             source = bundle.getString(getString(R.string.book_click_source_fragment));
-        } else {
+        }
+        else
+        {
             source = getString(R.string.borrow);
         }
 
@@ -178,7 +183,11 @@ public class BorrowDetailViewFragment extends DetailView
     {
         //TODO: actually do the stuff
         // Launch Scan ISBN
-        this.bookDocument.update(getString(R.string.status), getString(R.string.rPending));
+        onScanCall();
+        if (this.goodScan)
+        {
+            this.bookDocument.update(getString(R.string.status), getString(R.string.rPending));
+        }
         // notify owner
         onBackClick(view);
     }
@@ -192,8 +201,12 @@ public class BorrowDetailViewFragment extends DetailView
     {
         //TODO: actually do the stuff
         // Launch Scan ISBN
-        this.bookDocument.update(getString(R.string.status), getString(R.string.borrowed));
-        onBackClick(view);
+        onScanCall();
+        if (this.goodScan)
+        {
+            this.bookDocument.update(getString(R.string.status), getString(R.string.borrowed));
+            onBackClick(view);
+        }
     }
 
     private void btnViewLocation(View view)
@@ -296,6 +309,19 @@ public class BorrowDetailViewFragment extends DetailView
             {
                 this.bookDocument.update(getString(R.string.firestore_pick_up_address), "");
                 this.selectedBook.setPickUpAddress("");
+            }
+        }
+        else if (requestCode == IntentIntegrator.REQUEST_CODE)
+        {
+            this.goodScan = false;
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            if (result != null)
+            {
+                if (result.getContents() != null && this.selectedBook.getIsbn().equals(result.getContents()))
+                {
+                    // scan successful
+                    this.goodScan = true;
+                }
             }
         }
 

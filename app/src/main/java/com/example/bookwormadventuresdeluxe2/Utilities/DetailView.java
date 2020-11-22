@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.bookwormadventuresdeluxe2.Book;
 import com.example.bookwormadventuresdeluxe2.R;
+import com.google.zxing.integration.android.IntentIntegrator;
 
 /**
  * abstract class representing all the DetailView fragments
@@ -97,4 +98,16 @@ public abstract class DetailView extends Fragment
      * @param v The view that was clicked on
      */
     abstract public void onBackClick(View v);
+
+    /**
+     * Method is called when the user clicks on a action button to lend / receive
+     * a book
+     *
+     */
+    protected void onScanCall()
+    {
+        IntentIntegrator integrator = new IntentIntegrator(getActivity());
+        integrator.setBeepEnabled(false);
+        integrator.initiateScan();
+    }
 }
