@@ -228,7 +228,7 @@ public class BorrowDetailViewFragment extends DetailView
         TextView user = bookDetailView.findViewById(R.id.book_request_user);
         user.setText(book.getOwner());
 
-        clickUsername(user, book.getOwner());
+        clickUsername(user, book.getOwner(), borrowDetailViewFragment);
     }
 
     /**

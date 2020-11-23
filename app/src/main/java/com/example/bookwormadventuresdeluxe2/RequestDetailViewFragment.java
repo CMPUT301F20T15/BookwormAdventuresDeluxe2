@@ -22,8 +22,8 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -257,7 +257,7 @@ public class RequestDetailViewFragment extends DetailView
         }
 
         /* Enables clicking of requester profile*/
-        clickUsername(user, book.getRequesters().get(0));
+        clickUsername(user, book.getRequesters().get(0), this.requestDetailViewFragment);
     }
 
     /**
