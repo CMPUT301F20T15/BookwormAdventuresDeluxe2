@@ -85,7 +85,6 @@ public class NotificationFragment extends Fragment
     {
         //TODO: remove notifications
         Fragment myBooksFragment = getFragmentManager().findFragmentByTag(getString(R.string.my_books_fragment));
-        getFragmentManager().beginTransaction().hide(ActiveFragmentTracker.activeFragment).show(myBooksFragment).commit();
-        ActiveFragmentTracker.activeFragment = myBooksFragment;
+        getFragmentManager().beginTransaction().hide(this).show(ActiveFragmentTracker.activeFragment).commit();
     }
 }

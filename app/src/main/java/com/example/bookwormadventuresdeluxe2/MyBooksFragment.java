@@ -250,8 +250,17 @@ public class MyBooksFragment extends Fragment
     private void onNotificationClick(View view)
     {
         Fragment notificationFragment = getFragmentManager().findFragmentByTag(getString(R.string.notification_fragment));
-        getFragmentManager().beginTransaction().hide(ActiveFragmentTracker.activeFragment).show(notificationFragment).commit();
-        ActiveFragmentTracker.activeFragment = notificationFragment;
+        if (notificationFragment != null)
+        {
+            /* If the fragment already exists just show it */
+            getFragmentManager().beginTransaction().hide(ActiveFragmentTracker.activeFragment).show(notificationFragment).commit();
+        }
+        else
+        {
+            /* If the fragment does not exist create and add it */
+            notificationFragment = new NotificationFragment();
+            getFragmentManager().beginTransaction().add(R.id.frame_container, notificationFragment, getString(R.string.notification_fragment)).commit();
+        }
     }
 
     /**

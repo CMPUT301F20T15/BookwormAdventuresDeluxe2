@@ -27,7 +27,6 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
     private SearchFragment searchFragment = new SearchFragment();
     private RequestsFragment requestsFragment = new RequestsFragment();
     private ProfileFragment profileFragment = new ProfileFragment();
-    private NotificationFragment notificationFragment = new NotificationFragment();
     private final FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
@@ -62,7 +61,6 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
                 fragmentManager.beginTransaction().add(R.id.frame_container, profileFragment, getString(R.string.profile_fragment)).hide(profileFragment).commit();
             }
         });
-        fragmentManager.beginTransaction().add(R.id.frame_container, notificationFragment, getString(R.string.notification_fragment)).hide(notificationFragment).commit();
         fragmentManager.beginTransaction().add(R.id.frame_container, myBooksFragment, getString(R.string.my_books_fragment)).commit();
         ActiveFragmentTracker.activeFragment = myBooksFragment;
     }
@@ -89,6 +87,14 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
         if (filterMenu != null)
         {
             fragmentManager.beginTransaction().remove(filterMenu).commit();
+        }
+
+        /* If a notification Fragment is open, close it */
+        Fragment notificationFragment = fragmentManager.findFragmentByTag(getString(R.string.notification_fragment));
+
+        if (notificationFragment != null)
+        {
+            fragmentManager.beginTransaction().remove(notificationFragment).commit();
         }
 
         /* Override to open a new Fragment*/
