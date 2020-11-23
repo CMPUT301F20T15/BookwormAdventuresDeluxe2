@@ -83,7 +83,7 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
         }
 
         /* If a FilterMenu is open, close it */
-        Fragment filterMenu = fragmentManager.findFragmentByTag("filterMenu");
+        Fragment filterMenu = fragmentManager.findFragmentByTag(getString(R.string.filter_menu_fragment));
         if (filterMenu != null)
         {
             fragmentManager.beginTransaction().remove(filterMenu).commit();
