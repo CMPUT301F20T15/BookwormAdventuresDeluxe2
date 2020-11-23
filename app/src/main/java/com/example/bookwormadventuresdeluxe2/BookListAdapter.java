@@ -18,7 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;

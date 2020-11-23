@@ -22,7 +22,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
-import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
@@ -230,41 +229,6 @@ public class BorrowDetailViewFragment extends DetailView
         user.setText(book.getOwner());
 
         clickUsername(user, book.getOwner());
-    }
-
-    /**
-     * Opens user profile on TextView click
-     *
-     * @param textView TextView in view
-     * @param username Book owner's username
-     */
-    private void clickUsername(TextView textView, String username)
-    {
-        textView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                /* Pulling UserProfileObject from database */
-                FirebaseUserGetSet.getUser(username, new FirebaseUserGetSet.UserCallback()
-                {
-                    @Override
-                    public void onCallback(UserProfileObject userObject)
-                    {
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable(getString(R.string.profile_object), userObject);
-                        ProfileFragment profileFragment = new ProfileFragment();
-                        profileFragment.setArguments(bundle);
-                        getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                                .add(R.id.frame_container, profileFragment, getString(R.string.other_profile_fragment))
-                                .hide(borrowDetailViewFragment)
-                                .commit();
-                    }
-                });
-            }
-        });
     }
 
     /**

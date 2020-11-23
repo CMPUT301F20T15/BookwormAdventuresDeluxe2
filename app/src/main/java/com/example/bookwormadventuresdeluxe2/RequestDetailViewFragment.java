@@ -3,7 +3,7 @@ package com.example.bookwormadventuresdeluxe2;
 /**
  * Holds the view for seeing details on a book in the Requested tab
  * The user will be able to interact with status dependant request options on the book
- *
+ * <p>
  * Outstanding Issues: Still requires ISBN scan for handoff. Cannot view requester's profile
  */
 
@@ -23,8 +23,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -39,6 +39,7 @@ public class RequestDetailViewFragment extends DetailView
     private DocumentReference bookDocument;
     private RequestDetailViewFragment requestDetailViewFragment;
     private Resources resources;
+    private ConstraintLayout dropdownContainer;
 
     private static int SetLocationActivityResultCode = 7;
 
@@ -66,11 +67,13 @@ public class RequestDetailViewFragment extends DetailView
         this.btn1 = this.bookDetailView.findViewById(R.id.requestDetail_btn1);
         this.btn2 = this.bookDetailView.findViewById(R.id.requestDetail_btn2);
         this.exchange = this.bookDetailView.findViewById(R.id.request_exchange_location);
+        this.dropdownContainer = this.bookDetailView.findViewById(R.id.dropdown_container);
 
         /* Update the UI based on the book's current status */
         switch (this.selectedBook.getStatus())
         {
             case Requested:
+                this.dropdownContainer.setVisibility(View.VISIBLE);
                 Spinner requesters = this.bookDetailView.findViewById(R.id.chose_request);
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, this.selectedBook.getRequesters());
                 requesters.setAdapter(adapter);
@@ -78,7 +81,7 @@ public class RequestDetailViewFragment extends DetailView
                 bookDetailView.findViewById(R.id.book_request_user).setVisibility(View.GONE);
 
                 /* Enables viewing profile of selected requester*/
-                Button viewProfileBtn = bookDetailView.findViewById(R.id.view_profile_button);
+                TextView viewProfileBtn = bookDetailView.findViewById(R.id.view_profile_button);
                 viewProfileBtn.setVisibility(View.VISIBLE);
                 sliderProfileButton(viewProfileBtn, requesters);
 
@@ -93,6 +96,7 @@ public class RequestDetailViewFragment extends DetailView
                 break;
 
             case Accepted:
+                this.dropdownContainer.setVisibility(View.GONE);
                 this.btn1.setText(getString(R.string.set_location_label));
                 this.btn2.setText(getString(R.string.lend_book));
 
@@ -260,9 +264,9 @@ public class RequestDetailViewFragment extends DetailView
      * Opens selected user profile on Button click
      *
      * @param viewProfileButton TextView in view
-     * @param spinner Spinner for selecting requester
+     * @param spinner           Spinner for selecting requester
      */
-    private void sliderProfileButton(Button viewProfileButton, Spinner spinner)
+    private void sliderProfileButton(TextView viewProfileButton, Spinner spinner)
     {
         viewProfileButton.setOnClickListener(new View.OnClickListener()
         {
@@ -271,41 +275,6 @@ public class RequestDetailViewFragment extends DetailView
             {
                 /* Pulling UserProfileObject from database */
                 FirebaseUserGetSet.getUser(spinner.getSelectedItem().toString(), new FirebaseUserGetSet.UserCallback()
-                {
-                    @Override
-                    public void onCallback(UserProfileObject userObject)
-                    {
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable(getString(R.string.profile_object), userObject);
-                        ProfileFragment profileFragment = new ProfileFragment();
-                        profileFragment.setArguments(bundle);
-                        getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                                .add(R.id.frame_container, profileFragment, getString(R.string.other_profile_fragment))
-                                .hide(requestDetailViewFragment)
-                                .commit();
-                    }
-                });
-            }
-        });
-    }
-
-    /**
-     * Opens user profile on TextView click
-     *
-     * @param textView TextView in view
-     * @param username Requester's username
-     */
-    private void clickUsername(TextView textView, String username)
-    {
-        textView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                /* Pulling UserProfileObject from database */
-                FirebaseUserGetSet.getUser(username, new FirebaseUserGetSet.UserCallback()
                 {
                     @Override
                     public void onCallback(UserProfileObject userObject)
