@@ -42,6 +42,8 @@ public class BorrowDetailViewFragment extends DetailView
     private static int SetLocationActivityResultCode = 7;
 
     private String source = "";
+    public static int BORROW_RECIEVE_SCAN = 8;
+    public static int BORROW_RETURN_SCAN = 9;
 
     public BorrowDetailViewFragment()
     {
@@ -184,7 +186,7 @@ public class BorrowDetailViewFragment extends DetailView
     {
         //TODO: actually do the stuff
         // Launch Scan ISBN
-        onScanCall();
+        onScanCall(BORROW_RETURN_SCAN);
         if (this.goodScan)
         {
             this.bookDocument.update(getString(R.string.status), getString(R.string.rPending));
@@ -200,14 +202,8 @@ public class BorrowDetailViewFragment extends DetailView
      */
     private void btnScan(View view)
     {
-        //TODO: actually do the stuff
         // Launch Scan ISBN
-        onScanCall();
-        if (this.goodScan)
-        {
-            this.bookDocument.update(getString(R.string.status), getString(R.string.borrowed));
-            onBackClick(view);
-        }
+        onScanCall(BORROW_RECIEVE_SCAN);
     }
 
     private void btnViewLocation(View view)
@@ -295,6 +291,30 @@ public class BorrowDetailViewFragment extends DetailView
         }
     }
 
+    private void processBookHandOff(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        this.goodScan = false;
+        IntentResult result = IntentIntegrator.parseActivityResult(resultCode, data);
+        if (result != null && result.getContents() != null &&
+                this.selectedBook.getIsbn().equals(result.getContents()))
+        {
+            // scan successful
+            this.goodScan = true;
+            if (requestCode == BORROW_RECIEVE_SCAN)
+            {
+                this.bookDocument.update(getString(R.string.status), getString(R.string.borrowed));
+            }
+            else if (requestCode == BORROW_RETURN_SCAN)
+            {
+                this.bookDocument.update(getString(R.string.status), getString(R.string.rPending));
+            }
+            else
+            {
+                Toast.makeText(getActivity(), "Scan was unsuccessful", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
@@ -312,24 +332,13 @@ public class BorrowDetailViewFragment extends DetailView
                 this.selectedBook.setPickUpAddress("");
             }
         }
-        else if (requestCode == IntentIntegrator.REQUEST_CODE)
+        else if (requestCode == BORROW_RECIEVE_SCAN || requestCode == BORROW_RETURN_SCAN)
         {
-            this.goodScan = false;
-            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-            if (result != null && result.getContents() != null &&
-                    this.selectedBook.getIsbn().equals(result.getContents()))
-            {
-                // scan successful
-                this.goodScan = true;
-            }
-            else
-            {
-                Toast.makeText(getActivity(), "Scan was unsuccessful", Toast.LENGTH_LONG).show();
-            }
+            processBookHandOff(requestCode, resultCode, data);
         }
 
         BorrowDetailViewFragment fragment = new BorrowDetailViewFragment();
         fragment.onFragmentInteraction(this.selectedBook, this.selectedBookId);
-        getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+        getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commitAllowingStateLoss();
     }
 }

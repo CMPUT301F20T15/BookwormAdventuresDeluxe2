@@ -102,12 +102,12 @@ public abstract class DetailView extends Fragment
     /**
      * Method is called when the user clicks on a action button to lend / receive
      * a book
-     *
      */
-    protected void onScanCall()
+    protected void onScanCall(int requestCode)
     {
         IntentIntegrator integrator = new IntentIntegrator(getActivity());
         integrator.setBeepEnabled(false);
+        integrator.setRequestCode(requestCode);
         integrator.initiateScan();
     }
 }

@@ -53,6 +53,8 @@ public class MyBooksFragment extends Fragment
 
     private Query booksOfCurrentUser;
 
+    public static final int MY_BOOK_FRAGMENT_SCAN = 4;
+
     public MyBooksFragment()
     {
         // Required empty constructor
@@ -169,9 +171,9 @@ public class MyBooksFragment extends Fragment
             rootRef.collection(getString(R.string.books_collection)).add(data);
             myBooksRecyclerAdapter.notifyDataSetChanged();
         }
-        else if (requestCode == IntentIntegrator.REQUEST_CODE)
+        else if (requestCode == MY_BOOK_FRAGMENT_SCAN)
         {
-            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intentData);
+            IntentResult result = IntentIntegrator.parseActivityResult(resultCode, intentData);
             if (result != null)
             {
                 if (result.getContents() != null)
@@ -260,6 +262,7 @@ public class MyBooksFragment extends Fragment
     {
         IntentIntegrator integrator = new IntentIntegrator(getActivity());
         integrator.setBeepEnabled(false);
+        integrator.setRequestCode(MY_BOOK_FRAGMENT_SCAN);
         integrator.initiateScan();
     }
 

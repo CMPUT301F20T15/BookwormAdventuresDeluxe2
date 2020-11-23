@@ -40,6 +40,8 @@ public class RequestDetailViewFragment extends DetailView
     private DocumentReference bookDocument;
     private boolean goodScan;
 
+    public static final int REQUEST_GIVE_SCAN = 5;
+    public static final int REQUEST_RECIEVE_SCAN = 6;
     private static int SetLocationActivityResultCode = 7;
 
     public RequestDetailViewFragment()
@@ -153,15 +155,7 @@ public class RequestDetailViewFragment extends DetailView
      */
     private void btnAcceptReturn(View view)
     {
-        //TODO: Launch Scan ISBN
-        onScanCall();
-        if (this.goodScan)
-        {
-            this.bookDocument.update(getString(R.string.status), getString(R.string.available));
-            this.bookDocument.update(getString(R.string.requesters), new ArrayList<String>());
-            this.bookDocument.update(getString(R.string.firestore_pick_up_address), "");
-            onBackClick(view);
-        }
+        onScanCall(REQUEST_RECIEVE_SCAN);
     }
 
     /**
@@ -171,13 +165,7 @@ public class RequestDetailViewFragment extends DetailView
      */
     private void btnLendBook(View view)
     {
-        //TODO: launch scan
-        onScanCall();
-        if (this.goodScan)
-        {
-            this.bookDocument.update(getString(R.string.status), getString(R.string.bPending));
-            onBackClick(view);
-        }
+        onScanCall(REQUEST_GIVE_SCAN);
     }
 
     private void btnSetLocation(View view)
@@ -342,6 +330,32 @@ public class RequestDetailViewFragment extends DetailView
         getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
     }
 
+    private void processBookHandOff(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        this.goodScan = false;
+        IntentResult result = IntentIntegrator.parseActivityResult(resultCode, data);
+        if (result != null && result.getContents() != null &&
+                this.selectedBook.getIsbn().equals(result.getContents()))
+        {
+            // scan successful
+            this.goodScan = true;
+            if (requestCode == REQUEST_GIVE_SCAN)
+            {
+                this.bookDocument.update(getString(R.string.status), getString(R.string.bPending));
+            }
+            else if (requestCode == REQUEST_RECIEVE_SCAN)
+            {
+                this.bookDocument.update(getString(R.string.status), getString(R.string.available));
+                this.bookDocument.update(getString(R.string.requesters), new ArrayList<String>());
+                this.bookDocument.update(getString(R.string.firestore_pick_up_address), "");
+            }
+        }
+        else
+        {
+            Toast.makeText(getActivity(), "Scan was unsuccessful", Toast.LENGTH_LONG).show();
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
@@ -359,24 +373,14 @@ public class RequestDetailViewFragment extends DetailView
                 this.selectedBook.setPickUpAddress("");
             }
         }
-        else if (requestCode == IntentIntegrator.REQUEST_CODE)
+        else if (requestCode == REQUEST_GIVE_SCAN || requestCode == REQUEST_RECIEVE_SCAN)
         {
-            this.goodScan = false;
-            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-            if (result != null && result.getContents() != null &&
-                    this.selectedBook.getIsbn().equals(result.getContents()))
-            {
-                // scan successful
-                this.goodScan = true;
-            }
-            else
-            {
-                Toast.makeText(getActivity(), "Scan was unsuccessful", Toast.LENGTH_LONG).show();
-            }
+            processBookHandOff(requestCode, resultCode, data);
         }
 
         RequestDetailViewFragment fragment = new RequestDetailViewFragment();
         fragment.onFragmentInteraction(this.selectedBook, this.selectedBookId);
-        getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+        // https://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit
+        getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commitAllowingStateLoss();
     }
 }
