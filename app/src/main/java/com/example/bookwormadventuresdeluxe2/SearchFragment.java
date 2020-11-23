@@ -8,10 +8,13 @@ package com.example.bookwormadventuresdeluxe2;
  *                      borrowed and accepted books. Cannot search for a book
  */
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.SearchView;
 
 import androidx.fragment.app.Fragment;
@@ -23,6 +26,8 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+
+import java.util.Arrays;
 
 public class SearchFragment extends Fragment
 {
@@ -48,16 +53,6 @@ public class SearchFragment extends Fragment
         appHeaderText = view.findViewById(R.id.app_header_title);
         appHeaderText.setText(R.string.search_title);
 
-        // https://stackoverflow.com/questions/17670685/custom-searchview-whole-clickable-in-android/47826388
-        searchView = (SearchView) view.findViewById(R.id.search_bar);
-        searchView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                searchView.setIconified(false);
-            }
-        });
         return view;
     }
 
@@ -68,14 +63,11 @@ public class SearchFragment extends Fragment
         FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
         UserCredentialAPI userCredentialApi = UserCredentialAPI.getInstance();
 
-        Query availableBooksNotMine = rootRef.collection(getString(R.string.books_collection));
-//                .whereNotEqualTo(getString(R.string.owner),
-//                UserCredentialAPI.getInstance().getUsername())
-//                .whereIn(getString(R.string.status),
-//                Arrays.asList(getString(R.string.available), getString(R.string.requested)));
+        Query availableBooks = rootRef.collection(getString(R.string.books_collection))
+                .whereIn(getString(R.string.status), Arrays.asList(getString(R.string.available), getString(R.string.requested)));
 
         FirestoreRecyclerOptions<Book> options = new FirestoreRecyclerOptions.Builder<Book>()
-                .setQuery(availableBooksNotMine, Book.class)
+                .setQuery(availableBooks, Book.class)
                 .build();
 
         searchBooksRecyclerView = (RecyclerView) view.findViewById(R.id.search_recycler_view);
@@ -86,6 +78,20 @@ public class SearchFragment extends Fragment
 
         searchBooksRecyclerAdapter = new BookListAdapter(this.getContext(), options, R.id.search_books);
         searchBooksRecyclerView.setAdapter(searchBooksRecyclerAdapter);
+
+        // https://stackoverflow.com/questions/17670685/custom-searchview-whole-clickable-in-android/47826388
+        searchView = (SearchView) view.findViewById(R.id.search_bar);
+
+        // https://stackoverflow.com/questions/19645366/searchview-customize-close-icon
+        int clearSearchBtnID = searchView.getContext()
+                                    .getResources()
+                                    .getIdentifier("android:id/search_close_btn", null, null);
+
+        ImageView clearSearchBtn = view.findViewById(clearSearchBtnID);
+
+        searchClickListener(searchView, options);
+        searchTextListener(searchView, options);
+        searchClear(clearSearchBtn, options, view);
     }
 
     // For listening to firebase for updates to the books list
@@ -106,6 +112,60 @@ public class SearchFragment extends Fragment
         {
             searchBooksRecyclerAdapter.stopListening();
         }
+    }
+
+    private void searchClickListener(SearchView searchView, FirestoreRecyclerOptions<Book> options)
+    {
+        searchView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                searchView.setIconified(false);
+            }
+        });
+    }
+
+    private void searchTextListener(SearchView searchView, FirestoreRecyclerOptions<Book> options)
+    {
+        /*
+         * Source: https://stackoverflow.com/questions/9327826/searchviews-oncloselistener-doesnt-work
+         * */
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+        {
+            @Override
+            public boolean onQueryTextSubmit(String searchText)
+            {
+                searchBooksRecyclerAdapter.setSearch(searchText);
+                searchBooksRecyclerAdapter.updateOptions(options);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String searchText)
+            {
+                return false;
+            }
+        });
+    }
+
+    private void searchClear(ImageView clearSearchBtn, FirestoreRecyclerOptions<Book> options, View view)
+    {
+        clearSearchBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (searchView.getQuery().toString().length() != 0)
+                {
+                    searchBooksRecyclerAdapter.setSearch("");
+                    searchBooksRecyclerAdapter.updateOptions(options);
+                }
+                searchView.setQuery("", false);
+                InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        });
     }
 }
 

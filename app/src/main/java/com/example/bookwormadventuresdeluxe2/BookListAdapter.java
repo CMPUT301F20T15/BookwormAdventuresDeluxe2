@@ -8,7 +8,6 @@ package com.example.bookwormadventuresdeluxe2;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +28,8 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
 {
     private Context context;
     private int caller;
+
+    private static String search = "";
 
     // Reference to the views for each item
     public static class BookListViewHolder extends RecyclerView.ViewHolder
@@ -130,7 +131,24 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
                 detailView.setArguments(source);
                 break;
             case R.id.search_books:
-                source.putString(context.getString(R.string.book_click_source_fragment), context.getString(R.string.search_title));
+                if (book.getOwner().equals(UserCredentialAPI.getInstance().getUsername())
+                    || (!search.equals("") && !searchMatch(book, search)))
+                {
+                    holder.itemView.setVisibility(View.GONE);
+                    holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
+                }
+                if (search.equals("") || (!search.equals("") && searchMatch(book, search)))
+                {
+                    RecyclerView.LayoutParams searchLayoutParams =
+                            new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                                            ViewGroup.LayoutParams.WRAP_CONTENT);
+                    int margin = 32;
+                    searchLayoutParams.setMargins(margin, margin, margin, margin);
+
+                    holder.itemView.setVisibility(View.VISIBLE);
+                    holder.itemView.setLayoutParams(searchLayoutParams);
+                    source.putString(context.getString(R.string.book_click_source_fragment), context.getString(R.string.search_title));
+                }
                 detailView = new BorrowDetailViewFragment();
                 detailView.setArguments(source);
                 break;
@@ -139,5 +157,25 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
         }
 
         holder.itemView.setOnClickListener(launchDetailView(detailView, book, documentId));
+    }
+
+    public void setSearch(String search)
+    {
+        this.search = search;
+    }
+
+    public boolean searchMatch(Book book, String search)
+    {
+        if (book.getTitle().toLowerCase().contains(search.toLowerCase())
+            || book.getAuthor().toLowerCase().contains(search.toLowerCase())
+            || book.getDescription().toLowerCase().contains(search.toLowerCase())
+            || book.getIsbn().contains(search))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
