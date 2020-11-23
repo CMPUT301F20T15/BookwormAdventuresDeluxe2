@@ -1,5 +1,12 @@
 package com.example.bookwormadventuresdeluxe2.NotificationUtility;
 
+/**
+ * Monitors FCM token updates
+ * Builds notification from received message
+ * sources: https://firebase.google.com/docs/cloud-messaging/android/client
+ * https://www.youtube.com/watch?v=D9EqQyDSFrI&t=6s&ab_channel=CodingCafe
+ */
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -23,13 +30,6 @@ import java.util.Random;
 
 import static com.example.bookwormadventuresdeluxe2.GlobalApplication.CHANNEL_ID;
 import static com.example.bookwormadventuresdeluxe2.GlobalApplication.getAppContext;
-
-/**
- * Monitors FCM token updates
- * Builds notification from received message
- * sources: https://firebase.google.com/docs/cloud-messaging/android/client
- * https://www.youtube.com/watch?v=D9EqQyDSFrI&t=6s&ab_channel=CodingCafe
- */
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService
 {

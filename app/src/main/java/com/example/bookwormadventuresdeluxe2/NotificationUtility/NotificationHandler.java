@@ -6,22 +6,15 @@ package com.example.bookwormadventuresdeluxe2.NotificationUtility;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.example.bookwormadventuresdeluxe2.FirebaseUserGetSet;
 import com.example.bookwormadventuresdeluxe2.GlobalApplication;
-import com.example.bookwormadventuresdeluxe2.LoginActivity;
-import com.example.bookwormadventuresdeluxe2.Notification;
 import com.example.bookwormadventuresdeluxe2.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
@@ -45,7 +38,6 @@ public class NotificationHandler
      */
     public static void sendNotification(String title, String message, String username, HashMap<String, String> inAppNotification)
     {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         /* Find user FCM token and process notification */
         FirebaseUserGetSet.getUser(username, (user ->
         {
@@ -54,8 +46,8 @@ public class NotificationHandler
             if (token != null)
             {
                 Data data = new Data(title, message);
-                NotificationData notificationData = new NotificationData(data, token);
-                processNotification(notificationData);
+                NotificationSender notificationSender = new NotificationSender(data, token);
+                processNotification(notificationSender);
             }
 
             /* Add to user notification collection */
@@ -72,15 +64,15 @@ public class NotificationHandler
     /**
      * Carry outs the process of sending a notification
      *
-     * @param notificationData Filled in notification with data and token
+     * @param notificationSender Filled in notification with data and token
      */
-    private static void processNotification(NotificationData notificationData)
+    private static void processNotification(NotificationSender notificationSender)
     {
-        APIService apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
-        apiService.sendNotification(notificationData).enqueue(new Callback<MyResponse>()
+        NotificationAPI notificationApi = RetrofitClient.getClient("https://fcm.googleapis.com/").create(NotificationAPI.class);
+        notificationApi.sendNotification(notificationSender).enqueue(new Callback<RetrofitResponse>()
         {
             @Override
-            public void onResponse(Call<MyResponse> call, Response<MyResponse> response)
+            public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response)
             {
                 if (response.code() == 200)
                 {
@@ -92,15 +84,15 @@ public class NotificationHandler
             }
 
             @Override
-            public void onFailure(Call<MyResponse> call, Throwable t)
+            public void onFailure(Call<RetrofitResponse> call, Throwable t)
             {
-                Log.d(TAG, "apiService send nottifcation on failure");
+                Log.d(TAG, "notificationApi send notification on failure");
             }
         });
     }
 
     /**
-     * Checks if current users FCM token is valid and updates accordingly
+     * Checks if current users' FCM token is valid and updates if required
      *
      * @param oldToken Old FCM token of user which is checked
      * @param userId   The user ID of the user to register FCM token

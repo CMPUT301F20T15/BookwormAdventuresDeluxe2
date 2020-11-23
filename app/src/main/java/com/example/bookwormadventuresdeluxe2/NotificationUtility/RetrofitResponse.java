@@ -1,9 +1,10 @@
 package com.example.bookwormadventuresdeluxe2.NotificationUtility;
 
 /**
- * Stores request result
+ * Stores retrofit http request result
  */
-public class MyResponse
+
+public class RetrofitResponse
 {
     public int success;
 }

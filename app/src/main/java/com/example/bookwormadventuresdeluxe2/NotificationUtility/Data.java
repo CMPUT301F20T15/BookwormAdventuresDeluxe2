@@ -1,5 +1,9 @@
 package com.example.bookwormadventuresdeluxe2.NotificationUtility;
 
+/**
+ * Stores information to display in a notification
+ */
+
 public class Data
 {
     private String Title;

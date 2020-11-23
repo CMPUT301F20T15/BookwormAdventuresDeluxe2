@@ -1,5 +1,9 @@
 package com.example.bookwormadventuresdeluxe2.NotificationUtility;
 
+/**
+ * Class to store FCM token
+ */
+
 public class Token
 {
     private String token;
