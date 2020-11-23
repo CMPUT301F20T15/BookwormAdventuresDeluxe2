@@ -162,6 +162,8 @@ public class SearchFragment extends Fragment
                     searchBooksRecyclerAdapter.updateOptions(options);
                 }
                 searchView.setQuery("", false);
+
+                // https://stackoverflow.com/questions/1109022/how-do-you-close-hide-the-android-soft-keyboard-using-java
                 InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
