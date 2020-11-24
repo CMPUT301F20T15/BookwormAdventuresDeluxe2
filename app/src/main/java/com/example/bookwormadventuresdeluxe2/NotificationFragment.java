@@ -154,7 +154,8 @@ public class NotificationFragment extends Fragment
             FirebaseUserGetSet.resetNotifications(UserCredentialAPI.getInstance().getUserId());
         }
 
-        MyBooksFragment myBooksFragment = new MyBooksFragment();
-        getFragmentManager().beginTransaction().replace(R.id.frame_container, myBooksFragment).commit();
+        MyBooksFragment myBooksFragment = (MyBooksFragment) getFragmentManager().findFragmentByTag(getString(R.string.my_books_fragment));
+        myBooksFragment.updateNotificationBadge(); // update notification badge
+        getFragmentManager().beginTransaction().hide(this).show(ActiveFragmentTracker.activeFragment).commit();
     }
 }

@@ -148,7 +148,7 @@ public class MyBooksFragment extends Fragment
     /**
      * Update notification badge count and visibility on change
      */
-    private void updateNotificationBadge()
+    public void updateNotificationBadge()
     {
         Long notificationCount = UserCredentialAPI.getInstance().getNotificationCount();
 
@@ -298,7 +298,9 @@ public class MyBooksFragment extends Fragment
                             // Open the detailed view if the book exists
                             bookDetailFragment.onFragmentInteraction(bookToView, documentId);
                             getActivity().getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.frame_container, bookDetailFragment).commit();
+                                    .add(R.id.frame_container, bookDetailFragment, getString(R.string.book_detail_fragment))
+                                    .hide(ActiveFragmentTracker.activeFragment)
+                                    .commit();
                             break;
                         default:
                             /*
@@ -325,8 +327,18 @@ public class MyBooksFragment extends Fragment
      */
     private void onNotificationClick(View view)
     {
-        NotificationFragment notificationFragment = new NotificationFragment();
-        getFragmentManager().beginTransaction().replace(R.id.frame_container, notificationFragment).commit();
+        Fragment notificationFragment = getFragmentManager().findFragmentByTag(getString(R.string.notification_fragment));
+        if (notificationFragment != null)
+        {
+            /* If the fragment already exists just show it */
+            getFragmentManager().beginTransaction().hide(ActiveFragmentTracker.activeFragment).show(notificationFragment).commit();
+        }
+        else
+        {
+            /* If the fragment does not exist create and add it */
+            notificationFragment = new NotificationFragment();
+            getFragmentManager().beginTransaction().add(R.id.frame_container, notificationFragment, getString(R.string.notification_fragment)).hide(ActiveFragmentTracker.activeFragment).commit();
+        }
     }
 
     /**
@@ -354,7 +366,7 @@ public class MyBooksFragment extends Fragment
         if (fragmentRootView == null)
         {
             /* Fragment was hidden, show it */
-            getFragmentManager().beginTransaction().add(R.id.frame_container, filterMenu).commit();
+            getFragmentManager().beginTransaction().add(R.id.frame_container, filterMenu, getString(R.string.filter_menu_fragment)).commit();
         }
         else
         {

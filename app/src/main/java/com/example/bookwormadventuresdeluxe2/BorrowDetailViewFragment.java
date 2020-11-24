@@ -9,6 +9,7 @@ package com.example.bookwormadventuresdeluxe2;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,10 +21,9 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
 
 import com.example.bookwormadventuresdeluxe2.NotificationUtility.NotificationHandler;
-import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
-import com.example.bookwormadventuresdeluxe2.Utilities.Status;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
@@ -39,6 +39,8 @@ public class BorrowDetailViewFragment extends DetailView
     private Button btn2;
     private TextView exchange;
     private DocumentReference bookDocument;
+    private BorrowDetailViewFragment borrowDetailViewFragment;
+    private Resources resources;
 
     private static int SetLocationActivityResultCode = 7;
 
@@ -54,6 +56,8 @@ public class BorrowDetailViewFragment extends DetailView
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
+        resources = getResources();
+
         /* Grabbing source fragment of book item after click*/
         Bundle bundle = getArguments();
         if (bundle != null)
@@ -67,6 +71,9 @@ public class BorrowDetailViewFragment extends DetailView
 
         this.bookDetailView = inflater.inflate(R.layout.fragment_borrow_detail_view, null, false);
         ((TextView) bookDetailView.findViewById(R.id.app_header_title)).setText(source);
+
+        /* Get the fragment from the fragment manager */
+        borrowDetailViewFragment = (BorrowDetailViewFragment) getFragmentManager().findFragmentByTag(getString(R.string.book_detail_fragment));
 
         // setup back button
         super.onCreateView(inflater, container, savedInstanceState);
@@ -94,8 +101,8 @@ public class BorrowDetailViewFragment extends DetailView
 
                 if (this.selectedBook.getPickUpAddress().equals(""))
                 {
-                    this.btn1.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
-                    this.btn1.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
+                    this.btn1.setBackgroundTintList(resources.getColorStateList(R.color.tempPhotoBackground));
+                    this.btn1.setTextColor(resources.getColorStateList(R.color.colorPrimary));
                 }
                 else
                 {
@@ -122,12 +129,11 @@ public class BorrowDetailViewFragment extends DetailView
 
                 if (this.selectedBook.getPickUpAddress().equals(""))
                 {
-                    this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
-                    this.btn2.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
+                    setNotReadyToReturn();
                 }
                 else
                 {
-                    this.btn2.setOnClickListener(this::btnReturnBook);
+                    setReadyToReturn();
 //                    this.bookDetailView.findViewById(R.id.borrow_exchange).setVisibility(View.VISIBLE);
                 }
 
@@ -139,8 +145,8 @@ public class BorrowDetailViewFragment extends DetailView
 
             case rPending:
                 this.btn1.setText(getString(R.string.wait_owner));
-                this.btn1.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
-                this.btn1.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
+                this.btn1.setBackgroundTintList(resources.getColorStateList(R.color.tempPhotoBackground));
+                this.btn1.setTextColor(resources.getColorStateList(R.color.colorPrimary));
 
                 this.btn1.setVisibility(View.VISIBLE);
                 break;
@@ -250,42 +256,7 @@ public class BorrowDetailViewFragment extends DetailView
         TextView user = bookDetailView.findViewById(R.id.book_request_user);
         user.setText(book.getOwner());
 
-        clickUsername(user, book.getOwner());
-    }
-
-    /**
-     * Opens user profile on TextView click
-     *
-     * @param textView TextView in view
-     * @param username Book owner's username
-     */
-    private void clickUsername(TextView textView, String username)
-    {
-        textView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                /* Pulling UserProfileObject from database */
-                FirebaseUserGetSet.getUser(username, new FirebaseUserGetSet.UserCallback()
-                {
-                    @Override
-                    public void onCallback(UserProfileObject userObject)
-                    {
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable(getString(R.string.profile_object), userObject);
-                        ProfileFragment profileFragment = new ProfileFragment();
-                        profileFragment.setArguments(bundle);
-                        getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                                .replace(R.id.frame_container, profileFragment)
-                                .addToBackStack(null)
-                                .commit();
-                    }
-                });
-            }
-        });
+        clickUsername(user, book.getOwner(), borrowDetailViewFragment);
     }
 
     /**
@@ -298,20 +269,43 @@ public class BorrowDetailViewFragment extends DetailView
         /* Source fragment was Search, return to search books*/
         if (source.equals(getString(R.string.search_title)))
         {
-            SearchFragment fragment = new SearchFragment();
-            getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+            Fragment searchFragment = getFragmentManager().findFragmentByTag(getString(R.string.search_fragment));
+            getFragmentManager().beginTransaction().remove(this).show(searchFragment).commit();
         }
         /* Source fragment was Borrow, return to Borrow */
         else
         {
-            RequestsFragment fragment = new RequestsFragment();
+            Fragment requestsFragment = getFragmentManager().findFragmentByTag(getString(R.string.requests_fragment));
             Bundle args = new Bundle();
-            fragment.setArguments(args);
+            requestsFragment.setArguments(args);
             args.putBoolean(getString(R.string.borrow), true);
-            getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+            getFragmentManager().beginTransaction().remove(this).show(requestsFragment).commit();
         }
     }
 
+    /**
+     * Function to call when a location is set and the return button should be set to pressable
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void setReadyToReturn()
+    {
+        this.btn2.setBackgroundTintList(resources.getColorStateList(R.color.colorPrimaryDark));
+        this.btn2.setTextColor(resources.getColorStateList(R.color.colorBackground));
+        this.btn2.setOnClickListener(this::btnReturnBook);
+    }
+
+    /**
+     * Function to call when a location is cancelled and the return button should be set to not pressable
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void setNotReadyToReturn()
+    {
+        this.btn2.setBackgroundTintList(resources.getColorStateList(R.color.tempPhotoBackground));
+        this.btn2.setTextColor(resources.getColorStateList(R.color.colorPrimary));
+        this.btn2.setOnClickListener(null);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
@@ -322,16 +316,19 @@ public class BorrowDetailViewFragment extends DetailView
                 String pickUpLocation = data.getStringExtra("pickUpLocation");
                 this.bookDocument.update(getString(R.string.firestore_pick_up_address), pickUpLocation);
                 this.selectedBook.setPickUpAddress(pickUpLocation);
+                setReadyToReturn();
             }
             if (resultCode == Activity.RESULT_CANCELED)
             {
                 this.bookDocument.update(getString(R.string.firestore_pick_up_address), "");
                 this.selectedBook.setPickUpAddress("");
+                setNotReadyToReturn();
             }
         }
 
-        BorrowDetailViewFragment fragment = new BorrowDetailViewFragment();
-        fragment.onFragmentInteraction(this.selectedBook, this.selectedBookId);
-        getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+        borrowDetailViewFragment.onFragmentInteraction(this.selectedBook, this.selectedBookId);
+        getFragmentManager().beginTransaction()
+                .show(borrowDetailViewFragment)
+                .commit();
     }
 }
