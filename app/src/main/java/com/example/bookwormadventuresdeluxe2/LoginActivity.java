@@ -93,7 +93,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         UserCredentialAPI userCredentialAPI = UserCredentialAPI.getInstance();
                                         userCredentialAPI.setUserId(snapshot.getString(getString(R.string.firestore_userId)));
                                         userCredentialAPI.setUsername(snapshot.getString(getString(R.string.firestore_username)));
-                                        userCredentialAPI.setNotificationCount((Long) snapshot.get("notificationCount"));
+                                        userCredentialAPI.setNotificationCount((Long) snapshot.get(getString(R.string.firestore_user_notification_count_field)));
                                         /* Update FCM token if invalid */
                                         NotificationHandler.updateFCMToken(snapshot.getString("token"), snapshot.getId());
 
@@ -259,7 +259,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                                     UserCredentialAPI userCredentialAPI = UserCredentialAPI.getInstance();
                                                     userCredentialAPI.setUserId(snapshot.getString(getString(R.string.firestore_userId)));
                                                     userCredentialAPI.setUsername(snapshot.getString(getString(R.string.firestore_username)));
-                                                    userCredentialAPI.setNotificationCount((Long) snapshot.get("notificationCount"));
+                                                    userCredentialAPI.setNotificationCount((Long) snapshot.get(getString(R.string.firestore_user_notification_count_field)));
                                                     /* Update FCM token if invalid */
                                                     NotificationHandler.updateFCMToken(snapshot.getString("token"), snapshot.getId());
                                                     Intent myBooksIntent = new Intent(LoginActivity.this, MyBooksActivity.class);

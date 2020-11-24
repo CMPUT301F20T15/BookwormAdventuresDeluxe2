@@ -1,7 +1,7 @@
 package com.example.bookwormadventuresdeluxe2.NotificationUtility;
 
 /**
- * Stores notification data and receiver
+ * Stores notification data and receiver as expected by FCM post request api
  */
 
 public class NotificationSender

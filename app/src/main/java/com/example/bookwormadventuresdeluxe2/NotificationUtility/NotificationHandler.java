@@ -45,7 +45,7 @@ public class NotificationHandler
             String token = user.getFCMtoken();
             if (token != null)
             {
-                Data data = new Data(title, message);
+                Data data = new Data(title, message, user.getUserId());
                 NotificationSender notificationSender = new NotificationSender(data, token);
                 processNotification(notificationSender);
             }

@@ -13,13 +13,17 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
+import com.example.bookwormadventuresdeluxe2.GlobalApplication;
 import com.example.bookwormadventuresdeluxe2.LoginActivity;
 import com.example.bookwormadventuresdeluxe2.R;
+import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,6 +37,8 @@ import static com.example.bookwormadventuresdeluxe2.GlobalApplication.getAppCont
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService
 {
+    public static final String TAG = "FirebaseMesagingService";
+
     /**
      * Listen for FCM app registration toke change and update firestore
      *
@@ -42,10 +48,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
     public void onNewToken(@NonNull String token)
     {
         super.onNewToken(token);
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null)
+        String currentUserId = getCurrentUserId();
+        if (currentUserId != null)
         {
-            sendRegistrationToServer(token, currentUser.getUid());
+            sendRegistrationToServer(token, currentUserId);
         }
     }
 
@@ -59,11 +65,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage)
     {
         super.onMessageReceived(remoteMessage);
-
-        showNotification(remoteMessage.getData().get("Title"), remoteMessage.getData().get("Message"));
+        /* Check if notification is intended for logged in user */
+        String currentUserId = getCurrentUserId();
+        String receiverUserId = remoteMessage.getData().get("ReceiverUserId");
+        if (currentUserId != null && currentUserId.equals(receiverUserId))
+        {
+            showNotification(remoteMessage.getData().get("Title"), remoteMessage.getData().get("Message"));
+        }
+        else
+        {
+            Log.d(TAG, "Notification not intended for this device.");
+        }
     }
 
-    /**
+    /**TAG
      * Build and show notification
      *
      * @param title The title of the notification
@@ -98,5 +113,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.document(context.getString(R.string.users_collection) + "/" + userId)
                 .update(context.getString(R.string.firestore_user_token_field), token);
+    }
+
+    /**
+     * Retrieves current user's Id
+     *
+     * @return id of the user or null if logged out
+     */
+    private String getCurrentUserId()
+    {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null)
+        {
+            return currentUser.getUid();
+        }
+        return null;
     }
 }
