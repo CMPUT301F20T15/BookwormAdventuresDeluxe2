@@ -9,13 +9,15 @@ import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
+import static com.example.bookwormadventuresdeluxe2.NotificationUtility.CloudMessagingServerKeyConstant.cloudMessagingServerKey;
+
 public interface NotificationAPI
 {
     /* Setup post request headers */
     // Todo: Hide FCM server key in secrets.xml
     @Headers(
             {
-                    "Authorization:key=AAAAxQez4bg:APA91bHXkCnrOfTnVcmkfxC-9hqMrvvNJdHb_qEcG4-j0YxbUaHFq9kB6pzHkU4XJSJhyTt7lpXgCyXyO8jJRokJIKErI9JZVGkCRV1nIBUb1f1intxwHai1RCTrhObXX6nQ8rK4AHDN",
+                    cloudMessagingServerKey,
                     "Content-Type:application/json"
             }
     )
