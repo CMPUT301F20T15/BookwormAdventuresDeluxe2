@@ -135,7 +135,7 @@ public class SearchFragment extends Fragment
     }
 
     /**
-     * Functionality for submitting a search input
+     * Functionality for submitting a search string
      *
      * @param searchView Textfield and icon to enter the search term
      * @param options Object to populate the BookListAdapter
@@ -164,7 +164,7 @@ public class SearchFragment extends Fragment
     }
 
     /**
-     * Handles functionality for pressing 'X' to clear on the searchView
+     * Handles functionality for pressing 'X' to clear SearchView text
      *
      * @param clearSearchBtn Image of the icon
      * @param options Object to populate the FireStoreRecycler adapter
