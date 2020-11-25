@@ -133,7 +133,7 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
                 break;
             case R.id.search_books:
 
-                /* If book is owner's, OR not a search match while searching, hide it */
+                /* If book belongs to owner, OR not a search match while searching, hide it */
                 if (book.getOwner().equals(UserCredentialAPI.getInstance().getUsername())
                     || (!this.search.equals("") && !searchMatch(book)))
                 {
@@ -141,7 +141,7 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
                     holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
                 }
 
-                /* If not searching, OR searching and not a search match, show book*/
+                /* If not searching, OR searching and book is a search match, show book*/
                 else if (this.search.equals("") || (!search.equals("") && searchMatch(book)))
                 {
                     // Source: https://stackoverflow.com/questions/12728255/in-android-how-do-i-set-margins-in-dp-programmatically
