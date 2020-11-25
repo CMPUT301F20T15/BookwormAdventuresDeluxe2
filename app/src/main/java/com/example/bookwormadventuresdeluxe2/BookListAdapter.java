@@ -186,7 +186,7 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
     }
 
     /**
-     * Checker for search through books
+     * Checker for searching through books
      *
      * @param book Book to be searched for search string
      * @return boolean result if book is a match
