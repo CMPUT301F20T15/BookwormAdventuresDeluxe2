@@ -132,12 +132,16 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
                 detailView.setArguments(source);
                 break;
             case R.id.search_books:
+
+                /* If book is owner's or not a search match while searching, hide it */
                 if (book.getOwner().equals(UserCredentialAPI.getInstance().getUsername())
                     || (!this.search.equals("") && !searchMatch(book)))
                 {
                     holder.itemView.setVisibility(View.GONE);
                     holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
                 }
+
+                /* If not searching or searching and not a search match, hide book*/
                 else if (this.search.equals("") || (!search.equals("") && searchMatch(book)))
                 {
                     // https://stackoverflow.com/questions/12728255/in-android-how-do-i-set-margins-in-dp-programmatically
@@ -161,16 +165,32 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
         holder.itemView.setOnClickListener(launchDetailView(detailView, book, documentId));
     }
 
+    /**
+     * Set's the search term for the adapter
+     *
+     * @param searchText Current search term
+     */
     public void setSearch(String searchText)
     {
         this.search = searchText;
     }
 
+    /**
+     * Getter for current search term of the adapter
+     *
+     * @return
+     */
     public String getSearch()
     {
         return this.search;
     }
 
+    /**
+     * Checker for search through books
+     *
+     * @param book Book to be checked against search string
+     * @return Result if book is a match
+     */
     public boolean searchMatch(Book book)
     {
         if (book.getTitle().toLowerCase().contains(this.search.toLowerCase())
@@ -180,9 +200,6 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
+        return false;
     }
 }

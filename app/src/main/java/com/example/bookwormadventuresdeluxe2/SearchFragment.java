@@ -4,8 +4,6 @@ package com.example.bookwormadventuresdeluxe2;
  * A {@link Fragment} subclass for navbar menu search item. This fragment is responsible for
  * allowing the user to search for books.
  *
- * Outstanding Issues: Does not filter out owner's books and still displays all
- *                      borrowed and accepted books. Cannot search for a book
  */
 
 import android.content.Context;
@@ -79,10 +77,10 @@ public class SearchFragment extends Fragment
         searchBooksRecyclerAdapter = new BookListAdapter(this.getContext(), options, R.id.search_books);
         searchBooksRecyclerView.setAdapter(searchBooksRecyclerAdapter);
 
-        // https://stackoverflow.com/questions/17670685/custom-searchview-whole-clickable-in-android/47826388
+        // Source: https://stackoverflow.com/questions/17670685/custom-searchview-whole-clickable-in-android/47826388
         searchView = (SearchView) view.findViewById(R.id.search_bar);
 
-        // https://stackoverflow.com/questions/19645366/searchview-customize-close-icon
+        // Source: https://stackoverflow.com/questions/19645366/searchview-customize-close-icon
         int clearSearchBtnID = searchView.getContext()
                                     .getResources()
                                     .getIdentifier("android:id/search_close_btn", null, null);
@@ -94,7 +92,9 @@ public class SearchFragment extends Fragment
         searchClear(clearSearchBtn, options, view);
     }
 
-    // For listening to firebase for updates to the books list
+    /**
+     * For listening to firebase for updates to the books list
+     */
     @Override
     public void onStart()
     {
@@ -102,7 +102,9 @@ public class SearchFragment extends Fragment
         searchBooksRecyclerAdapter.startListening();
     }
 
-    // Stops listening to the firebase on completion
+    /**
+     * Stops listening to firebase collection
+     */
     @Override
     public void onStop()
     {
@@ -114,6 +116,12 @@ public class SearchFragment extends Fragment
         }
     }
 
+    /**
+     * Functionality for clicking the SearchView bar
+     *
+     * @param searchView Textfield and icon to enter the search term
+     * @param options Object to populate the FireStoreRecycler adapter
+     */
     private void searchClickListener(SearchView searchView, FirestoreRecyclerOptions<Book> options)
     {
         searchView.setOnClickListener(new View.OnClickListener()
@@ -126,6 +134,12 @@ public class SearchFragment extends Fragment
         });
     }
 
+    /**
+     * Functionality for submitting a search input
+     *
+     * @param searchView Textfield and icon to enter the search term
+     * @param options Object to populate the BookListAdapter
+     */
     private void searchTextListener(SearchView searchView, FirestoreRecyclerOptions<Book> options)
     {
         /*
@@ -149,6 +163,13 @@ public class SearchFragment extends Fragment
         });
     }
 
+    /**
+     * Handles functionality for pressing 'X' to clear on the searchView
+     *
+     * @param clearSearchBtn Image of the icon
+     * @param options Object to populate the FireStoreRecycler adapter
+     * @param view Current view
+     */
     private void searchClear(ImageView clearSearchBtn, FirestoreRecyclerOptions<Book> options, View view)
     {
         clearSearchBtn.setOnClickListener(new View.OnClickListener()
