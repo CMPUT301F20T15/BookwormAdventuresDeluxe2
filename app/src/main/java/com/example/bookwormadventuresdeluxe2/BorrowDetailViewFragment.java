@@ -23,10 +23,14 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.example.bookwormadventuresdeluxe2.Utilities.Status;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -84,6 +88,39 @@ public class BorrowDetailViewFragment extends DetailView
         this.btn2 = this.bookDetailView.findViewById(R.id.borrowDetail_btn2);
         this.exchange = this.bookDetailView.findViewById(R.id.borrow_exchange_location);
 
+        this.redraw();
+
+        this.bookDocument = FirebaseFirestore
+                .getInstance()
+                .collection(getString(R.string.books_collection))
+                .document(this.selectedBookId);
+
+        this.bookDocument.addSnapshotListener(new EventListener<DocumentSnapshot>()
+        {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                @Nullable FirebaseFirestoreException e)
+            {
+                if (snapshot != null && snapshot.exists())
+                {
+
+                    Activity activity = getActivity();
+                    if (isAdded() && activity != null)
+                    {
+                        redraw();
+                    }
+                }
+            }
+        });
+
+        return bookDetailView;
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void redraw()
+    {
+        this.updateView(this.selectedBook);
         switch (selectedBook.getStatus())
         {
             case Available:
@@ -100,6 +137,7 @@ public class BorrowDetailViewFragment extends DetailView
 
             case Accepted:
                 this.btn1.setText(getString(R.string.view_location));
+                this.btn2.setText(getString(R.string.scan));
 
                 if (this.selectedBook.getPickUpAddress().equals(""))
                 {
@@ -109,9 +147,13 @@ public class BorrowDetailViewFragment extends DetailView
                 else
                 {
                     this.btn1.setOnClickListener(this::btnViewLocation);
+                    this.btn2.setOnClickListener(null);
                 }
 
+                this.btn2.setBackgroundTintList(resources.getColorStateList(R.color.tempPhotoBackground));
+                this.btn2.setTextColor(resources.getColorStateList(R.color.colorPrimary));
                 this.btn1.setVisibility(View.VISIBLE);
+                this.btn2.setVisibility(View.VISIBLE);
                 break;
 
             case bPending:
@@ -136,7 +178,6 @@ public class BorrowDetailViewFragment extends DetailView
                 else
                 {
                     setReadyToReturn();
-//                    this.bookDetailView.findViewById(R.id.borrow_exchange).setVisibility(View.VISIBLE);
                 }
 
                 this.btn1.setOnClickListener(this::btnSetLocation);
@@ -146,23 +187,18 @@ public class BorrowDetailViewFragment extends DetailView
                 break;
 
             case rPending:
-                this.btn1.setText(getString(R.string.wait_owner));
+                this.btn1.setText(getString(R.string.set_location));
+                this.btn2.setText(getString(R.string.wait_owner));
                 this.btn1.setBackgroundTintList(resources.getColorStateList(R.color.tempPhotoBackground));
                 this.btn1.setTextColor(resources.getColorStateList(R.color.colorPrimary));
 
+                this.btn2.setVisibility(View.VISIBLE);
                 this.btn1.setVisibility(View.VISIBLE);
                 break;
 
             default:
                 throw new InvalidParameterException("Bad status passed to BorrowDetailView");
         }
-
-        this.bookDocument = FirebaseFirestore
-                .getInstance()
-                .collection(getString(R.string.books_collection))
-                .document(this.selectedBookId);
-
-        return bookDetailView;
     }
 
     /**
@@ -194,12 +230,7 @@ public class BorrowDetailViewFragment extends DetailView
         //TODO: actually do the stuff
         // Launch Scan ISBN
         onScanCall(BORROW_RETURN_SCAN);
-        if (this.goodScan)
-        {
-            this.bookDocument.update(getString(R.string.status), getString(R.string.rPending));
-            // notify owner
-            onBackClick(view);
-        }
+
     }
 
     /**
@@ -263,8 +294,10 @@ public class BorrowDetailViewFragment extends DetailView
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void processBookHandOff(int requestCode, int resultCode, @Nullable Intent data)
     {
+        String message = "";
         this.goodScan = false;
         IntentResult result = IntentIntegrator.parseActivityResult(resultCode, data);
         if (result != null && result.getContents() != null &&
@@ -275,16 +308,36 @@ public class BorrowDetailViewFragment extends DetailView
             if (requestCode == BORROW_RECIEVE_SCAN)
             {
                 this.bookDocument.update(getString(R.string.status), getString(R.string.borrowed));
+                this.selectedBook.setStatus(Status.Borrowed);
+                message = "Book received";
+                this.updateView(this.selectedBook);
+                this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
+                this.btn2.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
+                this.btn1.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
+                this.btn1.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
+                this.btn2.setOnClickListener(null);
+                this.btn1.setOnClickListener(null);
             }
             else if (requestCode == BORROW_RETURN_SCAN)
             {
                 this.bookDocument.update(getString(R.string.status), getString(R.string.rPending));
+                this.selectedBook.setStatus(Status.rPending);
+                message = "Give book to owner";
+//                this.redraw();
+                this.updateView(this.selectedBook);
+
             }
             else
             {
-                Toast.makeText(getActivity(), "Scan was unsuccessful", Toast.LENGTH_LONG).show();
+                throw new IllegalStateException("BorrowDetailViewFragment processBookHandOff(...) error");
             }
+            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
         }
+        else
+        {
+            Toast.makeText(getActivity(), "Scan was unsuccessful", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     /**
@@ -338,6 +391,6 @@ public class BorrowDetailViewFragment extends DetailView
         borrowDetailViewFragment.onFragmentInteraction(this.selectedBook, this.selectedBookId);
         getFragmentManager().beginTransaction()
                 .show(borrowDetailViewFragment)
-                .commit();
+                .commitAllowingStateLoss();
     }
 }
