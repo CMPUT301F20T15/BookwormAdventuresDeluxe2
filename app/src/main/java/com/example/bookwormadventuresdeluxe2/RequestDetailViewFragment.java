@@ -3,12 +3,13 @@ package com.example.bookwormadventuresdeluxe2;
 /**
  * Holds the view for seeing details on a book in the Requested tab
  * The user will be able to interact with status dependant request options on the book
- *
+ * <p>
  * Outstanding Issues: Still requires ISBN scan for handoff. Cannot view requester's profile
  */
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,8 +22,9 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 
-import com.example.bookwormadventuresdeluxe2.Utilities.DetailView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -35,6 +37,9 @@ public class RequestDetailViewFragment extends DetailView
     private Button btn2;
     private TextView exchange;
     private DocumentReference bookDocument;
+    private RequestDetailViewFragment requestDetailViewFragment;
+    private Resources resources;
+    private ConstraintLayout dropdownContainer;
 
     private static int SetLocationActivityResultCode = 7;
 
@@ -48,8 +53,13 @@ public class RequestDetailViewFragment extends DetailView
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
+        resources = getResources();
+
         this.bookDetailView = inflater.inflate(R.layout.fragment_request_detail_view, null, false);
         ((TextView) bookDetailView.findViewById(R.id.app_header_title)).setText(R.string.requests_title);
+
+        /* Get the fragment from the fragment manager */
+        requestDetailViewFragment = (RequestDetailViewFragment) getFragmentManager().findFragmentByTag(getString(R.string.book_detail_fragment));
 
         // Setup back button
         super.onCreateView(inflater, container, savedInstanceState);
@@ -57,10 +67,13 @@ public class RequestDetailViewFragment extends DetailView
         this.btn1 = this.bookDetailView.findViewById(R.id.requestDetail_btn1);
         this.btn2 = this.bookDetailView.findViewById(R.id.requestDetail_btn2);
         this.exchange = this.bookDetailView.findViewById(R.id.request_exchange_location);
+        this.dropdownContainer = this.bookDetailView.findViewById(R.id.dropdown_container);
 
-        switch (selectedBook.getStatus())
+        /* Update the UI based on the book's current status */
+        switch (this.selectedBook.getStatus())
         {
             case Requested:
+                this.dropdownContainer.setVisibility(View.VISIBLE);
                 Spinner requesters = this.bookDetailView.findViewById(R.id.chose_request);
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, this.selectedBook.getRequesters());
                 requesters.setAdapter(adapter);
@@ -68,7 +81,7 @@ public class RequestDetailViewFragment extends DetailView
                 bookDetailView.findViewById(R.id.book_request_user).setVisibility(View.GONE);
 
                 /* Enables viewing profile of selected requester*/
-                Button viewProfileBtn = bookDetailView.findViewById(R.id.view_profile_button);
+                TextView viewProfileBtn = bookDetailView.findViewById(R.id.view_profile_button);
                 viewProfileBtn.setVisibility(View.VISIBLE);
                 sliderProfileButton(viewProfileBtn, requesters);
 
@@ -83,16 +96,19 @@ public class RequestDetailViewFragment extends DetailView
                 break;
 
             case Accepted:
+                this.dropdownContainer.setVisibility(View.GONE);
                 this.btn1.setText(getString(R.string.set_location_label));
                 this.btn2.setText(getString(R.string.lend_book));
 
                 this.btn1.setOnClickListener(this::btnSetLocation);
 
-                if(this.selectedBook.getPickUpAddress().equals("")) {
-                    this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
-                    this.btn2.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
-                } else {
-                    this.btn2.setOnClickListener(this::btnLendBook);
+                if (this.selectedBook.getPickUpAddress().equals(""))
+                {
+                    setNotReadyToLend();
+                }
+                else
+                {
+                    setReadyToLend();
 //                    this.bookDetailView.findViewById(R.id.borrow_exchange).setVisibility(View.VISIBLE);
                 }
 
@@ -102,8 +118,8 @@ public class RequestDetailViewFragment extends DetailView
 
             case bPending:
                 this.btn1.setText(getString(R.string.wait_borrower));
-                this.btn1.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
-                this.btn1.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
+                this.btn1.setBackgroundTintList(resources.getColorStateList(R.color.tempPhotoBackground));
+                this.btn1.setTextColor(resources.getColorStateList(R.color.colorPrimary));
 
                 this.btn1.setVisibility(View.VISIBLE);
                 break;
@@ -239,18 +255,18 @@ public class RequestDetailViewFragment extends DetailView
             default:
                 throw new InvalidParameterException("Invalid book status in RequestDetailView updateView");
         }
-        
+
         /* Enables clicking of requester profile*/
-        clickUsername(user, book.getRequesters().get(0));
+        clickUsername(user, book.getRequesters().get(0), this.requestDetailViewFragment);
     }
 
     /**
      * Opens selected user profile on Button click
      *
      * @param viewProfileButton TextView in view
-     * @param spinner Spinner for selecting requester
+     * @param spinner           Spinner for selecting requester
      */
-    private void sliderProfileButton(Button viewProfileButton, Spinner spinner)
+    private void sliderProfileButton(TextView viewProfileButton, Spinner spinner)
     {
         viewProfileButton.setOnClickListener(new View.OnClickListener()
         {
@@ -270,43 +286,8 @@ public class RequestDetailViewFragment extends DetailView
                         getActivity().getSupportFragmentManager()
                                 .beginTransaction()
                                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                                .replace(R.id.frame_container, profileFragment)
-                                .addToBackStack(null)
-                                .commit();
-                    }
-                });
-            }
-        });
-    }
-
-    /**
-     * Opens user profile on TextView click
-     *
-     * @param textView TextView in view
-     * @param username Requester's username
-     */
-    private void clickUsername(TextView textView, String username)
-    {
-        textView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                /* Pulling UserProfileObject from database */
-                FirebaseUserGetSet.getUser(username, new FirebaseUserGetSet.UserCallback()
-                {
-                    @Override
-                    public void onCallback(UserProfileObject userObject)
-                    {
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable(getString(R.string.profile_object), userObject);
-                        ProfileFragment profileFragment = new ProfileFragment();
-                        profileFragment.setArguments(bundle);
-                        getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                                .replace(R.id.frame_container, profileFragment)
-                                .addToBackStack(null)
+                                .add(R.id.frame_container, profileFragment, getString(R.string.other_profile_fragment))
+                                .hide(requestDetailViewFragment)
                                 .commit();
                     }
                 });
@@ -321,12 +302,35 @@ public class RequestDetailViewFragment extends DetailView
      */
     public void onBackClick(View v)
     {
-        RequestsFragment fragment = new RequestsFragment();
+        Fragment requestsFragment = getFragmentManager().findFragmentByTag(getString(R.string.requests_fragment));
         Bundle args = new Bundle();
-        fragment.setArguments(args);
-        getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+        requestsFragment.setArguments(args);
+        getFragmentManager().beginTransaction().remove(this).show(requestsFragment).commit();
     }
 
+    /**
+     * Function to call when a location is set and the lend button should be set to pressable
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void setReadyToLend()
+    {
+        this.btn2.setBackgroundTintList(resources.getColorStateList(R.color.colorPrimaryDark));
+        this.btn2.setTextColor(resources.getColorStateList(R.color.colorBackground));
+        this.btn2.setOnClickListener(this::btnLendBook);
+    }
+
+    /**
+     * Function to call when a location is cancelled and the lend button should be set to not pressable
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void setNotReadyToLend()
+    {
+        this.btn2.setBackgroundTintList(resources.getColorStateList(R.color.tempPhotoBackground));
+        this.btn2.setTextColor(resources.getColorStateList(R.color.colorPrimary));
+        this.btn2.setOnClickListener(null);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
@@ -337,16 +341,19 @@ public class RequestDetailViewFragment extends DetailView
                 String pickUpLocation = data.getStringExtra("pickUpLocation");
                 this.bookDocument.update(getString(R.string.firestore_pick_up_address), pickUpLocation);
                 this.selectedBook.setPickUpAddress(pickUpLocation);
+                setReadyToLend();
             }
             if (resultCode == Activity.RESULT_CANCELED)
             {
                 this.bookDocument.update(getString(R.string.firestore_pick_up_address), "");
                 this.selectedBook.setPickUpAddress("");
+                setNotReadyToLend();
             }
         }
 
-        RequestDetailViewFragment fragment = new RequestDetailViewFragment();
-        fragment.onFragmentInteraction(this.selectedBook, this.selectedBookId);
-        getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+        requestDetailViewFragment.onFragmentInteraction(this.selectedBook, this.selectedBookId);
+        getFragmentManager().beginTransaction()
+                .show(requestDetailViewFragment)
+                .commit();
     }
 }
