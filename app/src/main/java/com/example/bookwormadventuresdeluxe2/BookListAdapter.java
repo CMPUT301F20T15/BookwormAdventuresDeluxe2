@@ -141,7 +141,7 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
                     holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
                 }
 
-                /* If not searching, OR searching and not a search match, hide book*/
+                /* If not searching, OR searching and not a search match, show book*/
                 else if (this.search.equals("") || (!search.equals("") && searchMatch(book)))
                 {
                     // Source: https://stackoverflow.com/questions/12728255/in-android-how-do-i-set-margins-in-dp-programmatically
