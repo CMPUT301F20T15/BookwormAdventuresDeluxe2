@@ -166,7 +166,7 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
     }
 
     /**
-     * Set's the search term for the adapter
+     * Setter for current search term of the adapter
      *
      * @param searchText Current search term
      */
@@ -178,7 +178,7 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
     /**
      * Getter for current search term of the adapter
      *
-     * @return
+     * @return Adapter's current search term
      */
     public String getSearch()
     {
