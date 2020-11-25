@@ -82,6 +82,8 @@ public class BorrowDetailViewFragment extends DetailView
         this.btn2 = this.bookDetailView.findViewById(R.id.borrowDetail_btn2);
         this.exchange = this.bookDetailView.findViewById(R.id.borrow_exchange_location);
 
+        String pickUpAddress = this.selectedBook.getPickUpAddress();
+
         switch (selectedBook.getStatus())
         {
             case Available:
@@ -99,7 +101,7 @@ public class BorrowDetailViewFragment extends DetailView
             case Accepted:
                 this.btn1.setText(getString(R.string.view_location));
 
-                if (this.selectedBook.getPickUpAddress().equals(""))
+                if (pickUpAddress == null || pickUpAddress.equals("")) // null.equals is invalid
                 {
                     this.btn1.setBackgroundTintList(resources.getColorStateList(R.color.tempPhotoBackground));
                     this.btn1.setTextColor(resources.getColorStateList(R.color.colorPrimary));
@@ -127,7 +129,7 @@ public class BorrowDetailViewFragment extends DetailView
                 this.btn1.setText(getString(R.string.set_location));
                 this.btn2.setText(getString(R.string.return_book));
 
-                if (this.selectedBook.getPickUpAddress().equals(""))
+                if (pickUpAddress == null || pickUpAddress.equals("")) // null.equals is invalid
                 {
                     setNotReadyToReturn();
                 }

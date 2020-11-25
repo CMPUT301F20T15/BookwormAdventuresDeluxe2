@@ -105,7 +105,8 @@ public class RequestDetailViewFragment extends DetailView
 
                 this.btn1.setOnClickListener(this::btnSetLocation);
 
-                if (this.selectedBook.getPickUpAddress().equals(""))
+                String pickUpAddress = this.selectedBook.getPickUpAddress();
+                if (pickUpAddress == null || pickUpAddress.equals("")) // null.equals is invalid
                 {
                     setNotReadyToLend();
                 }
