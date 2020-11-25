@@ -144,7 +144,7 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
                 /* If not searching or searching and not a search match, hide book*/
                 else if (this.search.equals("") || (!search.equals("") && searchMatch(book)))
                 {
-                    // https://stackoverflow.com/questions/12728255/in-android-how-do-i-set-margins-in-dp-programmatically
+                    // Source: https://stackoverflow.com/questions/12728255/in-android-how-do-i-set-margins-in-dp-programmatically
                     RecyclerView.LayoutParams searchLayoutParams =
                             new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                                             ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -166,7 +166,7 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
     }
 
     /**
-     * Setter for current search term of the adapter
+     * Setter for search term of the adapter
      *
      * @param searchText Current search term
      */
@@ -178,7 +178,7 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
     /**
      * Getter for current search term of the adapter
      *
-     * @return Adapter's current search term
+     * @return String result of this adapter's current search term
      */
     public String getSearch()
     {
@@ -188,8 +188,8 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
     /**
      * Checker for search through books
      *
-     * @param book Book to be checked against search string
-     * @return Result if book is a match
+     * @param book Book to be searched for search string
+     * @return boolean result if book is a match
      */
     public boolean searchMatch(Book book)
     {
