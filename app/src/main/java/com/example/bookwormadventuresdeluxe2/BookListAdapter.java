@@ -132,12 +132,12 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
                 break;
             case R.id.search_books:
                 if (book.getOwner().equals(UserCredentialAPI.getInstance().getUsername())
-                    || (!search.equals("") && !searchMatch(book, search)))
+                    || (!this.search.equals("") && !searchMatch(book)))
                 {
                     holder.itemView.setVisibility(View.GONE);
                     holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
                 }
-                if (search.equals("") || (!search.equals("") && searchMatch(book, search)))
+                else if (this.search.equals("") || (!search.equals("") && searchMatch(book)))
                 {
                     // https://stackoverflow.com/questions/12728255/in-android-how-do-i-set-margins-in-dp-programmatically
                     RecyclerView.LayoutParams searchLayoutParams =
@@ -160,17 +160,17 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
         holder.itemView.setOnClickListener(launchDetailView(detailView, book, documentId));
     }
 
-    public void setSearch(String search)
+    public void setSearch(String searchText)
     {
-        this.search = search;
+        this.search = searchText;
     }
 
-    public boolean searchMatch(Book book, String search)
+    public boolean searchMatch(Book book)
     {
-        if (book.getTitle().toLowerCase().contains(search.toLowerCase())
-            || book.getAuthor().toLowerCase().contains(search.toLowerCase())
-            || book.getDescription().toLowerCase().contains(search.toLowerCase())
-            || book.getIsbn().contains(search))
+        if (book.getTitle().toLowerCase().contains(this.search.toLowerCase())
+            || book.getAuthor().toLowerCase().contains(this.search.toLowerCase())
+            || book.getDescription().toLowerCase().contains(this.search.toLowerCase())
+            || book.getIsbn().contains(this.search))
         {
             return true;
         }
