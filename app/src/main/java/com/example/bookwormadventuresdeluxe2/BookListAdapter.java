@@ -166,6 +166,11 @@ public class BookListAdapter extends FirestoreRecyclerAdapter<Book, BookListAdap
         this.search = searchText;
     }
 
+    public String getSearch()
+    {
+        return this.search;
+    }
+
     public boolean searchMatch(Book book)
     {
         if (book.getTitle().toLowerCase().contains(this.search.toLowerCase())

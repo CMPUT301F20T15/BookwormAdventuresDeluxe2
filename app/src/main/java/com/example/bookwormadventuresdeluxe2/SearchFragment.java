@@ -156,7 +156,7 @@ public class SearchFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                if (searchView.getQuery().toString().length() != 0)
+                if (searchBooksRecyclerAdapter.getSearch().length() != 0)
                 {
                     searchBooksRecyclerAdapter.setSearch("");
                     searchBooksRecyclerAdapter.updateOptions(options);
