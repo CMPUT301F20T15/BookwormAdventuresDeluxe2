@@ -76,9 +76,8 @@
     <string name="firestore_user_notification_bookId_field">bookID</string>
     <string name="firestore_user_notification_message_field">message</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="notification_title">Notifications</string>
+    <string name="new_notification_title">1 new notification</string>
     <string name="owned_by">Owned by</string>
     <string name="accept">Accept</string>
     <string name="deny">Deny</string>

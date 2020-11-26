@@ -66,12 +66,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage)
     {
         super.onMessageReceived(remoteMessage);
+        /* Get new notification title */
+        Context context = getAppContext();
+        String title = context.getString(R.string.new_notification_title);
         /* Check if notification is intended for logged in user */
         String currentUserId = getCurrentUserId();
         String receiverUserId = remoteMessage.getData().get("ReceiverUserId");
         if (currentUserId != null && currentUserId.equals(receiverUserId))
         {
-            showNotification(remoteMessage.getData().get("Title"), remoteMessage.getData().get("Message"));
+            showNotification(title, remoteMessage.getData().get("Message"));
         }
         else
         {

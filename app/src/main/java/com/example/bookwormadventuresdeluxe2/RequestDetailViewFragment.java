@@ -252,7 +252,7 @@ public class RequestDetailViewFragment extends DetailView
         inAppNotification.put(getString(R.string.firestore_user_notification_message_field), message);
         inAppNotification.put(getString(R.string.firestore_user_notification_timestamp_field), String.valueOf(Timestamp.now().getSeconds())); // to sort by latest
         /* Call notification handler to process notification */
-        NotificationHandler.sendNotification("Request Accepted", message, borrowerUsername, inAppNotification);
+        NotificationHandler.sendNotification(message, borrowerUsername, inAppNotification);
     }
 
     /**
