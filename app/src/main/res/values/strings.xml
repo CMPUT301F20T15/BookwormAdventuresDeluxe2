@@ -146,6 +146,6 @@
     <string name="borrow_request_message">New borrow request from:</string>
     <string name="request_accepted_message">Borrow request accepted by:</string>
     <string name="return_request_message">Return requested by:</string>
-    <string name="my_requests_pick_up_location_set_message">Pick up location set by:</string>
+    <string name="my_requests_book_confirm_lend_message">Book confirmed to lend by:</string>
 
 </resources>

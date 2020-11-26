@@ -191,7 +191,7 @@ public class RequestDetailViewFragment extends DetailView
         onBackClick(view);
 
         // Send In-app and Push notification to Borrower
-        sendNotification(selectedBook.getRequesters().get(0), getString(R.string.my_requests_pick_up_location_set_message));
+        sendNotification(selectedBook.getRequesters().get(0), getString(R.string.my_requests_book_confirm_lend_message));
     }
 
     private void btnSetLocation(View view)
