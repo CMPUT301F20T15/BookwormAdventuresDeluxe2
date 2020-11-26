@@ -12,6 +12,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
@@ -93,6 +94,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
                 .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle(title)
                 .setContentText(body)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.app_icon))
                 .setPriority(NotificationCompat.PRIORITY_HIGH) // for lower than api 26
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true) // removes notification on click
