@@ -176,7 +176,7 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if (requestCode == RequestDetailViewFragment.REQUEST_GIVE_SCAN ||
-                requestCode == RequestDetailViewFragment.REQUEST_RECIEVE_SCAN ||
+                requestCode == RequestDetailViewFragment.REQUEST_RECEIVE_SCAN ||
                 requestCode == BorrowDetailViewFragment.BORROW_RETURN_SCAN ||
                 requestCode == BorrowDetailViewFragment.BORROW_RECIEVE_SCAN ||
                 requestCode == MyBooksFragment.MY_BOOK_FRAGMENT_SCAN)

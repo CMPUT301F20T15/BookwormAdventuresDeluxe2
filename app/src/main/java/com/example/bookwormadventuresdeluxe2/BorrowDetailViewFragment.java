@@ -9,7 +9,6 @@ package com.example.bookwormadventuresdeluxe2;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -43,10 +42,8 @@ public class BorrowDetailViewFragment extends DetailView
 {
     private Button btn1;
     private Button btn2;
-    private TextView exchange;
     private DocumentReference bookDocument;
     private BorrowDetailViewFragment borrowDetailViewFragment;
-    private Resources resources;
 
     private static int SetLocationActivityResultCode = 7;
 
@@ -64,7 +61,6 @@ public class BorrowDetailViewFragment extends DetailView
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        resources = getResources();
 
         /* Grabbing source fragment of book item after click*/
         Bundle bundle = getArguments();
@@ -88,7 +84,6 @@ public class BorrowDetailViewFragment extends DetailView
 
         this.btn1 = this.bookDetailView.findViewById(R.id.borrowDetail_btn1);
         this.btn2 = this.bookDetailView.findViewById(R.id.borrowDetail_btn2);
-        this.exchange = this.bookDetailView.findViewById(R.id.borrow_exchange_location);
 
         this.redraw();
 

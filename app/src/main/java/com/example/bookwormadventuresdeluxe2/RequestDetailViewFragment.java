@@ -9,7 +9,6 @@ package com.example.bookwormadventuresdeluxe2;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -42,29 +41,24 @@ public class RequestDetailViewFragment extends DetailView
 {
     private Button btn1;
     private Button btn2;
-    private TextView exchange;
     private DocumentReference bookDocument;
-    private boolean goodScan;
     private RequestDetailViewFragment requestDetailViewFragment;
-    private Resources resources;
     private ConstraintLayout dropdownContainer;
 
     public static final int REQUEST_GIVE_SCAN = 5;
-    public static final int REQUEST_RECIEVE_SCAN = 6;
+    public static final int REQUEST_RECEIVE_SCAN = 6;
     private static int SetLocationActivityResultCode = 7;
 
     public RequestDetailViewFragment()
     {
         // Required empty public constructor
     }
-
-
+    
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        resources = getResources();
 
         this.bookDetailView = inflater.inflate(R.layout.fragment_request_detail_view, null, false);
         ((TextView) bookDetailView.findViewById(R.id.app_header_title)).setText(R.string.requests_title);
@@ -77,7 +71,6 @@ public class RequestDetailViewFragment extends DetailView
 
         this.btn1 = this.bookDetailView.findViewById(R.id.requestDetail_btn1);
         this.btn2 = this.bookDetailView.findViewById(R.id.requestDetail_btn2);
-        this.exchange = this.bookDetailView.findViewById(R.id.request_exchange_location);
         this.dropdownContainer = this.bookDetailView.findViewById(R.id.dropdown_container);
 
         /* Update the UI based on the book's current status */
@@ -220,7 +213,7 @@ public class RequestDetailViewFragment extends DetailView
      */
     private void btnAcceptReturn(View view)
     {
-        onScanCall(REQUEST_RECIEVE_SCAN);
+        onScanCall(REQUEST_RECEIVE_SCAN);
     }
 
     /**
@@ -396,13 +389,11 @@ public class RequestDetailViewFragment extends DetailView
     private void processBookHandOff(int requestCode, int resultCode, @Nullable Intent data)
     {
         String message = "";
-        this.goodScan = false;
         IntentResult result = IntentIntegrator.parseActivityResult(resultCode, data);
         if (result != null && result.getContents() != null &&
                 this.selectedBook.getIsbn().equals(result.getContents()))
         {
             // scan successful
-            this.goodScan = true;
             if (requestCode == REQUEST_GIVE_SCAN)
             {
                 this.bookDocument.update(getString(R.string.status), getString(R.string.bPending));
@@ -413,7 +404,7 @@ public class RequestDetailViewFragment extends DetailView
                 sendNotification(selectedBook.getRequesters().get(0), getString(R.string.my_requests_book_confirm_lend_message));
             }
 
-            else if (requestCode == REQUEST_RECIEVE_SCAN)
+            else if (requestCode == REQUEST_RECEIVE_SCAN)
             {
                 this.bookDocument.update(getString(R.string.status), getString(R.string.available));
                 this.bookDocument.update(getString(R.string.requesters), new ArrayList<String>());
@@ -455,7 +446,7 @@ public class RequestDetailViewFragment extends DetailView
                 this.disableButton(this.btn2);
             }
         }
-        else if (requestCode == REQUEST_GIVE_SCAN || requestCode == REQUEST_RECIEVE_SCAN)
+        else if (requestCode == REQUEST_GIVE_SCAN || requestCode == REQUEST_RECEIVE_SCAN)
         {
             processBookHandOff(requestCode, resultCode, data);
         }
