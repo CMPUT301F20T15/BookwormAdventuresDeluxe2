@@ -358,6 +358,13 @@ public class AddOrEditBooksActivity extends AppCompatActivity
                 String isbn_scan_result = scanResult.getContents();
                 if (isbn_scan_result != null) // proceed if result present
                 {
+                    /* The scan picked up some invalid ISBN. */
+                    if (isbn_scan_result.length() < 9)
+                    {
+                        Toast.makeText(AddOrEditBooksActivity.this, "Unable to detect the ISBN. Please Retry.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     // Older versions had 9 digits but can be converted to 10 "by prefixing it with a zero"
                     // https://en.wikipedia.org/wiki/International_Standard_Book_Number
                     if (isbn_scan_result.length() == 9)
