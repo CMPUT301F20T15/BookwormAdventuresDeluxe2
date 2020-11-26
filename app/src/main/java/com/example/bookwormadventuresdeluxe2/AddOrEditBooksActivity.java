@@ -429,19 +429,6 @@ public class AddOrEditBooksActivity extends AppCompatActivity
             /* Multiple books may be returned by the books API, select the first one */
             JSONObject volumeInfo = result.getJSONArray("items").getJSONObject(0).getJSONObject("volumeInfo");
             JSONArray authors = volumeInfo.getJSONArray("authors");
-            subtitle = volumeInfo.getString("subtitle");
-            title = (subtitle == "") ? (volumeInfo.getString("title")) : (volumeInfo.getString("title") + ": " + subtitle);
-            description = volumeInfo.getString("description");
-            imageUrlString = volumeInfo.getJSONObject("imageLinks").getString("thumbnail");
-
-            /* For some reason this API is stupid and returns an http URL not https. Convert it. */
-            if (imageUrlString.substring(0, 5) != "https")
-            {
-                imageUrlString = "https" + imageUrlString.substring(4);
-            }
-
-            imageUrl = new URL(imageUrlString);
-
             /* Since there may be multiple authors, append them together separated by a comma */
             for (int i = 0; i < authors.length(); i++)
             {
@@ -454,6 +441,28 @@ public class AddOrEditBooksActivity extends AppCompatActivity
                     author += ", " + authors.getString(i);
                 }
             }
+
+            /*
+               The subtitle may not exist. Catch it in here so that the exception doesn't bubble up
+               and cause no data to be set for the book.
+             */
+            try
+            {
+                subtitle = volumeInfo.getString("subtitle");
+            } catch (JSONException e)
+            {
+                /* Do nothing, this is expected to happen sometimes */
+            }
+            title = (subtitle == "") ? (volumeInfo.getString("title")) : (volumeInfo.getString("title") + ": " + subtitle);
+            description = volumeInfo.getString("description");
+
+            imageUrlString = volumeInfo.getJSONObject("imageLinks").getString("thumbnail");
+            /* For some reason this API is stupid and returns an http URL not https. Convert it. */
+            if (imageUrlString.substring(0, 5) != "https")
+            {
+                imageUrlString = "https" + imageUrlString.substring(4);
+            }
+            imageUrl = new URL(imageUrlString);
         } catch (JSONException e)
         {
             e.printStackTrace();
