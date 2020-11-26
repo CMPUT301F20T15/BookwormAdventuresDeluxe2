@@ -6,12 +6,10 @@ package com.example.bookwormadventuresdeluxe2;
  *
  */
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.SearchView;
 
@@ -183,10 +181,7 @@ public class SearchFragment extends Fragment
                     searchBooksRecyclerAdapter.updateOptions(options);
                 }
                 searchView.setQuery("", false);
-
-                // https://stackoverflow.com/questions/1109022/how-do-you-close-hide-the-android-soft-keyboard-using-java
-                InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                searchView.clearFocus();
             }
         });
     }
