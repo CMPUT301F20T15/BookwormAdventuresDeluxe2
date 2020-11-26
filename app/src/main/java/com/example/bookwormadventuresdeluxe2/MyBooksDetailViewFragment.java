@@ -54,6 +54,7 @@ public class MyBooksDetailViewFragment extends DetailView
         return bookDetailView;
     }
 
+
     /**
      * Update the textfields for book detail view based on the given book
      *
@@ -112,6 +113,7 @@ public class MyBooksDetailViewFragment extends DetailView
         myBooksFragment.setArguments(args);
         getFragmentManager().beginTransaction().remove(this).show(myBooksFragment).commit();
     }
+
 
     /**
      * Allows the user to edit the selected book

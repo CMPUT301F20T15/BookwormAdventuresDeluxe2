@@ -89,6 +89,7 @@ public class RequestDetailViewFragment extends DetailView
         {
             if (snapshot != null && snapshot.exists())
             {
+                selectedBook = snapshot.toObject(Book.class);
                 Activity activity = getActivity();
                 if (isAdded() && activity != null)
                 {
@@ -100,6 +101,9 @@ public class RequestDetailViewFragment extends DetailView
         return bookDetailView;
     }
 
+    /**
+     * Redraws the screen to adjust for the book state and information
+     */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void redraw()
     {
@@ -136,27 +140,31 @@ public class RequestDetailViewFragment extends DetailView
                 this.btn1.setOnClickListener(this::btnSetLocation);
                 if (this.selectedBook.getPickUpAddress().equals(""))
                 {
-                    setNotReadyToLend();
+                    this.disableButton(this.btn2);
                 }
                 else
                 {
-                    setReadyToLend();
+                    this.enableButton(this.btn2);
+                    this.btn2.setOnClickListener(this::btnLendBook);
                 }
                 this.btn1.setVisibility(View.VISIBLE);
                 this.btn2.setVisibility(View.VISIBLE);
                 break;
 
             case Borrowed:
+                this.btn1.setText(getString(R.string.view_location));
+                this.btn2.setText(R.string.book_lent);
+                this.disableButton(this.btn1);
+                this.disableButton(this.btn2);
+                this.btn1.setVisibility(View.VISIBLE);
+                this.btn2.setVisibility(View.VISIBLE);
+                break;
             case bPending:
                 this.btn1.setText(getString(R.string.view_location));
                 this.btn2.setText(getString(R.string.wait_borrower));
-                this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
-                this.btn2.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
-                this.btn1.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
-                this.btn1.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
 
-                this.btn1.setOnClickListener(null);
-                this.btn2.setOnClickListener(null);
+                this.disableButton(this.btn1);
+                this.disableButton(this.btn2);
 
                 this.btn1.setVisibility(View.VISIBLE);
                 this.btn2.setVisibility(View.VISIBLE);
@@ -166,6 +174,8 @@ public class RequestDetailViewFragment extends DetailView
                 this.btn1.setText(getString(R.string.view_location));
                 this.btn2.setText(getString(R.string.accept_return));
 
+                this.enableButton(this.btn1);
+                this.enableButton(this.btn2);
                 this.btn1.setOnClickListener(this::btnViewLocation);
                 this.btn2.setOnClickListener(this::btnAcceptReturn);
 
@@ -254,7 +264,6 @@ public class RequestDetailViewFragment extends DetailView
 
         this.bookDocument.update(getString(R.string.requesters), borrower);
         this.bookDocument.update(getString(R.string.status), getString(R.string.accepted));
-        onBackClick(view);
     }
 
     /**
@@ -345,18 +354,14 @@ public class RequestDetailViewFragment extends DetailView
         getFragmentManager().beginTransaction().remove(this).show(requestsFragment).commit();
     }
 
+
     /**
-     * Function to call when a location is set and the lend button should be set to pressable
+     * Process the book handoff
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
      */
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void setReadyToLend()
-    {
-        this.btn2.setBackgroundTintList(resources.getColorStateList(R.color.colorPrimaryDark));
-        this.btn2.setTextColor(resources.getColorStateList(R.color.colorBackground));
-        this.btn2.setOnClickListener(this::btnLendBook);
-    }
-
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void processBookHandOff(int requestCode, int resultCode, @Nullable Intent data)
     {
@@ -373,15 +378,7 @@ public class RequestDetailViewFragment extends DetailView
                 this.bookDocument.update(getString(R.string.status), getString(R.string.bPending));
                 this.selectedBook.setStatus(Status.bPending);
                 message = "Hand book to borrower";
-//                updateView(this.selectedBook);
                 this.redraw();
-//                this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
-//                this.btn2.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
-//                this.btn1.setText(getString(R.string.wait_borrower));
-//                this.btn1.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
-//                this.btn1.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
-//                this.btn2.setOnClickListener(null);
-//                this.btn1.setOnClickListener(null);
             }
 
             else if (requestCode == REQUEST_RECIEVE_SCAN)
@@ -392,10 +389,7 @@ public class RequestDetailViewFragment extends DetailView
                 this.selectedBook.setStatus(Status.Available);
                 this.selectedBook.setRequesters(new ArrayList<String>());
                 message = "Book received.";
-//                updateView(this.selectedBook);
                 this.redraw();
-//                this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
-//                this.btn2.setOnClickListener(null);
             }
             else
             {
@@ -409,20 +403,8 @@ public class RequestDetailViewFragment extends DetailView
         }
     }
 
-    /**
-     * Function to call when a location is cancelled and the lend button should be set to not pressable
-     */
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void setNotReadyToLend()
-    {
-        this.btn2.setBackgroundTintList(resources.getColorStateList(R.color.tempPhotoBackground));
-        this.btn2.setTextColor(resources.getColorStateList(R.color.colorPrimary));
-        this.btn2.setOnClickListener(null);
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
         if (requestCode == SetLocationActivityResultCode)
@@ -432,13 +414,15 @@ public class RequestDetailViewFragment extends DetailView
                 String pickUpLocation = data.getStringExtra("pickUpLocation");
                 this.bookDocument.update(getString(R.string.firestore_pick_up_address), pickUpLocation);
                 this.selectedBook.setPickUpAddress(pickUpLocation);
-                setReadyToLend();
+//                setReadyToLend();
+                this.disableButton(this.btn2);
             }
             if (resultCode == Activity.RESULT_CANCELED)
             {
                 this.bookDocument.update(getString(R.string.firestore_pick_up_address), "");
                 this.selectedBook.setPickUpAddress("");
-                setNotReadyToLend();
+//                setNotReadyToLend();
+                this.disableButton(this.btn2);
             }
         }
         else if (requestCode == REQUEST_GIVE_SCAN || requestCode == REQUEST_RECIEVE_SCAN)
