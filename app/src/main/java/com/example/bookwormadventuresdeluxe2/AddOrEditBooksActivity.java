@@ -33,6 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.bookwormadventuresdeluxe2.Utilities.DownloadImageTask;
 import com.example.bookwormadventuresdeluxe2.Utilities.EditTextValidator;
 import com.example.bookwormadventuresdeluxe2.Utilities.Status;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
@@ -53,6 +54,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.UUID;
 
 public class AddOrEditBooksActivity extends AppCompatActivity
@@ -196,8 +199,12 @@ public class AddOrEditBooksActivity extends AppCompatActivity
 
         // Remove the association to the book object
         this.bookPhotoDownloadUrl = "";
-        // Delete image from firebase
-        this.deletePhotoFromFirebase(imageUrl);
+
+        /* Only delete the book image from firebase if it was originally stored there. */
+        if (imageUrl.startsWith("https://firebasestorage"))
+        {
+            this.deletePhotoFromFirebase(imageUrl);
+        }
     }
 
     /**
@@ -403,6 +410,8 @@ public class AddOrEditBooksActivity extends AppCompatActivity
         String subtitle = "";
         String author = "";
         String description = "";
+        String imageUrlString = "";
+        URL imageUrl = null;
         try
         {
             /* If there are no matches, return */
@@ -417,6 +426,15 @@ public class AddOrEditBooksActivity extends AppCompatActivity
             subtitle = volumeInfo.getString("subtitle");
             title = (subtitle == "") ? (volumeInfo.getString("title")) : (volumeInfo.getString("title") + ": " + subtitle);
             description = volumeInfo.getString("description");
+            imageUrlString = volumeInfo.getJSONObject("imageLinks").getString("thumbnail");
+
+            /* For some reason this API is stupid and returns an http URL not https. Convert it. */
+            if (imageUrlString.substring(0, 5) != "https")
+            {
+                imageUrlString = "https" + imageUrlString.substring(4);
+            }
+
+            imageUrl = new URL(imageUrlString);
 
             /* Since there may be multiple authors, append them together separated by a comma */
             for (int i = 0; i < authors.length(); i++)
@@ -430,15 +448,34 @@ public class AddOrEditBooksActivity extends AppCompatActivity
                     author += ", " + authors.getString(i);
                 }
             }
-
-            /* Set the editTexts with the results */
-            titleView.setText(title);
-            authorView.setText(author);
-            descriptionView.setText(description);
         } catch (JSONException e)
         {
             e.printStackTrace();
-            return;
+        } catch (MalformedURLException e)
+        {
+            e.printStackTrace();
+        }
+
+        /* Set the editTexts with the results */
+        if (title != "")
+        {
+            titleView.setText(title);
+        }
+        if (author != "")
+        {
+            authorView.setText(author);
+        }
+        if (description != "")
+        {
+            descriptionView.setText(description);
+        }
+
+        /* Set the book photo to the photo stored at the url */
+        // https://stackoverflow.com/questions/11831188/how-to-get-bitmap-from-a-url-in-android
+        if (imageUrl != null)
+        {
+            new DownloadImageTask(bookPicture).execute(imageUrlString);
+            bookPhotoDownloadUrl = imageUrlString;
         }
     }
 
@@ -551,7 +588,6 @@ public class AddOrEditBooksActivity extends AppCompatActivity
                                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
                                 bookPicture.setImageBitmap(bitmap);
                                 bookPicture.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
                             } catch (IOException e)
                             {
                                 e.printStackTrace();
