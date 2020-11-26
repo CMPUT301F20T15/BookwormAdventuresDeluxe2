@@ -353,45 +353,48 @@ public class AddOrEditBooksActivity extends AppCompatActivity
         {
             IntentResult scanResult = IntentIntegrator.parseActivityResult(
                     requestCode, resultCode, intent);
-            String isbn_scan_result = scanResult.getContents();
-            if (isbn_scan_result != null) // proceed if result present
+            if (scanResult != null)
             {
-                // Older versions had 9 digits but can be converted to 10 "by prefixing it with a zero"
-                // https://en.wikipedia.org/wiki/International_Standard_Book_Number
-                if (isbn_scan_result.length() == 9)
+                String isbn_scan_result = scanResult.getContents();
+                if (isbn_scan_result != null) // proceed if result present
                 {
-                    isbn_scan_result = "0" + isbn_scan_result;
-                }
-                isbnView.setText(isbn_scan_result);
+                    // Older versions had 9 digits but can be converted to 10 "by prefixing it with a zero"
+                    // https://en.wikipedia.org/wiki/International_Standard_Book_Number
+                    if (isbn_scan_result.length() == 9)
+                    {
+                        isbn_scan_result = "0" + isbn_scan_result;
+                    }
+                    isbnView.setText(isbn_scan_result);
 
-                String url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn_scan_result;
+                    String url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn_scan_result;
 
-                /* Request the book details from Google's API */
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                        (Request.Method.GET, url, null, new Response.Listener<JSONObject>()
-                        {
-
-                            @Override
-                            public void onResponse(JSONObject response)
+                    /* Request the book details from Google's API */
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                            (Request.Method.GET, url, null, new Response.Listener<JSONObject>()
                             {
-                                parseBookResult(response);
-                            }
-                        }, new Response.ErrorListener()
-                        {
-                            @Override
-                            public void onErrorResponse(VolleyError error)
+
+                                @Override
+                                public void onResponse(JSONObject response)
+                                {
+                                    parseBookResult(response);
+                                }
+                            }, new Response.ErrorListener()
                             {
+                                @Override
+                                public void onErrorResponse(VolleyError error)
+                                {
                                 /*
                                    In this case, we simply won't add the additional book details
                                 */
-                                Log.d("Volley Error: ", error.getMessage());
-                            }
-                        });
-                requestQueue.add(jsonObjectRequest);
-            }
-            else
-            {
-                super.onActivityResult(requestCode, resultCode, intent);
+                                    Log.d("Volley Error: ", error.getMessage());
+                                }
+                            });
+                    requestQueue.add(jsonObjectRequest);
+                }
+                else
+                {
+                    super.onActivityResult(requestCode, resultCode, intent);
+                }
             }
         }
 
