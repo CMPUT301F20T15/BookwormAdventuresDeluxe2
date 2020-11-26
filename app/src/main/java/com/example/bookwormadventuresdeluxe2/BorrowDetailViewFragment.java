@@ -177,17 +177,17 @@ public class BorrowDetailViewFragment extends DetailView
         this.bookDocument.update(getString(R.string.status), getString(R.string.requested));
 
         // Send In-app and Push notification to owner
-        sendBorrowRequestNotification();
+        sendNotification(getString(R.string.borrow_request_message));
         onBackClick(view);
     }
 
     /**
      * Create hash map with notification info pass to Notification Handler process notification
      */
-    private void sendBorrowRequestNotification()
+    private void sendNotification(String notificationMessage)
     {
         /* Create notification for firestore collection */
-        String message = "New borrow request from: "
+        String message = notificationMessage + " "
                 + UserCredentialAPI.getInstance().getUsername();
         HashMap<String, String> inAppNotification = new HashMap<>();
         inAppNotification.put(getString(R.string.firestore_user_notification_bookId_field), selectedBookId);
@@ -220,6 +220,8 @@ public class BorrowDetailViewFragment extends DetailView
         this.bookDocument.update(getString(R.string.status), getString(R.string.rPending));
         // notify owner
         onBackClick(view);
+        // Send In-app and Push notification to owner
+        sendNotification(getString(R.string.return_request_message));
     }
 
     /**
