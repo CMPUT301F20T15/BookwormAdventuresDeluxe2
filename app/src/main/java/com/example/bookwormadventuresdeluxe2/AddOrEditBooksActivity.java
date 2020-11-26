@@ -200,11 +200,7 @@ public class AddOrEditBooksActivity extends AppCompatActivity
         // Remove the association to the book object
         this.bookPhotoDownloadUrl = "";
 
-        /* Only delete the book image from firebase if it was originally stored there. */
-        if (imageUrl.startsWith("https://firebasestorage"))
-        {
-            this.deletePhotoFromFirebase(imageUrl);
-        }
+        this.deletePhotoFromFirebase(imageUrl);
     }
 
     /**
@@ -527,6 +523,11 @@ public class AddOrEditBooksActivity extends AppCompatActivity
      */
     private void deletePhotoFromFirebase(String imageUrl)
     {
+        /* Only delete the book image from firebase if it was originally stored there. */
+        if (!imageUrl.startsWith("https://firebasestorage"))
+        {
+            return;
+        }
         // https://stackoverflow.com/questions/45103085/deleting-file-from-firebase-storage-using-url
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference currentBookPhoto = storage.getReferenceFromUrl(imageUrl);
