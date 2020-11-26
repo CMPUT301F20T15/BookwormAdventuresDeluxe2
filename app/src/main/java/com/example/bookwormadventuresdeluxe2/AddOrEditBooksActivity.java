@@ -27,6 +27,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.bookwormadventuresdeluxe2.Utilities.EditTextValidator;
 import com.example.bookwormadventuresdeluxe2.Utilities.Status;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
@@ -41,6 +47,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -64,6 +74,9 @@ public class AddOrEditBooksActivity extends AppCompatActivity
     public static int DELETE_BOOK = 2;
     public static int REQUEST_IMAGE_UPLOAD = 3;
 
+    /* Request queue for REST requests */
+    RequestQueue requestQueue;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -78,6 +91,7 @@ public class AddOrEditBooksActivity extends AppCompatActivity
         deleteButton = findViewById(R.id.delete_button);
         deletePictureButton = findViewById(R.id.delete_picture);
         bookPicture = findViewById(R.id.book_photo);
+        requestQueue = Volley.newRequestQueue(this);
 
         /* If editing a book, prepopulate text fields with their old values */
         int requestCode = -1;
@@ -346,6 +360,31 @@ public class AddOrEditBooksActivity extends AppCompatActivity
                     isbn_scan_result = "0" + isbn_scan_result;
                 }
                 isbnView.setText(isbn_scan_result);
+
+                String url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn_scan_result;
+
+                /* Request the book details from Google's API */
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                        (Request.Method.GET, url, null, new Response.Listener<JSONObject>()
+                        {
+
+                            @Override
+                            public void onResponse(JSONObject response)
+                            {
+                                parseBookResult(response);
+                            }
+                        }, new Response.ErrorListener()
+                        {
+                            @Override
+                            public void onErrorResponse(VolleyError error)
+                            {
+                                /*
+                                   In this case, we simply won't add the additional book details
+                                */
+                                Log.d("Volley Error: ", error.getMessage());
+                            }
+                        });
+                requestQueue.add(jsonObjectRequest);
             }
             else
             {
@@ -353,6 +392,54 @@ public class AddOrEditBooksActivity extends AppCompatActivity
             }
         }
 
+    }
+
+    /**
+     * Parse the result received from Google's book API after scanning an ISBN
+     */
+    private void parseBookResult(JSONObject result)
+    {
+        String title = "";
+        String subtitle = "";
+        String author = "";
+        String description = "";
+        try
+        {
+            /* If there are no matches, return */
+            if (result.getInt("totalItems") < 1)
+            {
+                return;
+            }
+
+            /* Multiple books may be returned by the books API, select the first one */
+            JSONObject volumeInfo = result.getJSONArray("items").getJSONObject(0).getJSONObject("volumeInfo");
+            JSONArray authors = volumeInfo.getJSONArray("authors");
+            subtitle = volumeInfo.getString("subtitle");
+            title = (subtitle == "") ? (volumeInfo.getString("title")) : (volumeInfo.getString("title") + ": " + subtitle);
+            description = volumeInfo.getString("description");
+
+            /* Since there may be multiple authors, append them together separated by a comma */
+            for (int i = 0; i < authors.length(); i++)
+            {
+                if (i == 0)
+                {
+                    author += authors.getString(i);
+                }
+                else
+                {
+                    author += ", " + authors.getString(i);
+                }
+            }
+
+            /* Set the editTexts with the results */
+            titleView.setText(title);
+            authorView.setText(author);
+            descriptionView.setText(description);
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+            return;
+        }
     }
 
     /**
