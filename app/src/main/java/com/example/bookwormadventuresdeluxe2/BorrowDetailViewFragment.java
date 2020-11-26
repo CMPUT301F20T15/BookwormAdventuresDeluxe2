@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,14 +39,12 @@ import com.google.zxing.integration.android.IntentResult;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 
-
 public class BorrowDetailViewFragment extends DetailView
 {
     private Button btn1;
     private Button btn2;
     private TextView exchange;
     private DocumentReference bookDocument;
-    private boolean goodScan;
     private BorrowDetailViewFragment borrowDetailViewFragment;
     private Resources resources;
 
@@ -108,7 +105,6 @@ public class BorrowDetailViewFragment extends DetailView
             {
                 if (snapshot != null && snapshot.exists())
                 {
-                    Log.d("RICHMOND", "Document udpated");
                     selectedBook = snapshot.toObject(Book.class);
                     Activity activity = getActivity();
                     if (isAdded() && activity != null)
@@ -342,25 +338,19 @@ public class BorrowDetailViewFragment extends DetailView
     private void processBookHandOff(int requestCode, int resultCode, @Nullable Intent data)
     {
         String message = "";
-        this.goodScan = false;
         IntentResult result = IntentIntegrator.parseActivityResult(resultCode, data);
         if (result != null && result.getContents() != null &&
                 this.selectedBook.getIsbn().equals(result.getContents()))
         {
             // scan successful
-            this.goodScan = true;
             if (requestCode == BORROW_RECIEVE_SCAN)
             {
                 this.bookDocument.update(getString(R.string.status), getString(R.string.borrowed));
                 this.selectedBook.setStatus(Status.Borrowed);
                 message = "Book received";
                 this.updateView(this.selectedBook);
-                this.btn2.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
-                this.btn2.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
-                this.btn1.setBackgroundTintList(getResources().getColorStateList(R.color.tempPhotoBackground));
-                this.btn1.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
-                this.btn2.setOnClickListener(null);
-                this.btn1.setOnClickListener(null);
+                this.disableButton(this.btn1);
+                this.disableButton(this.btn2);
             }
             else if (requestCode == BORROW_RETURN_SCAN)
             {
