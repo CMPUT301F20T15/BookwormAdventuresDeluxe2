@@ -24,8 +24,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.example.bookwormadventuresdeluxe2.NotificationUtility.NotificationHandler;
 import com.example.bookwormadventuresdeluxe2.Utilities.Status;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -36,6 +38,8 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import java.security.InvalidParameterException;
+import java.util.HashMap;
+
 
 public class BorrowDetailViewFragment extends DetailView
 {
@@ -125,6 +129,7 @@ public class BorrowDetailViewFragment extends DetailView
     private void redraw()
     {
         this.updateView(this.selectedBook);
+        String pickUpAddress = this.selectedBook.getPickUpAddress();
         switch (selectedBook.getStatus())
         {
             case Available:
@@ -145,7 +150,7 @@ public class BorrowDetailViewFragment extends DetailView
                 this.btn1.setText(getString(R.string.view_location));
                 this.btn2.setText(getString(R.string.scan));
 
-                if (this.selectedBook.getPickUpAddress().equals(""))
+                if (pickUpAddress == null || pickUpAddress.equals("")) // null.equals is invalid
                 {
                     this.disableButton(this.btn1);
                 }
@@ -176,7 +181,7 @@ public class BorrowDetailViewFragment extends DetailView
                 this.btn1.setText(getString(R.string.set_location));
                 this.btn2.setText(getString(R.string.return_book));
 
-                if (this.selectedBook.getPickUpAddress().equals(""))
+                if (pickUpAddress == null || pickUpAddress.equals("")) // null.equals is invalid
                 {
                     this.enableButton(this.btn1);
                     this.disableButton(this.btn2);
@@ -212,7 +217,7 @@ public class BorrowDetailViewFragment extends DetailView
 
 
     /**
-     * Send request to book owner
+     * Send notification and request to book owner
      *
      * @param view The view that was clicked on
      */
@@ -221,9 +226,33 @@ public class BorrowDetailViewFragment extends DetailView
         this.bookDocument.update(getString(R.string.requesters),
                 FieldValue.arrayUnion(UserCredentialAPI.getInstance().getUsername()));
         this.bookDocument.update(getString(R.string.status), getString(R.string.requested));
+
+        // Send In-app and Push notification to owner
+        sendNotification(getString(R.string.borrow_request_message));
         onBackClick(view);
     }
 
+    /**
+     * Create hash map with notification info pass to Notification Handler process notification
+     */
+    private void sendNotification(String notificationMessage)
+    {
+        /* Create notification for firestore collection */
+        String message = notificationMessage + " "
+                + UserCredentialAPI.getInstance().getUsername();
+        HashMap<String, String> inAppNotification = new HashMap<>();
+        inAppNotification.put(getString(R.string.firestore_user_notification_bookId_field), selectedBookId);
+        inAppNotification.put(getString(R.string.firestore_user_notification_message_field), message);
+        inAppNotification.put(getString(R.string.firestore_user_notification_timestamp_field), String.valueOf(Timestamp.now().getSeconds()));
+        /* Call notification handler to process notification */
+        NotificationHandler.sendNotification(message, selectedBook.getOwner(), inAppNotification);
+    }
+
+    /**
+     * Start set location Activity to allow user to pick a location
+     *
+     * @param view
+     */
     private void btnSetLocation(View view)
     {
         Intent setLocationActivityIntent = new Intent(getActivity(), SetLocationActivity.class);
@@ -237,10 +266,8 @@ public class BorrowDetailViewFragment extends DetailView
      */
     private void btnReturnBook(View view)
     {
-        //TODO: actually do the stuff
         // Launch Scan ISBN
         onScanCall(BORROW_RETURN_SCAN);
-
     }
 
     /**
@@ -340,8 +367,10 @@ public class BorrowDetailViewFragment extends DetailView
                 this.bookDocument.update(getString(R.string.status), getString(R.string.rPending));
                 this.selectedBook.setStatus(Status.rPending);
                 message = "Give book to owner";
-//                this.redraw();
                 this.updateView(this.selectedBook);
+                // notify owner
+                // Send In-app and Push notification to owner
+                sendNotification(getString(R.string.return_request_message));
 
             }
             else

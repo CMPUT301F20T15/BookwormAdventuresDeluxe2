@@ -50,6 +50,7 @@
     <!-- Firestore collections -->
     <string name="books_collection">Books</string>
     <string name="users_collection">Users</string>
+    <string name="notifications_collection">notifications</string>
     <!-- Firestore keywords -->
     <string name="owner">owner</string>
     <string name="status">status</string>
@@ -68,9 +69,13 @@
     <string name="firestore_email">email</string>
     <string name="firestore_phoneNumber">phoneNumber</string>
     <string name="firestore_userId">userId</string>
+    <!-- Firestore notification   -->
+    <string name="firestore_user_notification_count_field">notificationCount</string>
+    <string name="firestore_user_token_field">token</string>
+    <string name="firestore_user_notification_timestamp_field">timestamp</string>
+    <string name="firestore_user_notification_bookId_field">bookID</string>
+    <string name="firestore_user_notification_message_field">message</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="notification_title">Notifications</string>
     <string name="owned_by">Owned by</string>
     <string name="accept">Accept</string>
@@ -136,5 +141,12 @@
     <string name="set_exchange_location">Set Exchange Location</string>
     <string name="view_location_pending_request">Pending Request</string>
     <string name="book_lent">Book lent</string>
+
+    <!--  Notification  -->
+    <string name="new_notification_title">1 new notification</string>
+    <string name="borrow_request_message">New borrow request from:</string>
+    <string name="request_accepted_message">Borrow request accepted by:</string>
+    <string name="return_request_message">Return requested by:</string>
+    <string name="my_requests_book_confirm_lend_message">Book confirmed to lend by:</string>
 
 </resources>
