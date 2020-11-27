@@ -144,13 +144,13 @@ public class CreateAccountActivity extends AppCompatActivity
                         EditTextValidator.invalidPhone(editTextPhoneNumber);
                         hasValidationError = true;
                     }
-                    if (EditTextValidator.usernameTooShort(editTextUsername))
-                    {
-                        hasValidationError = true;
-                    }
                     if (!EditTextValidator.isEmailPattern(editTextEmail.getText().toString().trim()))
                     {
                         EditTextValidator.invalidEmail(editTextEmail);
+                        hasValidationError = true;
+                    }
+                    if (EditTextValidator.usernameTooShort(editTextUsername))
+                    {
                         hasValidationError = true;
                     }
                     if (!hasValidationError)
