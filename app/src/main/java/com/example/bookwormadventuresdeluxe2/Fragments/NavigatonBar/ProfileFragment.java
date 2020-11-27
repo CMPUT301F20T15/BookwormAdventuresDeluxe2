@@ -291,7 +291,7 @@ public class ProfileFragment extends Fragment
     }
 
     /**
-     * Updates phone number text on ProfileFragment
+     * Updates phone number text on ProfileFragment and in database
      *
      * @param inputPhone New phone number
      */
