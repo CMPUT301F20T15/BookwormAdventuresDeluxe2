@@ -134,11 +134,8 @@ public class CreateAccountActivity extends AppCompatActivity
                         editTextPassword, confirmPassword))
                 {
                     boolean hasValidationError = false;
-                    if (!EditTextValidator.passwordsMatch(editTextPassword, confirmPassword))
-                    {
-                        hasValidationError = true;
-                    }
-                    if (EditTextValidator.weakPass(editTextPassword, confirmPassword))
+                    if (!EditTextValidator.passwordsMatch(editTextPassword, confirmPassword)
+                        || EditTextValidator.weakPass(editTextPassword, confirmPassword))
                     {
                         hasValidationError = true;
                     }
