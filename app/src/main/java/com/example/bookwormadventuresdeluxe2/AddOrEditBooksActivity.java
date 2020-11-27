@@ -54,8 +54,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.UUID;
 
 public class AddOrEditBooksActivity extends AppCompatActivity
@@ -417,7 +415,10 @@ public class AddOrEditBooksActivity extends AppCompatActivity
         String author = "";
         String description = "";
         String imageUrlString = "";
-        URL imageUrl = null;
+
+        JSONObject volumeInfo;
+
+        /* Try to get the book's volume info (if there is even a match) */
         try
         {
             /* If there are no matches, return */
@@ -425,10 +426,18 @@ public class AddOrEditBooksActivity extends AppCompatActivity
             {
                 return;
             }
-
             /* Multiple books may be returned by the books API, select the first one */
-            JSONObject volumeInfo = result.getJSONArray("items").getJSONObject(0).getJSONObject("volumeInfo");
+            volumeInfo = result.getJSONArray("items").getJSONObject(0).getJSONObject("volumeInfo");
+        } catch (JSONException e)
+        {
+            return;
+        }
+
+        /* Try to get the author from the endpoint */
+        try
+        {
             JSONArray authors = volumeInfo.getJSONArray("authors");
+
             /* Since there may be multiple authors, append them together separated by a comma */
             for (int i = 0; i < authors.length(); i++)
             {
@@ -442,10 +451,19 @@ public class AddOrEditBooksActivity extends AppCompatActivity
                 }
             }
 
+            authorView.setText(author);
+        } catch (JSONException e)
+        {
+            /* Do nothing, this is expected to happen sometimes */
+        }
+
+        /* Try to get the title from the endpoint */
+        try
+        {
             /*
                The subtitle may not exist. Catch it in here so that the exception doesn't bubble up
-               and cause no data to be set for the book.
-             */
+               and cause no data to be set for the title.
+            */
             try
             {
                 subtitle = volumeInfo.getString("subtitle");
@@ -454,43 +472,38 @@ public class AddOrEditBooksActivity extends AppCompatActivity
                 /* Do nothing, this is expected to happen sometimes */
             }
             title = (subtitle == "") ? (volumeInfo.getString("title")) : (volumeInfo.getString("title") + ": " + subtitle);
-            description = volumeInfo.getString("description");
+            titleView.setText(title);
+        } catch (JSONException e)
+        {
+            /* Do nothing, this is expected to happen sometimes */
+        }
 
+        /* Try to get the description from the endpoint */
+        try
+        {
+            description = volumeInfo.getString("description");
+            descriptionView.setText(description);
+        } catch (JSONException e)
+        {
+            /* Do nothing, this is expected to happen sometimes */
+        }
+
+        /* Try to get a thumbnail of the book from the endpoint */
+        try
+        {
             imageUrlString = volumeInfo.getJSONObject("imageLinks").getString("thumbnail");
             /* For some reason this API is stupid and returns an http URL not https. Convert it. */
             if (imageUrlString.substring(0, 5) != "https")
             {
                 imageUrlString = "https" + imageUrlString.substring(4);
             }
-            imageUrl = new URL(imageUrlString);
-        } catch (JSONException e)
-        {
-            e.printStackTrace();
-        } catch (MalformedURLException e)
-        {
-            e.printStackTrace();
-        }
-
-        /* Set the editTexts with the results */
-        if (title != "")
-        {
-            titleView.setText(title);
-        }
-        if (author != "")
-        {
-            authorView.setText(author);
-        }
-        if (description != "")
-        {
-            descriptionView.setText(description);
-        }
-
-        /* Set the book photo to the photo stored at the url */
-        // https://stackoverflow.com/questions/11831188/how-to-get-bitmap-from-a-url-in-android
-        if (imageUrl != null)
-        {
+            /* Set the book photo to the photo stored at the url */
+            // https://stackoverflow.com/questions/11831188/how-to-get-bitmap-from-a-url-in-android
             new DownloadImageTask(bookPicture).execute(imageUrlString);
             bookPhotoDownloadUrl = imageUrlString;
+        } catch (JSONException e)
+        {
+            /* Do nothing, this is expected to happen sometimes */
         }
     }
 
