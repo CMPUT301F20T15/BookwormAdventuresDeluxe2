@@ -41,7 +41,7 @@ public class FirebaseUserGetSet
     private static CollectionReference usersRef = firebase.collection(context.getString(R.string.users_collection));
 
     /**
-     * Performs query to extract UserProfileObject from database
+     * Performs query to extract User from database
      *
      * @param username   Username of object to be called
      * @param myCallback Interface for returning object after query success
@@ -59,7 +59,7 @@ public class FirebaseUserGetSet
                             for (QueryDocumentSnapshot document : task.getResult())
                             {
                                 /* Extracting userObject from document */
-                                User userObject = new UserProfileObject(
+                                User userObject = new User(
                                         document.getData().get(context.getString(R.string.firestore_username)).toString(),
                                         document.getData().get(context.getString(R.string.firestore_email)).toString(),
                                         document.getData().get(context.getString(R.string.firestore_phoneNumber)).toString(),
@@ -261,7 +261,7 @@ public class FirebaseUserGetSet
      * Source: https://stackoverflow.com/questions/49514859/how-to-get-data-object-from-another-event-android-studio
      * */
     {
-        void onCallback(UserProfileObject userObject);
+        void onCallback(User userObject);
     }
 
     /**
