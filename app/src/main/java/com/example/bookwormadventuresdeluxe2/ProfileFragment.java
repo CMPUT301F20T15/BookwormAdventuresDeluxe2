@@ -228,7 +228,7 @@ public class ProfileFragment extends Fragment
                         @Override
                         public void onCallback(Boolean result)
                         {
-                            if (result == true)
+                            if (result)
                             {
                                 /* Email exists, return error */
                                 EditTextValidator.emailTaken(inputEmail);
@@ -237,7 +237,7 @@ public class ProfileFragment extends Fragment
                             }
 
                             /* Email does not exist, perform edit */
-                            if (result == false)
+                            else
                             {
                                 FirebaseUserGetSet.changeEmail(inputEmail, profile.getDocumentId(), new EditCallback()
                                 {
@@ -290,12 +290,9 @@ public class ProfileFragment extends Fragment
      */
     private void updatePhone(EditText inputPhone)
     {
-        if (!profile.getPhoneNumber().equals(inputPhone.getText().toString()))
-        {
-            FirebaseUserGetSet.editPhone(profile.getDocumentId(), inputPhone.getText().toString());
-            profile.setPhoneNumber(inputPhone.getText().toString().trim());
-            viewPhoneNumber.setText(inputPhone.getText().toString().trim());
-        }
+        FirebaseUserGetSet.editPhone(profile.getDocumentId(), inputPhone.getText().toString());
+        profile.setPhoneNumber(inputPhone.getText().toString().trim());
+        viewPhoneNumber.setText(inputPhone.getText().toString().trim());
     }
 
     /**
