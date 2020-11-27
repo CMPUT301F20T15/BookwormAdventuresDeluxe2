@@ -23,7 +23,7 @@ import com.example.bookwormadventuresdeluxe2.Fragments.NavigatonBar.ProfileFragm
 import com.example.bookwormadventuresdeluxe2.Fragments.DetailView.RequestDetailViewFragment;
 import com.example.bookwormadventuresdeluxe2.Fragments.NavigatonBar.RequestsFragment;
 import com.example.bookwormadventuresdeluxe2.Fragments.NavigatonBar.SearchFragment;
-import com.example.bookwormadventuresdeluxe2.Models.UserProfileObject;
+import com.example.bookwormadventuresdeluxe2.Models.User;
 import com.example.bookwormadventuresdeluxe2.Fragments.NavigatonBar.MyBooksFragment;
 import com.example.bookwormadventuresdeluxe2.R;
 import com.example.bookwormadventuresdeluxe2.Utilities.ActiveFragmentTracker;
@@ -63,7 +63,7 @@ public class MyBooksActivity extends AppCompatActivity implements BottomNavigati
         FirebaseUserGetSet.getUser(UserCredentialAPI.getInstance().getUsername(), new FirebaseUserGetSet.UserCallback()
         {
             @Override
-            public void onCallback(UserProfileObject userObject)
+            public void onCallback(User userObject)
             {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(getString(R.string.profile_object), userObject);

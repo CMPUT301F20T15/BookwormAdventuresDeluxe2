@@ -11,11 +11,8 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 
-import com.example.bookwormadventuresdeluxe2.Models.UserProfileObject;
+import com.example.bookwormadventuresdeluxe2.Models.User;
 import com.example.bookwormadventuresdeluxe2.R;
-import com.example.bookwormadventuresdeluxe2.Utilities.EditTextValidator;
-import com.example.bookwormadventuresdeluxe2.Utilities.GlobalApplication;
-import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,7 +30,7 @@ import java.util.Map;
 import static android.content.ContentValues.TAG;
 
 /**
- * Firebase writer and reader for UserProfileObject
+ * Firebase writer and reader for User
  */
 public class FirebaseUserGetSet
 {
@@ -42,7 +39,7 @@ public class FirebaseUserGetSet
     private static CollectionReference usersRef = firebase.collection(context.getString(R.string.users_collection));
 
     /**
-     * Performs query to extract UserProfileObject from database
+     * Performs query to extract User from database
      *
      * @param username   Username of object to be called
      * @param myCallback Interface for returning object after query success
@@ -60,7 +57,7 @@ public class FirebaseUserGetSet
                             for (QueryDocumentSnapshot document : task.getResult())
                             {
                                 /* Extracting userObject from document */
-                                UserProfileObject userObject = new UserProfileObject(
+                                User userObject = new User(
                                         document.getData().get(context.getString(R.string.firestore_username)).toString(),
                                         document.getData().get(context.getString(R.string.firestore_email)).toString(),
                                         document.getData().get(context.getString(R.string.firestore_phoneNumber)).toString(),
@@ -244,14 +241,14 @@ public class FirebaseUserGetSet
     }
 
     /**
-     * Callback for UserProfileObject
+     * Callback for User
      */
     public interface UserCallback
             /*
              * Source: https://stackoverflow.com/questions/49514859/how-to-get-data-object-from-another-event-android-studio
              * */
     {
-        void onCallback(UserProfileObject userObject);
+        void onCallback(User userObject);
     }
 
     /**

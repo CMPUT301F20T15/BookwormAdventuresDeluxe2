@@ -1,12 +1,12 @@
 package com.example.bookwormadventuresdeluxe2.Models;
 
 /**
- * UserProfileObject models a user and stores the user details pulled from firestore.
+ * User models a user and stores the user details pulled from firestore.
  */
 
 import java.io.Serializable;
 
-public class UserProfileObject implements Serializable
+public class User implements Serializable
 {
     private String username;
     private String email;
@@ -15,13 +15,13 @@ public class UserProfileObject implements Serializable
     private String documentId;
     private String FCMtoken;
 
-    public UserProfileObject()
+    public User()
     {
 
     }
 
     /**
-     * Default constructor for UserProfileObject
+     * Default constructor for User
      *
      * @param username    username pulled from database
      * @param email       email pulled from database
@@ -29,7 +29,7 @@ public class UserProfileObject implements Serializable
      * @param userId      userId pulled from database, unique to FirebaseAuth account
      * @param documentId  documentId pulled from database, used to target object
      */
-    public UserProfileObject(String username, String email, String phoneNumber, String userId, String documentId, String FCMtoken)
+    public User(String username, String email, String phoneNumber, String userId, String documentId, String FCMtoken)
     {
         this.username = username;
         this.email = email;

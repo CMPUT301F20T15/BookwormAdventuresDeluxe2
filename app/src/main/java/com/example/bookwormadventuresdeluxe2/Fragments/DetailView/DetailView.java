@@ -21,7 +21,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.bookwormadventuresdeluxe2.Fragments.NavigatonBar.ProfileFragment;
 import com.example.bookwormadventuresdeluxe2.Models.Book;
-import com.example.bookwormadventuresdeluxe2.Models.UserProfileObject;
+import com.example.bookwormadventuresdeluxe2.Models.User;
 import com.example.bookwormadventuresdeluxe2.R;
 import com.example.bookwormadventuresdeluxe2.Utilities.FirebaseUserGetSet;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
@@ -157,11 +157,11 @@ public abstract class DetailView extends Fragment
             @Override
             public void onClick(View view)
             {
-                /* Pulling UserProfileObject from database */
+                /* Pulling User from database */
                 FirebaseUserGetSet.getUser(username, new FirebaseUserGetSet.UserCallback()
                 {
                     @Override
-                    public void onCallback(UserProfileObject userObject)
+                    public void onCallback(User userObject)
                     {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(getString(R.string.profile_object), userObject);
