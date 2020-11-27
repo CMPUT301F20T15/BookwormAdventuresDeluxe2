@@ -27,8 +27,6 @@ import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 
-import org.w3c.dom.Text;
-
 public class ProfileFragment extends Fragment
 {
     private static final String TAG = "MyProfileFragment";
@@ -191,6 +189,7 @@ public class ProfileFragment extends Fragment
                     hasValidationError = true;
                 }
 
+                /* Checks if phone number is valid */
                 if (!EditTextValidator.isPhoneNumberPattern(inputPhone.getText().toString())
                         && !TextUtils.isEmpty(inputPhone.getText().toString()))
                 {
@@ -198,6 +197,7 @@ public class ProfileFragment extends Fragment
                     hasValidationError = true;
                 }
 
+                /* Checks if email is valid*/
                 if (!EditTextValidator.isEmailPattern(inputEmail.getText().toString().trim())
                         && !TextUtils.isEmpty(inputEmail.getText().toString().trim()))
                 {
@@ -211,14 +211,18 @@ public class ProfileFragment extends Fragment
                     return;
                 }
 
+                /* Checks if only phone number was edited */
                 if (!profile.getPhoneNumber().equals(inputPhone.getText().toString()) && profile.getEmail().equals(inputEmail.getText().toString().trim()))
                 {
                     updatePhone(inputPhone);
                     builder.dismiss();
                 }
+
+                /* Editing FirebaseAuth email */
                 progressBar.setVisibility(View.VISIBLE);
                 if (!profile.getEmail().equals(inputEmail.getText().toString().trim()))
                 {
+                    /* Checks if email exists */
                     FirebaseUserGetSet.checkEmailExists(inputEmail, new FirebaseUserGetSet.EmailCheckCallBack()
                     {
                         @Override
@@ -226,11 +230,13 @@ public class ProfileFragment extends Fragment
                         {
                             if (result == true)
                             {
+                                /* Email exists, return error */
                                 EditTextValidator.emailTaken(inputEmail);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 return;
                             }
-                            Log.d("TEST", "FALSE");
+
+                            /* Email does not exist, perform edit */
                             if (result == false)
                             {
                                 FirebaseUserGetSet.changeEmail(inputEmail, profile.getDocumentId(), new EditCallback()
@@ -242,6 +248,8 @@ public class ProfileFragment extends Fragment
                                         {
                                             profile.setEmail(inputEmail.getText().toString().trim());
                                             viewEmail.setText(inputEmail.getText().toString().trim());
+
+                                            /* If phone number and email are changed*/
                                             if (!profile.getPhoneNumber().equals(inputPhone.getText().toString()))
                                             {
                                                 updatePhone(inputPhone);
@@ -251,7 +259,6 @@ public class ProfileFragment extends Fragment
                                         {
                                             return;
                                         }
-
                                     }
                                 });
                             }
@@ -276,6 +283,11 @@ public class ProfileFragment extends Fragment
         builder.show();
     }
 
+    /**
+     * Updates phone number text on ProfileFragment
+     *
+     * @param inputPhone New phone number
+     */
     private void updatePhone(EditText inputPhone)
     {
         if (!profile.getPhoneNumber().equals(inputPhone.getText().toString()))

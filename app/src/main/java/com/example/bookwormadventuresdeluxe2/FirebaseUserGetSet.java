@@ -11,7 +11,6 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 
-import com.example.bookwormadventuresdeluxe2.Utilities.EditTextValidator;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -106,10 +105,14 @@ public class FirebaseUserGetSet
         data.put(context.getString(R.string.firestore_phoneNumber), newPhone);
 
         usersRef.document(docId).update(data);
-
-//        editPhone(documentID, inputPhone.getText().toString());
     }
 
+    /**
+     * Checks if email is currently in use
+     *
+     * @param email              Email to be checked
+     * @param emailCheckCallback Callback for timing return
+     */
     public static void checkEmailExists(EditText email, EmailCheckCallBack emailCheckCallback)
     {
         usersRef.whereEqualTo(context.getString(R.string.firestore_email), email.getText().toString().trim())
@@ -133,6 +136,7 @@ public class FirebaseUserGetSet
                 }
                 if (task.getResult().size() == 0)
                 {
+                    /* False if it does not exist */
                     emailCheckCallback.onCallback(false);
                 }
             }
@@ -161,7 +165,6 @@ public class FirebaseUserGetSet
                             /* Successful profile edit*/
                             editEmail(documentID,
                                     inputEmail.getText().toString().trim());
-
                             editCallback.onCallback(true);
                             Log.d(TAG, "User info updated.");
                         }
@@ -186,7 +189,6 @@ public class FirebaseUserGetSet
                                 inputEmail.requestFocus();
                                 Log.d(TAG, e.getMessage());
                             }
-
                             editCallback.onCallback(false);
                             Log.d(TAG, "User info update failed.");
                         }
@@ -256,9 +258,9 @@ public class FirebaseUserGetSet
      * Callback for UserProfileObject
      */
     public interface UserCallback
-            /*
-             * Source: https://stackoverflow.com/questions/49514859/how-to-get-data-object-from-another-event-android-studio
-             * */
+    /*
+     * Source: https://stackoverflow.com/questions/49514859/how-to-get-data-object-from-another-event-android-studio
+     * */
     {
         void onCallback(UserProfileObject userObject);
     }
@@ -267,20 +269,20 @@ public class FirebaseUserGetSet
      * Callback for editing profile result
      */
     public interface EditCallback
-            /*
-             * Source: https://stackoverflow.com/questions/49514859/how-to-get-data-object-from-another-event-android-studio
-             * */
+    /*
+     * Source: https://stackoverflow.com/questions/49514859/how-to-get-data-object-from-another-event-android-studio
+     * */
     {
         void onCallback(Boolean result);
     }
 
     /**
-     * Callback for editing profile result
+     * Callback for checking email existence
      */
     public interface EmailCheckCallBack
-            /*
-             * Source: https://stackoverflow.com/questions/49514859/how-to-get-data-object-from-another-event-android-studio
-             * */
+    /*
+     * Source: https://stackoverflow.com/questions/49514859/how-to-get-data-object-from-another-event-android-studio
+     * */
     {
         void onCallback(Boolean result);
     }

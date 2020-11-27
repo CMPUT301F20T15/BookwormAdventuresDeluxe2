@@ -311,7 +311,6 @@ public class CreateAccountActivity extends AppCompatActivity
                                 errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
                                 editTextUsername.setError(errorCode);
                                 editTextUsername.requestFocus();
-
                             } catch (Exception e)
                             {
                                 /* Different type from errorCode, cannot be cast to the same object.

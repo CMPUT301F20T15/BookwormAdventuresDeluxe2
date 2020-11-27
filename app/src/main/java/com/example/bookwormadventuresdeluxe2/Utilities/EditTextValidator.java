@@ -8,13 +8,6 @@ package com.example.bookwormadventuresdeluxe2.Utilities;
 import android.text.TextUtils;
 import android.widget.EditText;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -114,7 +107,7 @@ public class EditTextValidator
     }
 
     /**
-     * Set invalid email error notification
+     * Set invalid phone number error notification
      *
      * @param editText editText on which error is set
      */
@@ -148,7 +141,7 @@ public class EditTextValidator
     }
 
     /**
-     * Set weak password error if password1 and password2 are have length < 6
+     * Set weak password error if password1 and password2 have length < 6
      *
      * @param password1 password on which error is set
      * @param password2 editText on which error is set
@@ -189,13 +182,15 @@ public class EditTextValidator
     }
 
     /**
-     * Method for checking valid email format.
+     * Method for checking valid phone number format.
      *
      * @return boolean true for valid false for invalid
      */
     public static boolean isPhoneNumberPattern(String phone)
     {
-        /* Source: https://stackoverflow.com/questions/6358380/phone-number-validation-android */
+        /*
+         * Source: https://stackoverflow.com/questions/6358380/phone-number-validation-android
+         * */
         String expression = "^\\s*(?:\\+?(\\d{1}))?[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})(?: *x(\\d+))?\\s*$";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(phone);
@@ -210,7 +205,9 @@ public class EditTextValidator
      */
     public static boolean isEmailPattern(String email)
     {
-        /* Source: https://stackoverflow.com/questions/6119722/how-to-check-edittexts-text-is-email-address-or-not*/
+        /*
+         * Source: https://stackoverflow.com/questions/6119722/how-to-check-edittexts-text-is-email-address-or-not
+         * */
         String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(email);
