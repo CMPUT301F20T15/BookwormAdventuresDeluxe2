@@ -236,7 +236,6 @@ public class CreateAccountActivity extends AppCompatActivity
                                     {
                                         EditTextValidator.emailTaken(editTextEmail);
                                     }
-
                                     if (isUsernameInUse[0])
                                     {
                                         EditTextValidator.usernameTaken(editTextUsername);
