@@ -182,7 +182,7 @@ public class EditTextValidator
     }
 
     /**
-     * Method for checking valid phone number format.
+     * Method for checking valid phone number format
      *
      * @return boolean true for valid false for invalid
      */
@@ -198,7 +198,7 @@ public class EditTextValidator
     }
 
     /**
-     * Method for checking valid email format.
+     * Method for checking valid email format
      *
      * @param email Email string to be checked
      * @return boolean true for valid false for invalid

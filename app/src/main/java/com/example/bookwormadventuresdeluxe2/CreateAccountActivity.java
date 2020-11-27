@@ -133,6 +133,7 @@ public class CreateAccountActivity extends AppCompatActivity
                 if (!EditTextValidator.createAccountEmpties(editTextUsername, editTextEmail, editTextPhoneNumber,
                         editTextPassword, confirmPassword))
                 {
+                    /* Check if all input conditions met*/
                     boolean hasValidationError = false;
                     if (!EditTextValidator.passwordsMatch(editTextPassword, confirmPassword)
                         || EditTextValidator.weakPass(editTextPassword, confirmPassword))

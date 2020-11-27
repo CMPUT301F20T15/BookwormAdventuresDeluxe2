@@ -170,22 +170,19 @@ public class FirebaseUserGetSet
                         }
                         else
                         {
-                            /* Failed edit */
                             try
                             {
-                                /* Tries to match errorCode to EditText error */
-                                String errorCode = "";
-                                errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
-                                inputEmail.setError(errorCode);
+                                /* Failed edit */
+                                inputEmail.setError(task.getException().getMessage());
                                 inputEmail.requestFocus();
                             } catch (Exception e)
                             {
-                                /* Different type from errorCode, cannot be cast to the same object.
+                                /* Different type of error, cannot be cast to the same object.
                                  * Sets EditText error to new type.
                                  *
                                  * Log message to debug
                                  */
-                                inputEmail.setError(task.getException().getMessage());
+                                inputEmail.setError(e.getMessage());
                                 inputEmail.requestFocus();
                                 Log.d(TAG, e.getMessage());
                             }

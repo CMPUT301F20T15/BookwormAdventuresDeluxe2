@@ -254,6 +254,7 @@ public class ProfileFragment extends Fragment
                                             {
                                                 updatePhone(inputPhone);
                                             }
+                                            builder.dismiss();
                                         }
                                         else
                                         {
@@ -263,7 +264,6 @@ public class ProfileFragment extends Fragment
                                 });
                             }
                             progressBar.setVisibility(View.INVISIBLE);
-                            builder.dismiss();
                         }
                     });
                 }
