@@ -1,4 +1,4 @@
-package com.example.bookwormadventuresdeluxe2;
+package com.example.bookwormadventuresdeluxe2.Fragments.NavigatonBar;
 
 /**
  * MyProfile view fragment class for displaying and editing your contact details
@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,10 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.bookwormadventuresdeluxe2.FirebaseUserGetSet.EditCallback;
+import com.example.bookwormadventuresdeluxe2.Models.User;
+import com.example.bookwormadventuresdeluxe2.Utilities.FirebaseUserGetSet;
+import com.example.bookwormadventuresdeluxe2.Activities.LoginActivity;
+import com.example.bookwormadventuresdeluxe2.R;
 import com.example.bookwormadventuresdeluxe2.Utilities.EditTextValidator;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.android.material.textview.MaterialTextView;
@@ -44,7 +46,7 @@ public class ProfileFragment extends Fragment
     private ImageButton backButton;
 
     private FirebaseAuth firebaseAuth;
-    private UserProfileObject profile;
+    private User profile;
 
     /**
      * Required empty public constructor
@@ -63,7 +65,7 @@ public class ProfileFragment extends Fragment
     {
         /* Getting my profile */
         Bundle bundle = getArguments();
-        profile = (UserProfileObject) bundle.getSerializable(getString(R.string.profile_object));
+        profile = (User) bundle.getSerializable(getString(R.string.profile_object));
 
         /* Inflate the layout for this fragment */
         view = inflater.inflate(R.layout.fragment_profile, container, false);
