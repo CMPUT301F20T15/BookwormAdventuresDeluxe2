@@ -212,7 +212,8 @@ public class ProfileFragment extends Fragment
                 }
 
                 /* Checks if only phone number was edited */
-                if (!profile.getPhoneNumber().equals(inputPhone.getText().toString()) && profile.getEmail().equals(inputEmail.getText().toString().trim()))
+                if (!profile.getPhoneNumber().equals(inputPhone.getText().toString())
+                        && profile.getEmail().equals(inputEmail.getText().toString().trim()))
                 {
                     updatePhone(inputPhone);
                     builder.dismiss();
@@ -223,7 +224,8 @@ public class ProfileFragment extends Fragment
                 if (!profile.getEmail().equals(inputEmail.getText().toString().trim()))
                 {
                     /* Checks if email exists */
-                    FirebaseUserGetSet.checkEmailExists(inputEmail, new FirebaseUserGetSet.EmailCheckCallBack()
+                    FirebaseUserGetSet.checkEmailExists(inputEmail,
+                            new FirebaseUserGetSet.EmailCheckCallBack()
                     {
                         @Override
                         public void onCallback(Boolean result)
@@ -239,7 +241,9 @@ public class ProfileFragment extends Fragment
                             /* Email does not exist, perform edit */
                             else
                             {
-                                FirebaseUserGetSet.changeEmail(inputEmail, profile.getDocumentId(), new EditCallback()
+                                FirebaseUserGetSet.changeEmail(inputEmail,
+                                        profile.getDocumentId(),
+                                        new EditCallback()
                                 {
                                     @Override
                                     public void onCallback(Boolean result)
