@@ -1,6 +1,5 @@
 package com.example.bookwormadventuresdeluxe2;
 
-import com.example.bookwormadventuresdeluxe2.Models.Book;
 import com.example.bookwormadventuresdeluxe2.Utilities.Status;
 
 import org.junit.Before;
