@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +21,13 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.bookwormadventuresdeluxe2.FirebaseUserGetSet.EditCallback;
 import com.example.bookwormadventuresdeluxe2.Utilities.EditTextValidator;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
+
+import org.w3c.dom.Text;
 
 public class ProfileFragment extends Fragment
 {
@@ -181,9 +185,23 @@ public class ProfileFragment extends Fragment
                 }
 
                 /* Checks if phone number was empty and sets error*/
-                if (TextUtils.isEmpty(inputPhone.getText().toString().trim()))
+                if (TextUtils.isEmpty(inputPhone.getText().toString()))
                 {
                     EditTextValidator.isEmpty(inputPhone);
+                    hasValidationError = true;
+                }
+
+                if (!EditTextValidator.isPhoneNumberPattern(inputPhone.getText().toString())
+                        && !TextUtils.isEmpty(inputPhone.getText().toString()))
+                {
+                    EditTextValidator.invalidPhone(inputPhone);
+                    hasValidationError = true;
+                }
+
+                if (!EditTextValidator.isEmailPattern(inputEmail.getText().toString().trim())
+                        && !TextUtils.isEmpty(inputEmail.getText().toString().trim()))
+                {
+                    EditTextValidator.invalidEmail(inputEmail);
                     hasValidationError = true;
                 }
 
@@ -193,33 +211,55 @@ public class ProfileFragment extends Fragment
                     return;
                 }
 
-                /* Attempts to edit FirebaseAuth account and Firebase info*/
+                if (!profile.getPhoneNumber().equals(inputPhone.getText().toString()) && profile.getEmail().equals(inputEmail.getText().toString().trim()))
+                {
+                    updatePhone(inputPhone);
+                    builder.dismiss();
+                }
                 progressBar.setVisibility(View.VISIBLE);
-                FirebaseUserGetSet.changeAuthInfo(inputEmail,
-                        inputPhone,
-                        profile.getDocumentId(),
-                        new FirebaseUserGetSet.EditCallback()
+                if (!profile.getEmail().equals(inputEmail.getText().toString().trim()))
+                {
+                    FirebaseUserGetSet.checkEmailExists(inputEmail, new FirebaseUserGetSet.EmailCheckCallBack()
+                    {
+                        @Override
+                        public void onCallback(Boolean result)
                         {
-                            @Override
-                            public void onCallback(Boolean result)
+                            if (result == true)
                             {
-                                /* After successful edit */
-                                if (inputEmail.getError() == null)
-                                {
-                                    /* Updating user object in Fragment*/
-                                    profile.setEmail(inputEmail.getText().toString().trim());
-                                    profile.setPhoneNumber(inputPhone.getText().toString().trim());
-
-                                    /* Updating TextView in fragment */
-                                    viewEmail.setText(inputEmail.getText().toString().trim());
-                                    viewPhoneNumber.setText(inputPhone.getText().toString().trim());
-
-                                    /* Closing dialog */
-                                    builder.dismiss();
-                                }
+                                EditTextValidator.emailTaken(inputEmail);
                                 progressBar.setVisibility(View.INVISIBLE);
+                                return;
                             }
-                        });
+                            Log.d("TEST", "FALSE");
+                            if (result == false)
+                            {
+                                FirebaseUserGetSet.changeEmail(inputEmail, profile.getDocumentId(), new EditCallback()
+                                {
+                                    @Override
+                                    public void onCallback(Boolean result)
+                                    {
+                                        if (result == true)
+                                        {
+                                            profile.setEmail(inputEmail.getText().toString().trim());
+                                            viewEmail.setText(inputEmail.getText().toString().trim());
+                                            if (!profile.getPhoneNumber().equals(inputPhone.getText().toString()))
+                                            {
+                                                updatePhone(inputPhone);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            return;
+                                        }
+
+                                    }
+                                });
+                            }
+                            progressBar.setVisibility(View.INVISIBLE);
+                            builder.dismiss();
+                        }
+                    });
+                }
             }
         });
 
@@ -234,6 +274,16 @@ public class ProfileFragment extends Fragment
         });
 
         builder.show();
+    }
+
+    private void updatePhone(EditText inputPhone)
+    {
+        if (!profile.getPhoneNumber().equals(inputPhone.getText().toString()))
+        {
+            FirebaseUserGetSet.editPhone(profile.getDocumentId(), inputPhone.getText().toString());
+            profile.setPhoneNumber(inputPhone.getText().toString().trim());
+            viewPhoneNumber.setText(inputPhone.getText().toString().trim());
+        }
     }
 
     /**
