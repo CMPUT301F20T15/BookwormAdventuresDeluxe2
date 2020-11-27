@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.bookwormadventuresdeluxe2.Models.User;
 import com.example.bookwormadventuresdeluxe2.Utilities.FirebaseUserGetSet;
+import com.example.bookwormadventuresdeluxe2.Utilities.FirebaseUserGetSet.EditCallback;
 import com.example.bookwormadventuresdeluxe2.Activities.LoginActivity;
 import com.example.bookwormadventuresdeluxe2.R;
 import com.example.bookwormadventuresdeluxe2.Utilities.EditTextValidator;
