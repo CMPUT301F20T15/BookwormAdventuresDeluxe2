@@ -1,4 +1,4 @@
-package com.example.bookwormadventuresdeluxe2;
+package com.example.bookwormadventuresdeluxe2.Utilities;
 
 /**
  * Class for calling user profile object details from database.
@@ -11,6 +11,8 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 
+import com.example.bookwormadventuresdeluxe2.Models.User;
+import com.example.bookwormadventuresdeluxe2.R;
 import com.example.bookwormadventuresdeluxe2.Utilities.UserCredentialAPI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -30,7 +32,7 @@ import java.util.Map;
 import static android.content.ContentValues.TAG;
 
 /**
- * Firebase writer and reader for UserProfileObject
+ * Firebase writer and reader for User
  */
 public class FirebaseUserGetSet
 {
@@ -57,7 +59,7 @@ public class FirebaseUserGetSet
                             for (QueryDocumentSnapshot document : task.getResult())
                             {
                                 /* Extracting userObject from document */
-                                UserProfileObject userObject = new UserProfileObject(
+                                User userObject = new UserProfileObject(
                                         document.getData().get(context.getString(R.string.firestore_username)).toString(),
                                         document.getData().get(context.getString(R.string.firestore_email)).toString(),
                                         document.getData().get(context.getString(R.string.firestore_phoneNumber)).toString(),
@@ -252,7 +254,7 @@ public class FirebaseUserGetSet
     }
 
     /**
-     * Callback for UserProfileObject
+     * Callback for User
      */
     public interface UserCallback
     /*
