@@ -94,7 +94,7 @@ public class MyBooksDetailViewFragment extends DetailView
      */
     private void redraw()
     {
-        updateView(this.selectedBook);
+        this.updateView(this.selectedBook);
     }
     
     /**
