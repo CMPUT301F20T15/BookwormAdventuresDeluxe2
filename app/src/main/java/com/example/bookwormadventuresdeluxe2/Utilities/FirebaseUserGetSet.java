@@ -184,7 +184,7 @@ public class FirebaseUserGetSet
                                  *
                                  * Log message to debug
                                  */
-                                inputEmail.setError(e.getMessage());
+                                inputEmail.setError(task.getException().getMessage());
                                 inputEmail.requestFocus();
                                 Log.d(TAG, e.getMessage());
                             }
