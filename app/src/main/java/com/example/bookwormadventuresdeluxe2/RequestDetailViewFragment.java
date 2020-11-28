@@ -139,7 +139,6 @@ public class RequestDetailViewFragment extends DetailView
                 user = bookDetailView.findViewById(R.id.book_request_user);
                 if (this.selectedBook.getRequesters().size() > 0)
                 {
-                    System.out.println("yes");
                     user.setText(this.selectedBook.getRequesters().get(0));
                     /* Enables clicking of requester profile*/
                     clickUsername(user, this.selectedBook.getRequesters().get(0), this.requestDetailViewFragment);
