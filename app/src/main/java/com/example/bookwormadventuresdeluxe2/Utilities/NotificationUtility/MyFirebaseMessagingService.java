@@ -35,7 +35,7 @@ import static com.example.bookwormadventuresdeluxe2.Utilities.GlobalApplication.
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService
 {
-    public static final String TAG = "FirebaseMessagingService";
+    public static final String TAG = "MyFMS";
 
     /**
      * Listen for FCM app registration toke change and update firestore
