@@ -138,6 +138,14 @@ public class AddOrEditBooksActivity extends AppCompatActivity
 
         if (this.editingBook)
         {
+            if (bookToEdit.getStatus().equals(Status.Borrowed))
+            {
+                deleteButton.setVisibility(View.GONE);
+            }
+            else
+            {
+                deleteButton.setVisibility(View.VISIBLE);
+            }
             /* Hide delete button if the book has no image url*/
             if (bookToEdit.getImageUrl().equals(""))
             {
