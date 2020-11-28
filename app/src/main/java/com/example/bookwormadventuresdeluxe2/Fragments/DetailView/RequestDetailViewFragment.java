@@ -326,6 +326,9 @@ public class RequestDetailViewFragment extends DetailView
         switch (book.getStatus())
         {
             case Available:
+                user.setVisibility(View.GONE);
+                dropdownContainer.setVisibility(View.GONE);
+                status.setText(getString(R.string.available));
                 break;
             case Requested:
             case Accepted:
