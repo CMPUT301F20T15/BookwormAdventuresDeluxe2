@@ -175,7 +175,9 @@ public class FirebaseUserGetSet
                             try
                             {
                                 /* Failed edit */
-                                inputEmail.setError(task.getException().getMessage());
+                                String errorCode = "";
+                                errorCode = ((FirebaseAuthException) task.getException()).getMessage();
+                                inputEmail.setError(errorCode);
                                 inputEmail.requestFocus();
                             } catch (Exception e)
                             {

@@ -309,7 +309,7 @@ public class CreateAccountActivity extends AppCompatActivity
                             {
                                 /* Extract Firebase Error Code */
                                 String errorCode = "";
-                                errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
+                                errorCode = ((FirebaseAuthException) task.getException()).getMessage();
                                 editTextUsername.setError(errorCode);
                                 editTextUsername.requestFocus();
                             } catch (Exception e)
