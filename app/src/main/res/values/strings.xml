@@ -163,4 +163,10 @@
     <string name="hand_to_owner">Hand book to owner</string>
     <string name="unsuccessful_scan">Scan was unsuccessful</string>
 
+    <!-- Close Fragment Messager -->
+    <string name="request_denied_message">Book request denied</string>
+    <string name="request_cancelled_message">Book request cancelled</string>
+    <string name="book_deleted_message">Book deleted</string>
+    <string name="cannot_edit_book">Cannot edit book</string>
+
 </resources>

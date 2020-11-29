@@ -16,8 +16,10 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -139,17 +141,6 @@ public class AddOrEditBooksActivity extends AppCompatActivity
 
         if (this.editingBook)
         {
-            if (Arrays.asList(
-                    Status.bPending,
-                    Status.Borrowed,
-                    Status.rPending).contains(bookToEdit.getStatus()))
-            {
-                deleteButton.setVisibility(View.GONE);
-            }
-            else
-            {
-                deleteButton.setVisibility(View.VISIBLE);
-            }
             /* Hide delete button if the book has no image url*/
             if (bookToEdit.getImageUrl().equals(""))
             {
@@ -222,6 +213,24 @@ public class AddOrEditBooksActivity extends AppCompatActivity
      */
     public void saveBook(View view)
     {
+        /* Disable saving changes if book is not available */
+        if (this.editingBook
+                && Arrays.asList(Status.Requested,
+                                    Status.Accepted,
+                                    Status.bPending,
+                                    Status.Borrowed,
+                                    Status.rPending).contains(bookToEdit.getStatus()))
+        {
+            Toast toast = Toast.makeText(AddOrEditBooksActivity.this, getString(R.string.cannot_edit_book), Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0,0);
+            ViewGroup group = (ViewGroup) toast.getView();
+            TextView messageTextView = (TextView) group.getChildAt(0);
+            messageTextView.setTextSize(18);
+            toast.show();
+            return;
+        }
+
+        /* Save changes */
         firebaseAuth = FirebaseAuth.getInstance();
         String title, author, description, isbn;
 
