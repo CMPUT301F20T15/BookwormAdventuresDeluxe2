@@ -102,6 +102,7 @@ public class BorrowDetailViewFragment extends DetailView
             {
                 if (snapshot != null && snapshot.exists())
                 {
+                    /* Close fragment if request is denied by owner */
                     if (BorrowDetailViewFragment.this.isVisible()
                         && selectedBook.getRequesters().contains(UserCredentialAPI.getInstance().getUsername())
                         && !snapshot.toObject(Book.class).getRequesters().contains(UserCredentialAPI.getInstance().getUsername()))
