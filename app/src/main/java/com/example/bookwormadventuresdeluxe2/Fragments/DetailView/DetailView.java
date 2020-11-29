@@ -197,6 +197,9 @@ public abstract class DetailView extends Fragment
      */
     protected void closeFragment(Fragment fragment, String message)
     {
+        /*
+         * Source: https://stackoverflow.com/questions/5274354/how-can-we-increase-the-font-size-in-toast
+         * */
         Fragment activeFragment = ActiveFragmentTracker.activeFragment;
         getFragmentManager().beginTransaction().remove(fragment).show(activeFragment).commit();
         Toast toast = Toast.makeText(getActivity(), message, Toast.LENGTH_LONG);
