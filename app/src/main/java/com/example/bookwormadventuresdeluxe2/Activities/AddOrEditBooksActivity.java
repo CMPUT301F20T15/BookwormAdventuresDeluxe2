@@ -154,15 +154,18 @@ public class AddOrEditBooksActivity extends AppCompatActivity
                 takePhoto.setVisibility(View.GONE);
                 scanIsbnButton.setVisibility(View.GONE);
             }
-            /* Hide delete button if the book has no image url*/
-            if (bookToEdit.getImageUrl().equals(""))
-            {
-                deletePictureButton.hide();
-            }
             else
             {
-                /* Only show the delete button if we are editing a book and it has an image*/
-                deletePictureButton.show();
+                /* Hide delete button if the book has no image url*/
+                if (bookToEdit.getImageUrl().equals(""))
+                {
+                    deletePictureButton.hide();
+                }
+                else
+                {
+                    /* Only show the delete button if we are editing a book and it has an image*/
+                    deletePictureButton.show();
+                }
             }
         }
         else
