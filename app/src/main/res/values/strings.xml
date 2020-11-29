@@ -20,7 +20,7 @@
     <string name="navbar_text_label_4">Profile</string>
     <string name="fab_content_desc">Add Book</string>
     <string name="edit_page_delete_picture_button">Delete Picture</string>
-    <string name="my_requests">My Requests</string>
+    <string name="my_requests">Lend</string>
     <string name="borrow">Borrow</string>
     <string name="set_location">Set Pickup Location</string>
     <string name="scan_isbn">Scan ISBN</string>
@@ -156,5 +156,11 @@
     <string name="request_accepted_message">Borrow request accepted by:</string>
     <string name="return_request_message">Return requested by:</string>
     <string name="my_requests_book_confirm_lend_message">Book confirmed to lend by:</string>
+
+    <!--  Book HandOff Messages -->
+    <string name="hand_to_borrower">Hand book to borrower</string>
+    <string name="book_received">Book received.</string>
+    <string name="hand_to_owner">Hand book to owner</string>
+    <string name="unsuccessful_scan">Scan was unsuccessful</string>
 
 </resources>
