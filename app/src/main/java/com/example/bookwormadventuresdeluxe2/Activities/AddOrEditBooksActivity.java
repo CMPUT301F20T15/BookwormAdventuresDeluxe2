@@ -16,10 +16,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -58,17 +56,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.UUID;
 
 public class AddOrEditBooksActivity extends AppCompatActivity
 {
     private TextView takePhoto;
     private ImageView bookPicture;
+    private ImageView scanIsbnButton;
     private EditText titleView, authorView, descriptionView, isbnView;
     private boolean editingBook = false;
     private boolean deleteBookPictureWhenSaving = false;
     private Button deleteButton;
+    private FloatingActionButton saveButton;
     private FloatingActionButton deletePictureButton;
     private Book bookToEdit;
     private String bookPhotoDownloadUrl = "";
@@ -94,8 +93,10 @@ public class AddOrEditBooksActivity extends AppCompatActivity
         authorView = findViewById(R.id.author_edit_text);
         descriptionView = findViewById(R.id.description_edit_text);
         isbnView = findViewById(R.id.isbn_edit_text);
+        scanIsbnButton = findViewById(R.id.scan_isbn_button);
         deleteButton = findViewById(R.id.delete_button);
         deletePictureButton = findViewById(R.id.delete_picture);
+        saveButton = findViewById(R.id.my_books_save_button);
         bookPicture = findViewById(R.id.book_photo);
         requestQueue = Volley.newRequestQueue(this);
 
@@ -141,6 +142,18 @@ public class AddOrEditBooksActivity extends AppCompatActivity
 
         if (this.editingBook)
         {
+            /* Disable editing if book is not available */
+            if (!bookToEdit.getStatus().equals(Status.Available))
+            {
+                titleView.setFocusable(false);
+                authorView.setFocusable(false);
+                descriptionView.setFocusable(false);
+                isbnView.setFocusable(false);
+                deletePictureButton.hide();
+                saveButton.hide();
+                takePhoto.setVisibility(View.GONE);
+                scanIsbnButton.setVisibility(View.GONE);
+            }
             /* Hide delete button if the book has no image url*/
             if (bookToEdit.getImageUrl().equals(""))
             {
@@ -213,23 +226,6 @@ public class AddOrEditBooksActivity extends AppCompatActivity
      */
     public void saveBook(View view)
     {
-        /* Disable saving changes if book is not available */
-        if (this.editingBook
-                && Arrays.asList(Status.Requested,
-                                    Status.Accepted,
-                                    Status.bPending,
-                                    Status.Borrowed,
-                                    Status.rPending).contains(bookToEdit.getStatus()))
-        {
-            Toast toast = Toast.makeText(AddOrEditBooksActivity.this, getString(R.string.cannot_edit_book), Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0,0);
-            ViewGroup group = (ViewGroup) toast.getView();
-            TextView messageTextView = (TextView) group.getChildAt(0);
-            messageTextView.setTextSize(18);
-            toast.show();
-            return;
-        }
-
         /* Save changes */
         firebaseAuth = FirebaseAuth.getInstance();
         String title, author, description, isbn;
