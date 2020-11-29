@@ -56,6 +56,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class AddOrEditBooksActivity extends AppCompatActivity
@@ -138,7 +139,10 @@ public class AddOrEditBooksActivity extends AppCompatActivity
 
         if (this.editingBook)
         {
-            if (bookToEdit.getStatus().equals(Status.Borrowed))
+            if (Arrays.asList(
+                    Status.bPending,
+                    Status.Borrowed,
+                    Status.rPending).contains(bookToEdit.getStatus()))
             {
                 deleteButton.setVisibility(View.GONE);
             }
