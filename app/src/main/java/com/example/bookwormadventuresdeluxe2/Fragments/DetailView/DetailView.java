@@ -189,6 +189,12 @@ public abstract class DetailView extends Fragment
         });
     }
 
+    /**
+     * Closes fragment
+     *
+     * @param fragment Fragment to be closed
+     * @param message  Reason for closing fragment
+     */
     protected void closeFragment(Fragment fragment, String message)
     {
         Fragment activeFragment = ActiveFragmentTracker.activeFragment;
@@ -199,6 +205,5 @@ public abstract class DetailView extends Fragment
         TextView messageTextView = (TextView) group.getChildAt(0);
         messageTextView.setTextSize(18);
         toast.show();
-
     }
 }
