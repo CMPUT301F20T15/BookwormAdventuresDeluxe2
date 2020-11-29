@@ -13,6 +13,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.example.bookwormadventuresdeluxe2.Activities.AddOrEditBooksActivity;
+import com.example.bookwormadventuresdeluxe2.Activities.LoginActivity;
+import com.example.bookwormadventuresdeluxe2.Activities.MyBooksActivity;
 import com.example.bookwormadventuresdeluxe2.Utilities.EditTextValidator;
 import com.robotium.solo.Solo;
 
@@ -40,7 +43,7 @@ public class MyBooksFragmentTest
     private Resources resources;
 
     private int BACK_BUTTON_INDEX = 0;
-    /* In the edit book fragment the index is different because android is stupid and picks
+    /* In the edit book fragment the index is different as android picks
      * arbitrary numbers
      */
     private int BACK_BUTTON_EDIT_BOOK_INDEX = 2;
